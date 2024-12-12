@@ -1,0 +1,20 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    " e ",
+    "eoe",
+    " e "
+  ],
+  "key": {
+    "e": {
+      "item": "minecraft:glass"
+    },
+    "o": {
+      "item": "minecraft:lapis_block"
+    }
+  },
+  "result": {
+    "item": "shadered:stormy_block",
+    "count": 6
+  }
+}
