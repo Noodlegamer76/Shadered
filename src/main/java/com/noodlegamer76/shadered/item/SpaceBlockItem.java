@@ -19,7 +19,6 @@ public class SpaceBlockItem extends BlockItem {
     //public void initializeClient(Consumer<IClientItemExtensions> consumer) {
     //    consumer.accept(new IClientItemExtensions() {
     //        private SpaceBlockItemRenderer renderer = null;
-    //        // Don't instantiate until ready. This prevents race conditions breaking things
     //        @Override public BlockEntityWithoutLevelRenderer getCustomRenderer() {
     //            if (this.renderer == null)
     //                this.renderer = new SpaceBlockItemRenderer(Minecraft.getInstance().getBlockEntityRenderDispatcher(), Minecraft.getInstance().getEntityModels());

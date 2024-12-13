@@ -16,7 +16,7 @@ import java.util.ArrayList;
 
 public class RenderCube {
 
-    public static void createCubeWithShader(PoseStack poseStack, ArrayList<BlockPos> positions, float partialTicks) {
+    public static void renderSkyBlocks(PoseStack poseStack, ArrayList<BlockPos> positions, float partialTicks) {
         Tesselator tesselator = Tesselator.getInstance();
         BufferBuilder bufferBuilder = tesselator.getBuilder();
 
@@ -96,7 +96,7 @@ public class RenderCube {
             default -> null;
         };
 
-        return neighborState != null && neighborState.isSolid();
+        return neighborState != null && neighborState.isSolidRender(level, pos);
     }
 
 }

@@ -117,13 +117,13 @@ public class RenderEventsForFbos {
 
             //BATCH RENDER SKY BLOCKS HERE
             RegisterShadersEvent.skybox.setSampler("Skybox", spaceTexture);
-            RenderCube.createCubeWithShader(event.getPoseStack(), spacePositions, event.getPartialTick());
+            RenderCube.renderSkyBlocks(event.getPoseStack(), spacePositions, event.getPartialTick());
 
             RegisterShadersEvent.skybox.setSampler("Skybox", stormyTexture);
-            RenderCube.createCubeWithShader(event.getPoseStack(), stormyPositions, event.getPartialTick());
+            RenderCube.renderSkyBlocks(event.getPoseStack(), stormyPositions, event.getPartialTick());
 
             RegisterShadersEvent.skybox.setSampler("Skybox", oceanTexture);
-            RenderCube.createCubeWithShader(event.getPoseStack(), oceanPositions, event.getPartialTick());
+            RenderCube.renderSkyBlocks(event.getPoseStack(), oceanPositions, event.getPartialTick());
 
         }
 

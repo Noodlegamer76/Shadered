@@ -22,7 +22,7 @@ public class ModBlockTagGenerator extends BlockTagsProvider  {
     @Override
     protected void addTags(HolderLookup.Provider pProvider) {
         tag(BlockTags.MINEABLE_WITH_PICKAXE)
-                .add(InitBlocks.OCEAN_BLOCK.get())
+                .add(InitBlocks.SPACE_BLOCK.get())
                 .add(InitBlocks.STORMY_BLOCK.get())
                 .add(InitBlocks.OCEAN_BLOCK.get());
     }
