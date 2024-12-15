@@ -11,6 +11,8 @@ public class ShaderedTab {
             event.accept(InitItems.SPACE_BLOCK);
             event.accept(InitItems.OCEAN_BLOCK);
             event.accept(InitItems.STORMY_BLOCK);
+            event.accept(InitItems.DARKNESS_BLOCK);
+            event.accept(InitItems.LIGHT_BLOCK);
         }
     }
 }

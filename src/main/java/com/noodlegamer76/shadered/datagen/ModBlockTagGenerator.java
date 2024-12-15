@@ -24,6 +24,8 @@ public class ModBlockTagGenerator extends BlockTagsProvider  {
         tag(BlockTags.MINEABLE_WITH_PICKAXE)
                 .add(InitBlocks.SPACE_BLOCK.get())
                 .add(InitBlocks.STORMY_BLOCK.get())
-                .add(InitBlocks.OCEAN_BLOCK.get());
+                .add(InitBlocks.OCEAN_BLOCK.get())
+                .add(InitBlocks.DARKNESS_BLOCK.get())
+                .add(InitBlocks.LIGHT_BLOCK.get());
     }
 }

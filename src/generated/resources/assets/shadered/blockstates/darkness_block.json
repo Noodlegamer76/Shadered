@@ -1,0 +1,7 @@
+{
+  "variants": {
+    "": {
+      "model": "shadered:block/darkness_block"
+    }
+  }
+}

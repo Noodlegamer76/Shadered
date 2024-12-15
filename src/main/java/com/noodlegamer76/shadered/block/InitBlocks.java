@@ -23,4 +23,10 @@ public class InitBlocks {
 
     public static final RegistryObject<Block> OCEAN_BLOCK = BLOCKS.register("ocean_block",
             () -> new OceanBlock(BlockBehaviour.Properties.copy(Blocks.STONE).mapColor(DyeColor.BLUE)));
+
+    public static final RegistryObject<Block> DARKNESS_BLOCK = BLOCKS.register("darkness_block",
+            () -> new Block(BlockBehaviour.Properties.copy(Blocks.STONE).mapColor(DyeColor.BLACK)));
+
+    public static final RegistryObject<Block> LIGHT_BLOCK = BLOCKS.register("light_block",
+            () -> new Block(BlockBehaviour.Properties.copy(Blocks.STONE).mapColor(DyeColor.WHITE).emissiveRendering((state, getter, pos) -> true)));
 }

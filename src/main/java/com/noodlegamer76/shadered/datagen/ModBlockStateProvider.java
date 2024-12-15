@@ -19,6 +19,7 @@ public class ModBlockStateProvider extends BlockStateProvider {
         blockWithItem(InitBlocks.SPACE_BLOCK);
         blockWithItem(InitBlocks.STORMY_BLOCK);
         blockWithItem(InitBlocks.OCEAN_BLOCK);
+        blockWithItem(InitBlocks.DARKNESS_BLOCK);
     }
     private void cutout(RegistryObject<Block> blockRegistryObject) {
         simpleBlock(blockRegistryObject.get(),

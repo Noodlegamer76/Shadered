@@ -3,6 +3,7 @@ package com.noodlegamer76.shadered.block;
 import com.noodlegamer76.shadered.entity.block.RenderTester;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.EntityBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -19,6 +20,7 @@ public class RenderTesterBlock extends Block implements EntityBlock {
     public BlockEntity newBlockEntity(BlockPos pPos, BlockState pState) {
         return new RenderTester(pPos, pState);
     }
+
     @Override
     public boolean skipRendering(BlockState pState, BlockState pAdjacentState, Direction pDirection) {
         return true;

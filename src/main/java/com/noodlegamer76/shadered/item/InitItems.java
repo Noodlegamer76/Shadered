@@ -23,4 +23,8 @@ public class InitItems {
             () -> new StormyBlockItem(InitBlocks.STORMY_BLOCK.get(), new Item.Properties()));
     public static final RegistryObject<Item> OCEAN_BLOCK = ITEMS.register("ocean_block",
             () -> new OceanBlockItem(InitBlocks.OCEAN_BLOCK.get(), new Item.Properties()));
+    public static final RegistryObject<Item> DARKNESS_BLOCK = ITEMS.register("darkness_block",
+            () -> new OceanBlockItem(InitBlocks.DARKNESS_BLOCK.get(), new Item.Properties()));
+    public static final RegistryObject<Item> LIGHT_BLOCK = ITEMS.register("light_block",
+            () -> new OceanBlockItem(InitBlocks.LIGHT_BLOCK.get(), new Item.Properties()));
 }

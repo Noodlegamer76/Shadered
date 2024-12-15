@@ -20,6 +20,8 @@ public class ModBlockLootTables extends BlockLootSubProvider {
         dropSelf(InitBlocks.SPACE_BLOCK.get());
         dropSelf(InitBlocks.STORMY_BLOCK.get());
         dropSelf(InitBlocks.OCEAN_BLOCK.get());
+        dropSelf(InitBlocks.DARKNESS_BLOCK.get());
+        dropSelf(InitBlocks.LIGHT_BLOCK.get());
     }
 
     @Override

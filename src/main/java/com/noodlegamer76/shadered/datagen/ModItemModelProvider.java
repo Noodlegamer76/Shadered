@@ -1,6 +1,8 @@
 package com.noodlegamer76.shadered.datagen;
 
 import com.noodlegamer76.shadered.ShaderedMod;
+import com.noodlegamer76.shadered.block.InitBlocks;
+import com.noodlegamer76.shadered.item.InitItems;
 import net.minecraft.data.PackOutput;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
@@ -18,6 +20,7 @@ public class ModItemModelProvider extends ItemModelProvider {
 
     @Override
     protected void registerModels() {
+        evenSimplerBlockItem(InitBlocks.LIGHT_BLOCK);
     }
 
     private ItemModelBuilder saplingItem(RegistryObject<Block> item) {

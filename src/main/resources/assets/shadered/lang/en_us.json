@@ -3,5 +3,7 @@
 
   "block.shadered.space_block": "Space Block",
   "block.shadered.stormy_block": "Stormy Block",
-  "block.shadered.ocean_block": "Ocean Block"
+  "block.shadered.ocean_block": "Ocean Block",
+  "block.shadered.darkness_block": "Darkness Block",
+  "block.shadered.light_block": "Light Block"
 }
