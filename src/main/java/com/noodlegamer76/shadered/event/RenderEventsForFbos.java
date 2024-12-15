@@ -6,6 +6,7 @@ import com.noodlegamer76.shadered.ShaderedMod;
 import com.noodlegamer76.shadered.client.util.RenderCube;
 import com.noodlegamer76.shadered.client.util.SkyBoxRenderer;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
@@ -15,6 +16,8 @@ import net.minecraftforge.fml.common.Mod;
 import org.lwjgl.opengl.GL44;
 
 import java.util.ArrayList;
+
+import static net.minecraft.client.renderer.blockentity.TheEndPortalRenderer.END_SKY_LOCATION;
 
 
 @Mod.EventBusSubscriber(modid = ShaderedMod.MODID, value = Dist.CLIENT)
@@ -26,9 +29,11 @@ public class RenderEventsForFbos {
     public static int spaceFbo;
     public static int stormyFbo;
     public static int oceanFbo;
+    public static int endSkyFbo;
     public static int spaceTexture;
     public static int stormyTexture;
     public static int oceanTexture;
+    public static int endSkyTexture;
     public static int width;
     public static int height;
 
@@ -38,6 +43,8 @@ public class RenderEventsForFbos {
     public static ArrayList<BlockPos> spacePositions = new ArrayList<>();
     public static ArrayList<BlockPos> stormyPositions = new ArrayList<>();
     public static ArrayList<BlockPos> oceanPositions = new ArrayList<>();
+    public static ArrayList<BlockPos> endPositions = new ArrayList<>();
+    public static ArrayList<BlockPos> endSkyPositions = new ArrayList<>();
     @SubscribeEvent
     public static void levelRenderEvent(RenderLevelStageEvent event) {
 
@@ -50,6 +57,7 @@ public class RenderEventsForFbos {
             spaceFbo = GlStateManager.glGenFramebuffers();
             stormyFbo = GlStateManager.glGenFramebuffers();
             oceanFbo = GlStateManager.glGenFramebuffers();
+            endSkyFbo = GlStateManager.glGenFramebuffers();
             GlStateManager._glBindFramebuffer(GL44.GL_FRAMEBUFFER, spaceFbo);
 
             //SPACE TEXTURE
@@ -91,6 +99,19 @@ public class RenderEventsForFbos {
             GlStateManager._texParameter(GL44.GL_TEXTURE_2D, GL44.GL_TEXTURE_MAG_FILTER, GL44.GL_LINEAR);
             GlStateManager._glFramebufferTexture2D(GL44.GL_FRAMEBUFFER, GL44.GL_COLOR_ATTACHMENT0, GL44.GL_TEXTURE_2D, oceanTexture, 0);
 
+            //END SKY TEXTURE
+            GlStateManager._glBindFramebuffer(GL44.GL_FRAMEBUFFER, endSkyFbo);
+
+            endSkyTexture = GlStateManager._genTexture();
+            RenderSystem.bindTexture(endSkyTexture);
+
+            GlStateManager._texImage2D(GL44.GL_TEXTURE_2D, 0, GL44.GL_RGBA,
+                    width, height,
+                    0, GL44.GL_RGBA, GL44.GL_UNSIGNED_BYTE, null);
+            GlStateManager._texParameter(GL44.GL_TEXTURE_2D, GL44.GL_TEXTURE_MIN_FILTER, GL44.GL_LINEAR);
+            GlStateManager._texParameter(GL44.GL_TEXTURE_2D, GL44.GL_TEXTURE_MAG_FILTER, GL44.GL_LINEAR);
+            GlStateManager._glFramebufferTexture2D(GL44.GL_FRAMEBUFFER, GL44.GL_COLOR_ATTACHMENT0, GL44.GL_TEXTURE_2D, endSkyTexture, 0);
+
             GlStateManager._glBindFramebuffer(GL44.GL_FRAMEBUFFER, current);
         }
 
@@ -109,6 +130,9 @@ public class RenderEventsForFbos {
             GlStateManager._glBindFramebuffer(GL44.GL_FRAMEBUFFER, oceanFbo);
             SkyBoxRenderer.renderBlockSkybox(event.getPoseStack(), OCEAN);
 
+            GlStateManager._glBindFramebuffer(GL44.GL_FRAMEBUFFER, endSkyFbo);
+            SkyBoxRenderer.renderEndSky(event.getPoseStack());
+
             GlStateManager._glBindFramebuffer(GL44.GL_FRAMEBUFFER, current);
         }
 
@@ -124,6 +148,11 @@ public class RenderEventsForFbos {
 
             RegisterShadersEvent.skybox.setSampler("Skybox", oceanTexture);
             RenderCube.renderSkyBlocks(event.getPoseStack(), oceanPositions, event.getPartialTick());
+
+            RegisterShadersEvent.skybox.setSampler("Skybox", endSkyTexture);
+            RenderCube.renderSkyBlocks(event.getPoseStack(), endSkyPositions, event.getPartialTick());
+
+            RenderCube.renderCubeWithRenderType(event.getPoseStack(), endPositions, event.getPartialTick(), RenderType.endPortal());
 
         }
 
@@ -192,6 +221,26 @@ public class RenderEventsForFbos {
             GlStateManager._texParameter(GL44.GL_TEXTURE_2D, GL44.GL_TEXTURE_MIN_FILTER, GL44.GL_LINEAR);
             GlStateManager._texParameter(GL44.GL_TEXTURE_2D, GL44.GL_TEXTURE_MAG_FILTER, GL44.GL_LINEAR);
             GlStateManager._glFramebufferTexture2D(GL44.GL_FRAMEBUFFER, GL44.GL_COLOR_ATTACHMENT0, GL44.GL_TEXTURE_2D, oceanTexture, 0);
+
+            //END SKY
+            GlStateManager._glDeleteFramebuffers(endSkyFbo);
+            endSkyFbo = GlStateManager.glGenFramebuffers();
+
+            GlStateManager._glBindFramebuffer(GL44.GL_FRAMEBUFFER, endSkyFbo);
+
+            GlStateManager._deleteTexture(endSkyTexture);
+
+            endSkyTexture = GlStateManager._genTexture();
+            RenderSystem.bindTexture(endSkyTexture);
+
+            GlStateManager._texImage2D(GL44.GL_TEXTURE_2D, 0, GL44.GL_RGBA,
+                    width, height,
+                    0, GL44.GL_RGBA, GL44.GL_UNSIGNED_BYTE, null);
+            GlStateManager._texParameter(GL44.GL_TEXTURE_2D, GL44.GL_TEXTURE_MIN_FILTER, GL44.GL_LINEAR);
+            GlStateManager._texParameter(GL44.GL_TEXTURE_2D, GL44.GL_TEXTURE_MAG_FILTER, GL44.GL_LINEAR);
+            GlStateManager._glFramebufferTexture2D(GL44.GL_FRAMEBUFFER, GL44.GL_COLOR_ATTACHMENT0, GL44.GL_TEXTURE_2D, endSkyTexture, 0);
+
+            GlStateManager._glBindFramebuffer(GL44.GL_FRAMEBUFFER, current);
         }
     }
 }

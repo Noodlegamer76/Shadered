@@ -18,13 +18,17 @@ public class InitItems {
     public static final RegistryObject<Item> RENDER_TESTER_BLOCK_ITEM = ITEMS.register("render_tester_block",
             () -> new BlockItem(InitBlocks.RENDER_TESTER_BLOCK.get(), new Item.Properties()));
     public static final RegistryObject<Item> SPACE_BLOCK = ITEMS.register("space_block",
-            () -> new SpaceBlockItem(InitBlocks.SPACE_BLOCK.get(), new Item.Properties()));
+            () -> new BlockItem(InitBlocks.SPACE_BLOCK.get(), new Item.Properties()));
     public static final RegistryObject<Item> STORMY_BLOCK = ITEMS.register("stormy_block",
-            () -> new StormyBlockItem(InitBlocks.STORMY_BLOCK.get(), new Item.Properties()));
+            () -> new BlockItem(InitBlocks.STORMY_BLOCK.get(), new Item.Properties()));
     public static final RegistryObject<Item> OCEAN_BLOCK = ITEMS.register("ocean_block",
-            () -> new OceanBlockItem(InitBlocks.OCEAN_BLOCK.get(), new Item.Properties()));
+            () -> new BlockItem(InitBlocks.OCEAN_BLOCK.get(), new Item.Properties()));
     public static final RegistryObject<Item> DARKNESS_BLOCK = ITEMS.register("darkness_block",
-            () -> new OceanBlockItem(InitBlocks.DARKNESS_BLOCK.get(), new Item.Properties()));
+            () -> new BlockItem(InitBlocks.DARKNESS_BLOCK.get(), new Item.Properties()));
     public static final RegistryObject<Item> LIGHT_BLOCK = ITEMS.register("light_block",
-            () -> new OceanBlockItem(InitBlocks.LIGHT_BLOCK.get(), new Item.Properties()));
+            () -> new BlockItem(InitBlocks.LIGHT_BLOCK.get(), new Item.Properties()));
+    public static final RegistryObject<Item> END_BLOCK = ITEMS.register("end_block",
+            () -> new BlockItem(InitBlocks.END_BLOCK.get(), new Item.Properties()));
+    public static final RegistryObject<Item> END_SKY_BLOCK = ITEMS.register("end_sky_block",
+            () -> new BlockItem(InitBlocks.END_SKY_BLOCK.get(), new Item.Properties()));
 }

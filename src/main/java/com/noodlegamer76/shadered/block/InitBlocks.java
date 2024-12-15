@@ -29,4 +29,10 @@ public class InitBlocks {
 
     public static final RegistryObject<Block> LIGHT_BLOCK = BLOCKS.register("light_block",
             () -> new Block(BlockBehaviour.Properties.copy(Blocks.STONE).mapColor(DyeColor.WHITE).emissiveRendering((state, getter, pos) -> true)));
+
+    public static final RegistryObject<Block> END_BLOCK = BLOCKS.register("end_block",
+            () -> new EndBlock(BlockBehaviour.Properties.copy(Blocks.STONE).mapColor(DyeColor.BLACK)));
+
+    public static final RegistryObject<Block> END_SKY_BLOCK = BLOCKS.register("end_sky_block",
+            () -> new EndSkyBlock(BlockBehaviour.Properties.copy(Blocks.STONE).mapColor(DyeColor.PURPLE)));
 }

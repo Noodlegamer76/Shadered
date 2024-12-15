@@ -7,6 +7,7 @@ import com.noodlegamer76.shadered.event.RenderEventsForFbos;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
+import net.minecraft.world.phys.Vec3;
 
 public class SpaceBlockRenderer<T extends RenderTester> implements BlockEntityRenderer<SpaceBlockEntity> {
 
@@ -16,6 +17,10 @@ public class SpaceBlockRenderer<T extends RenderTester> implements BlockEntityRe
     @Override
     public void render(SpaceBlockEntity pBlockEntity, float pPartialTick, PoseStack pPoseStack, MultiBufferSource pBuffer, int pPackedLight, int pPackedOverlay) {
         RenderEventsForFbos.spacePositions.add(pBlockEntity.getBlockPos());
+    }
 
+    @Override
+    public boolean shouldRender(SpaceBlockEntity pBlockEntity, Vec3 pCameraPos) {
+        return true;
     }
 }

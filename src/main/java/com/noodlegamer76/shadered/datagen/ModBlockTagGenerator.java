@@ -26,6 +26,8 @@ public class ModBlockTagGenerator extends BlockTagsProvider  {
                 .add(InitBlocks.STORMY_BLOCK.get())
                 .add(InitBlocks.OCEAN_BLOCK.get())
                 .add(InitBlocks.DARKNESS_BLOCK.get())
-                .add(InitBlocks.LIGHT_BLOCK.get());
+                .add(InitBlocks.LIGHT_BLOCK.get())
+                .add(InitBlocks.END_BLOCK.get())
+                .add(InitBlocks.END_SKY_BLOCK.get());
     }
 }

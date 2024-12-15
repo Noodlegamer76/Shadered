@@ -6,6 +6,7 @@ import com.mojang.math.Axis;
 import com.noodlegamer76.shadered.event.RegisterShadersEvent;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.block.state.BlockState;
@@ -76,6 +77,64 @@ public class RenderCube {
         }
 
         tesselator.end();
+
+        positions.clear();
+    }
+
+    public static void renderCubeWithRenderType(PoseStack poseStack, ArrayList<BlockPos> positions, float partialTicks, RenderType renderType) {
+        VertexConsumer vertexConsumer = Minecraft.getInstance().renderBuffers().bufferSource().getBuffer(renderType);
+
+        Vec3 camera = Minecraft.getInstance().gameRenderer.getMainCamera().getPosition();
+
+        RenderSystem.depthMask(true);
+        RenderSystem.enableDepthTest();
+
+        for (BlockPos pos : positions) {
+            for (int i = 0; i < 6; i++) {
+                // Check for backface culling based on face direction
+                if (shouldCull(pos, i)) {
+                    continue; // Skip rendering backfaces
+                }
+
+                poseStack.pushPose();
+                poseStack.translate(0.5, 0.5, 0.5);
+
+                poseStack.translate(-camera.x, -camera.y, -camera.z);
+                poseStack.translate(pos.getX(), pos.getY(), pos.getZ());
+
+                switch (i) {
+                    case 0:
+                        break;
+                    case 1:
+                        poseStack.mulPose(Axis.XP.rotationDegrees(90));
+                        break;
+                    case 2:
+                        poseStack.mulPose(Axis.XP.rotationDegrees(180));
+                        break;
+                    case 3:
+                        poseStack.mulPose(Axis.XP.rotationDegrees(-90));
+                        break;
+                    case 4:
+                        poseStack.mulPose(Axis.ZP.rotationDegrees(-90));
+                        break;
+                    case 5:
+                        poseStack.mulPose(Axis.ZN.rotationDegrees(-90));
+                        break;
+                }
+
+                poseStack.translate(0, -0.5, 0);
+                poseStack.scale(0.5f, 0.5f, 0.5f);
+
+                Matrix4f matrix4f = poseStack.last().pose();
+
+                vertexConsumer.vertex(matrix4f, -1, 0, -1).endVertex();
+                vertexConsumer.vertex(matrix4f, 1, 0, -1).endVertex();
+                vertexConsumer.vertex(matrix4f, 1, 0, 1).endVertex();
+                vertexConsumer.vertex(matrix4f, -1, 0, 1).endVertex();
+
+                poseStack.popPose();
+            }
+        }
 
         positions.clear();
     }

@@ -4,12 +4,10 @@ import com.mojang.logging.LogUtils;
 import com.noodlegamer76.shadered.block.InitBlocks;
 import com.noodlegamer76.shadered.block.StormyBlock;
 import com.noodlegamer76.shadered.client.model.BlockModel;
-import com.noodlegamer76.shadered.client.renderer.block.OceanBlockRenderer;
-import com.noodlegamer76.shadered.client.renderer.block.SpaceBlockRenderer;
-import com.noodlegamer76.shadered.client.renderer.block.StormyBlockRenderer;
-import com.noodlegamer76.shadered.client.renderer.block.TestRenderer;
+import com.noodlegamer76.shadered.client.renderer.block.*;
 import com.noodlegamer76.shadered.creativetabs.InitCreativeTabs;
 import com.noodlegamer76.shadered.creativetabs.ShaderedTab;
+import com.noodlegamer76.shadered.entity.block.EndBlockEntity;
 import com.noodlegamer76.shadered.entity.block.InitBlockEntities;
 import com.noodlegamer76.shadered.item.InitItems;
 import net.minecraft.resources.ResourceLocation;
@@ -96,6 +94,8 @@ public class ShaderedMod
             event.registerBlockEntityRenderer(InitBlockEntities.SPACE_BLOCK.get(), SpaceBlockRenderer::new);
             event.registerBlockEntityRenderer(InitBlockEntities.STORMY_BLOCK.get(), StormyBlockRenderer::new);
             event.registerBlockEntityRenderer(InitBlockEntities.OCEAN_BLOCK.get(), OceanBlockRenderer::new);
+            event.registerBlockEntityRenderer(InitBlockEntities.END_BLOCK.get(), EndBlockRenderer::new);
+            event.registerBlockEntityRenderer(InitBlockEntities.END_SKY_BLOCK.get(), EndSkyBlockRenderer::new);
         }
 
         @SubscribeEvent
