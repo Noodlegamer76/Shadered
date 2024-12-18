@@ -119,25 +119,33 @@ public class RenderEventsForFbos {
             width = Minecraft.getInstance().getWindow().getWidth();
             height = Minecraft.getInstance().getWindow().getHeight();
             changeTextureSize();
-
-            int current = GL44.glGetInteger(GL44.GL_FRAMEBUFFER_BINDING);
-            GlStateManager._glBindFramebuffer(GL44.GL_FRAMEBUFFER, spaceFbo);
-            SkyBoxRenderer.renderBlockSkybox(event.getPoseStack(), NEBULA);
-
-            GlStateManager._glBindFramebuffer(GL44.GL_FRAMEBUFFER, stormyFbo);
-            SkyBoxRenderer.renderBlockSkybox(event.getPoseStack(), STORMY);
-
-            GlStateManager._glBindFramebuffer(GL44.GL_FRAMEBUFFER, oceanFbo);
-            SkyBoxRenderer.renderBlockSkybox(event.getPoseStack(), OCEAN);
-
-            GlStateManager._glBindFramebuffer(GL44.GL_FRAMEBUFFER, endSkyFbo);
-            SkyBoxRenderer.renderEndSky(event.getPoseStack());
-
-            GlStateManager._glBindFramebuffer(GL44.GL_FRAMEBUFFER, current);
         }
 
         if (event.getStage() == RenderLevelStageEvent.Stage.AFTER_BLOCK_ENTITIES) {
 
+            int current = GL44.glGetInteger(GL44.GL_FRAMEBUFFER_BINDING);
+
+            if (!spacePositions.isEmpty()) {
+                GlStateManager._glBindFramebuffer(GL44.GL_FRAMEBUFFER, spaceFbo);
+                SkyBoxRenderer.renderBlockSkybox(event.getPoseStack(), NEBULA);
+            }
+
+            if (!stormyPositions.isEmpty()) {
+                GlStateManager._glBindFramebuffer(GL44.GL_FRAMEBUFFER, stormyFbo);
+                SkyBoxRenderer.renderBlockSkybox(event.getPoseStack(), STORMY);
+            }
+
+            if (!oceanPositions.isEmpty()) {
+                GlStateManager._glBindFramebuffer(GL44.GL_FRAMEBUFFER, oceanFbo);
+                SkyBoxRenderer.renderBlockSkybox(event.getPoseStack(), OCEAN);
+            }
+
+            if (!endSkyPositions.isEmpty()) {
+                GlStateManager._glBindFramebuffer(GL44.GL_FRAMEBUFFER, endSkyFbo);
+                SkyBoxRenderer.renderEndSky(event.getPoseStack());
+            }
+
+            GlStateManager._glBindFramebuffer(GL44.GL_FRAMEBUFFER, current);
 
             //BATCH RENDER SKY BLOCKS HERE
             RegisterShadersEvent.skybox.setSampler("Skybox", spaceTexture);

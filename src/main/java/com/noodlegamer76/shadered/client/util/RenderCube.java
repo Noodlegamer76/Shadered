@@ -9,6 +9,7 @@ import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
 import org.joml.Matrix4f;
@@ -91,9 +92,8 @@ public class RenderCube {
 
         for (BlockPos pos : positions) {
             for (int i = 0; i < 6; i++) {
-                // Check for backface culling based on face direction
                 if (shouldCull(pos, i)) {
-                    continue; // Skip rendering backfaces
+                    continue;
                 }
 
                 poseStack.pushPose();
