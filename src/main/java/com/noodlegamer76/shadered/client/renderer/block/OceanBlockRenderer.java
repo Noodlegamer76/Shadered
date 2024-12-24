@@ -19,6 +19,7 @@ public class OceanBlockRenderer<T extends RenderTester> implements BlockEntityRe
     @Override
     public void render(OceanBlockEntity pBlockEntity, float pPartialTick, PoseStack pPoseStack, MultiBufferSource pBuffer, int pPackedLight, int pPackedOverlay) {
         RenderEventsForFbos.oceanPositions.add(pBlockEntity.getBlockPos());
+        RenderEventsForFbos.oceanPose.add(pPoseStack.last().pose());
     }
 
     @Override

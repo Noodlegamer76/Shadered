@@ -18,7 +18,7 @@ import java.util.ArrayList;
 
 public class RenderCube {
 
-    public static void renderSkyBlocks(PoseStack poseStack, ArrayList<BlockPos> positions, float partialTicks) {
+    public static void renderSkyBlocks(ArrayList<BlockPos> positions, float partialTicks, ArrayList<Matrix4f> pose) {
         Tesselator tesselator = Tesselator.getInstance();
         BufferBuilder bufferBuilder = tesselator.getBuilder();
 
@@ -29,21 +29,21 @@ public class RenderCube {
         RenderSystem.setShader(() -> RegisterShadersEvent.skybox);
 
         bufferBuilder.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION);
+        PoseStack poseStack = new PoseStack();
 
-        for (BlockPos pos : positions) {
-            for (int i = 0; i < 6; i++) {
+        for (int i = 0; i < positions.size(); i++) {
+            BlockPos pos = positions.get(i);
+            for (int j = 0; j < 6; j++) {
                 // Check for backface culling based on face direction
-                if (shouldCull(pos, i)) {
+                if (shouldCull(pos, j)) {
                     continue; // Skip rendering backfaces
                 }
 
                 poseStack.pushPose();
+                poseStack.mulPoseMatrix(pose.get(i));
                 poseStack.translate(0.5, 0.5, 0.5);
 
-                poseStack.translate(-camera.x, -camera.y, -camera.z);
-                poseStack.translate(pos.getX(), pos.getY(), pos.getZ());
-
-                switch (i) {
+                switch (j) {
                     case 0:
                         break;
                     case 1:
@@ -80,29 +80,30 @@ public class RenderCube {
         tesselator.end();
 
         positions.clear();
+        pose.clear();
     }
 
-    public static void renderCubeWithRenderType(PoseStack poseStack, ArrayList<BlockPos> positions, float partialTicks, RenderType renderType) {
+    public static void renderCubeWithRenderType(ArrayList<BlockPos> positions, float partialTicks, RenderType renderType, ArrayList<Matrix4f> pose) {
         VertexConsumer vertexConsumer = Minecraft.getInstance().renderBuffers().bufferSource().getBuffer(renderType);
 
         Vec3 camera = Minecraft.getInstance().gameRenderer.getMainCamera().getPosition();
 
         RenderSystem.depthMask(true);
         RenderSystem.enableDepthTest();
-
-        for (BlockPos pos : positions) {
-            for (int i = 0; i < 6; i++) {
-                if (shouldCull(pos, i)) {
+        PoseStack poseStack = new PoseStack();
+        for (int i = 0; i < positions.size(); i++) {
+            BlockPos pos = positions.get(i);
+            for (int j = 0; j < 6; j++) {
+                if (shouldCull(pos, j)) {
                     continue;
                 }
 
                 poseStack.pushPose();
+
+                poseStack.mulPoseMatrix(pose.get(i));
                 poseStack.translate(0.5, 0.5, 0.5);
 
-                poseStack.translate(-camera.x, -camera.y, -camera.z);
-                poseStack.translate(pos.getX(), pos.getY(), pos.getZ());
-
-                switch (i) {
+                switch (j) {
                     case 0:
                         break;
                     case 1:
@@ -137,6 +138,7 @@ public class RenderCube {
         }
 
         positions.clear();
+        pose.clear();
     }
 
     private static boolean shouldCull(BlockPos pos, int faceIndex) {

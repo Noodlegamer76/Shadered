@@ -17,6 +17,7 @@ public class SpaceBlockRenderer<T extends RenderTester> implements BlockEntityRe
     @Override
     public void render(SpaceBlockEntity pBlockEntity, float pPartialTick, PoseStack pPoseStack, MultiBufferSource pBuffer, int pPackedLight, int pPackedOverlay) {
         RenderEventsForFbos.spacePositions.add(pBlockEntity.getBlockPos());
+        RenderEventsForFbos.spacePose.add(pPoseStack.last().pose());
     }
 
     @Override

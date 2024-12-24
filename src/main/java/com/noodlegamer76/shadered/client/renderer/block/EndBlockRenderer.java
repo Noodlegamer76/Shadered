@@ -16,6 +16,7 @@ public class EndBlockRenderer implements BlockEntityRenderer<EndBlockEntity> {
     @Override
     public void render(EndBlockEntity pBlockEntity, float pPartialTick, PoseStack pPoseStack, MultiBufferSource pBuffer, int pPackedLight, int pPackedOverlay) {
         RenderEventsForFbos.endPositions.add(pBlockEntity.getBlockPos());
+        RenderEventsForFbos.endPose.add(pPoseStack.last().pose());
     }
 
     @Override

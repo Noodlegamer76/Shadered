@@ -16,6 +16,7 @@ public class EndSkyBlockRenderer implements BlockEntityRenderer<EndSkyBlockEntit
     @Override
     public void render(EndSkyBlockEntity pBlockEntity, float pPartialTick, PoseStack pPoseStack, MultiBufferSource pBuffer, int pPackedLight, int pPackedOverlay) {
         RenderEventsForFbos.endSkyPositions.add(pBlockEntity.getBlockPos());
+        RenderEventsForFbos.endSkyPose.add(pPoseStack.last().pose());
     }
 
     @Override

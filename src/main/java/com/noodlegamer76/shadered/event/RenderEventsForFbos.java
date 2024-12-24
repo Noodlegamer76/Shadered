@@ -2,6 +2,7 @@ package com.noodlegamer76.shadered.event;
 
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.blaze3d.vertex.PoseStack;
 import com.noodlegamer76.shadered.ShaderedMod;
 import com.noodlegamer76.shadered.client.util.RenderCube;
 import com.noodlegamer76.shadered.client.util.SkyBoxRenderer;
@@ -13,6 +14,7 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.RenderLevelStageEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
+import org.joml.Matrix4f;
 import org.lwjgl.opengl.GL44;
 
 import java.util.ArrayList;
@@ -45,6 +47,12 @@ public class RenderEventsForFbos {
     public static ArrayList<BlockPos> oceanPositions = new ArrayList<>();
     public static ArrayList<BlockPos> endPositions = new ArrayList<>();
     public static ArrayList<BlockPos> endSkyPositions = new ArrayList<>();
+
+    public static ArrayList<Matrix4f> spacePose = new ArrayList<>();
+    public static ArrayList<Matrix4f> stormyPose = new ArrayList<>();
+    public static ArrayList<Matrix4f> oceanPose = new ArrayList<>();
+    public static ArrayList<Matrix4f> endPose = new ArrayList<>();
+    public static ArrayList<Matrix4f> endSkyPose = new ArrayList<>();
     @SubscribeEvent
     public static void levelRenderEvent(RenderLevelStageEvent event) {
 
@@ -149,18 +157,18 @@ public class RenderEventsForFbos {
 
             //BATCH RENDER SKY BLOCKS HERE
             RegisterShadersEvent.skybox.setSampler("Skybox", spaceTexture);
-            RenderCube.renderSkyBlocks(event.getPoseStack(), spacePositions, event.getPartialTick());
+            RenderCube.renderSkyBlocks(spacePositions, event.getPartialTick(), spacePose);
 
             RegisterShadersEvent.skybox.setSampler("Skybox", stormyTexture);
-            RenderCube.renderSkyBlocks(event.getPoseStack(), stormyPositions, event.getPartialTick());
+            RenderCube.renderSkyBlocks(stormyPositions, event.getPartialTick(), stormyPose);
 
             RegisterShadersEvent.skybox.setSampler("Skybox", oceanTexture);
-            RenderCube.renderSkyBlocks(event.getPoseStack(), oceanPositions, event.getPartialTick());
+            RenderCube.renderSkyBlocks(oceanPositions, event.getPartialTick(), oceanPose);
 
             RegisterShadersEvent.skybox.setSampler("Skybox", endSkyTexture);
-            RenderCube.renderSkyBlocks(event.getPoseStack(), endSkyPositions, event.getPartialTick());
+            RenderCube.renderSkyBlocks(endSkyPositions, event.getPartialTick(), endSkyPose);
 
-            RenderCube.renderCubeWithRenderType(event.getPoseStack(), endPositions, event.getPartialTick(), RenderType.endPortal());
+            RenderCube.renderCubeWithRenderType(endPositions, event.getPartialTick(), RenderType.endPortal(), endPose);
 
         }
 
