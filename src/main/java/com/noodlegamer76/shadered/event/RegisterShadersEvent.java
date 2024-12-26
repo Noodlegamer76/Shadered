@@ -16,6 +16,7 @@ import java.io.IOException;
 public class RegisterShadersEvent {
     public static ShaderInstance TEST;
     public static ShaderInstance skybox;
+    public static ShaderInstance pointLight;
 
     @SubscribeEvent
     public static void registerShaders(net.minecraftforge.client.event.RegisterShadersEvent event) throws IOException {
@@ -24,5 +25,10 @@ public class RegisterShadersEvent {
                         new ResourceLocation(ShaderedMod.MODID, "skybox"),
                         DefaultVertexFormat.POSITION),
                 (e) -> skybox = e);
+
+        event.registerShader(new ShaderInstance(event.getResourceProvider(),
+                        new ResourceLocation(ShaderedMod.MODID, "point_light"),
+                        DefaultVertexFormat.POSITION),
+                (e) -> pointLight = e);
     }
 }

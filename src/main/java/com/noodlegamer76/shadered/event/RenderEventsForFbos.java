@@ -19,6 +19,7 @@ import org.lwjgl.opengl.GL44;
 
 import java.util.ArrayList;
 
+import static com.mojang.blaze3d.platform.GlConst.GL_COLOR_BUFFER_BIT;
 import static net.minecraft.client.renderer.blockentity.TheEndPortalRenderer.END_SKY_LOCATION;
 
 
@@ -175,8 +176,23 @@ public class RenderEventsForFbos {
         if (event.getStage() == RenderLevelStageEvent.Stage.AFTER_WEATHER) {
             previousSizeY = height;
             previousSizeX = width;
-        }
 
+            int current = GL44.glGetInteger(GL44.GL_FRAMEBUFFER_BINDING);
+
+            GlStateManager._glBindFramebuffer(GL44.GL_FRAMEBUFFER, spaceFbo);
+            GlStateManager._clear(GL_COLOR_BUFFER_BIT, true);
+
+            GlStateManager._glBindFramebuffer(GL44.GL_FRAMEBUFFER, stormyFbo);
+            GlStateManager._clear(GL_COLOR_BUFFER_BIT, true);
+
+            GlStateManager._glBindFramebuffer(GL44.GL_FRAMEBUFFER, oceanFbo);
+            GlStateManager._clear(GL_COLOR_BUFFER_BIT, true);
+
+            GlStateManager._glBindFramebuffer(GL44.GL_FRAMEBUFFER, endSkyFbo);
+            GlStateManager._clear(GL_COLOR_BUFFER_BIT, true);
+
+            GlStateManager._glBindFramebuffer(GL44.GL_FRAMEBUFFER, current);
+        }
     }
 
 
