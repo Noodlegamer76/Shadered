@@ -17,19 +17,8 @@ public class RenderEventsForLights {
     @SubscribeEvent
     public static void levelRenderEvent(RenderLevelStageEvent event) {
         if (event.getStage() == RenderLevelStageEvent.Stage.AFTER_WEATHER) {
-            lights.add(new Light().setAlpha((float) Math.random() * 100.0f).setColor(new Vector3f((float) Math.random() * 10, (float) Math.random() * 10, (float) Math.random() * 10)).setPosition(new Vector3f(0 * 3, -60, 0 * 3)));
-            lights.add(new Light().setAlpha((float) Math.random() * 100.0f).setColor(new Vector3f((float) Math.random() * 10, (float) Math.random() * 10, (float) Math.random() * 10)).setPosition(new Vector3f(10 * 3, -60, 0 * 3)));
-            lights.add(new Light().setAlpha((float) Math.random() * 100.0f).setColor(new Vector3f((float) Math.random() * 10, (float) Math.random() * 10, (float) Math.random() * 10)).setPosition(new Vector3f(0 * 3, -60, 10 * 3)));
-            lights.add(new Light().setAlpha((float) Math.random() * 100.0f).setColor(new Vector3f((float) Math.random() * 10, (float) Math.random() * 10, (float) Math.random() * 10)).setPosition(new Vector3f(20 * 3, -60, 10 * 3)));
-            lights.add(new Light().setAlpha((float) Math.random() * 100.0f).setColor(new Vector3f((float) Math.random() * 10, (float) Math.random() * 10, (float) Math.random() * 10)).setPosition(new Vector3f(30 * 3, -60, 10 * 3)));
-            lights.add(new Light().setAlpha((float) Math.random() * 100.0f).setColor(new Vector3f((float) Math.random() * 10, (float) Math.random() * 10, (float) Math.random() * 10)).setPosition(new Vector3f(10 * 3, -60, 10 * 3)));
-            lights.add(new Light().setAlpha((float) Math.random() * 100.0f).setColor(new Vector3f((float) Math.random() * 10, (float) Math.random() * 10, (float) Math.random() * 10)).setPosition(new Vector3f(20 * 3, -60, 30 * 3)));
-            lights.add(new Light().setAlpha((float) Math.random() * 100.0f).setColor(new Vector3f((float) Math.random() * 10, (float) Math.random() * 10, (float) Math.random() * 10)).setPosition(new Vector3f(10 * 3, -60, 30 * 3)));
-            lights.add(new Light().setAlpha((float) Math.random() * 100.0f).setColor(new Vector3f((float) Math.random() * 10, (float) Math.random() * 10, (float) Math.random() * 10)).setPosition(new Vector3f(0 * 3, -60, 20 * 3)));
-            lights.add(new Light().setAlpha((float) Math.random() * 100.0f).setColor(new Vector3f((float) Math.random() * 10, (float) Math.random() * 10, (float) Math.random() * 10)).setPosition(new Vector3f(0 * 3, -60, 30 * 3)));
-            lights.add(new Light().setAlpha((float) Math.random() * 100.0f).setColor(new Vector3f((float) Math.random() * 10, (float) Math.random() * 10, (float) Math.random() * 10)).setPosition(new Vector3f(10 * 3, -60, 20 * 3)));
-            lights.add(new Light().setAlpha((float) Math.random() * 100.0f).setColor(new Vector3f((float) Math.random() * 10, (float) Math.random() * 10, (float) Math.random() * 10)).setPosition(new Vector3f(20 * 3, -60, 20 * 3)));
 
+            //Render Point Lights
             for (Light light: lights) {
                 light.render(event.getPoseStack());
             }
