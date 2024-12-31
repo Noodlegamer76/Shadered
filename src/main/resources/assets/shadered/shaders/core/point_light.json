@@ -17,6 +17,7 @@
         { "name": "LightColor", "type": "float", "count": 4, "values": [ 1.0, 1.0, 1.0, 1.0 ] },
         { "name": "ScreenSize", "type": "float",     "count": 2,  "values": [ 1.0, 1.0 ] },
         { "name": "CameraPos", "type": "float",     "count": 3,  "values": [ 0.0, 0.0, 0.0 ] },
-        { "name": "LightPos", "type": "float",     "count": 3,  "values": [ 0.0, 0.0, 0.0 ] }
+        { "name": "LightPos", "type": "float",     "count": 3,  "values": [ 0.0, 0.0, 0.0 ] },
+        { "name": "PointVariables", "type": "float",     "count": 3,  "values": [ 0.0, 0.0, 0.0 ] }
     ]
 }

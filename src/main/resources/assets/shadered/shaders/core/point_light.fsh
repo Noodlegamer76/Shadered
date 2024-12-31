@@ -7,6 +7,7 @@ uniform mat4 ModelView2;
 uniform vec2 ScreenSize;
 uniform vec3 CameraPos;
 uniform vec3 LightPos;
+uniform vec3 PointVariables;
 
 out vec4 fragColor;
 
@@ -28,7 +29,7 @@ void main() {
     vec3 LightDir = LightPos - worldPos;
     float fragDist = length(LightDir);
 
-    float attenuation = 1.0 / (1.0 + 0.1 * fragDist + 0.01 * fragDist * fragDist);
+    float attenuation = PointVariables.r / (PointVariables.r + PointVariables.g * fragDist + PointVariables.b * fragDist * fragDist);
 
     fragColor = vec4(LightColor.rgb * attenuation, LightColor.a * attenuation);
 }
