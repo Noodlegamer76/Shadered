@@ -4,7 +4,7 @@ import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.noodlegamer76.shadered.client.util.RenderCubeAroundPlayer;
-import com.noodlegamer76.shadered.event.RegisterShadersEvent;
+import com.noodlegamer76.shadered.event.RenderEventsForMaps;
 import net.minecraft.client.GraphicsStatus;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.ShaderInstance;
@@ -16,6 +16,7 @@ public class Light {
     private Vector3f color = new Vector3f(1.0f, 1.0f, 1.0f);
     private float alpha = 1.0f;
     private Vector3f position = new Vector3f(0.0f, 0.0f, 0.0f);
+    private boolean subtract = false;
 
     public Light setColor(Vector3f color) {
         this.color = color;
@@ -32,6 +33,15 @@ public class Light {
         return this;
     }
 
+    public Light setSubtract() {
+        this.subtract = true;
+        return this;
+    }
+
+    public boolean getSubtract() {
+        return subtract;
+    }
+
     public void render(PoseStack poseStack, ShaderInstance lightShader) {
 
         RenderSystem.setShader(() -> lightShader);
@@ -41,23 +51,27 @@ public class Light {
 
         setUniforms(lightShader, poseStack);
 
-        GlStateManager.glActiveTexture(GL44.GL_TEXTURE0);
-        GlStateManager._bindTexture(Minecraft.getInstance().getMainRenderTarget().getDepthTextureId());
-        GlStateManager._glUniform1i(GL44.glGetUniformLocation(lightShader.getId(), "Depth"), 0);
+            lightShader.setSampler("Depth", Minecraft.getInstance().getMainRenderTarget().getDepthTextureId());
+            RenderCubeAroundPlayer.renderCubeWithShader(poseStack);
 
-        RenderCubeAroundPlayer.renderCubeWithShader(poseStack);
-
-        RenderSystem.disableBlend();
-        RenderSystem.enableDepthTest();
 
         //to render this before the depth buffer is cleared
         GL44.glMemoryBarrier(GL44.GL_FRAMEBUFFER_BARRIER_BIT);
+        
+        RenderSystem.disableBlend();
+        RenderSystem.enableDepthTest();
+
     }
 
     protected void setUniforms(ShaderInstance light, PoseStack poseStack) {
 
-        Vector3f cameraPos = Minecraft.getInstance().gameRenderer.getMainCamera().getPosition().toVector3f();
+        Vector3f pos = Minecraft.getInstance().gameRenderer.getMainCamera().getPosition().toVector3f();
         Matrix4f matrix4f2 = poseStack.last().pose();
+
+        //use this number to fix precision issues at large distances, although it repeats lights every [mod] blocks
+        double mod = 20000;
+        float[] cameraPos = {(float) (pos.x % mod), (float) (pos.y % mod), (float) (pos.z % mod)};
+        Vector3f position = new Vector3f((float) (this.position.x % mod), (float) (this.position.y % mod), (float) (this.position.z % mod));
 
         if (light.getUniform("CameraPos") != null) {
             light.getUniform("CameraPos").set(cameraPos);

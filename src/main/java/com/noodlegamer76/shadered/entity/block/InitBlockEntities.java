@@ -29,4 +29,7 @@ public class InitBlockEntities {
 
     public static final RegistryObject<BlockEntityType<EndSkyBlockEntity>> END_SKY_BLOCK = BLOCK_ENTITIES.register("end_sky_block",
             () -> BlockEntityType.Builder.of(EndSkyBlockEntity::new, InitBlocks.END_SKY_BLOCK.get()).build(null));
+
+    public static final RegistryObject<BlockEntityType<DarkSourceEntity>> DARK_SOURCE = BLOCK_ENTITIES.register("dark_source",
+            () -> BlockEntityType.Builder.of(DarkSourceEntity::new, InitBlocks.DARK_SOURCE.get()).build(null));
 }

@@ -54,10 +54,10 @@ public class RenderCubeAroundPlayer {
             }
             Matrix4f matrix4f = poseStack.last().pose();
             bufferbuilder.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION);
-            bufferbuilder.vertex(matrix4f, -30, -30, -30).endVertex();
-            bufferbuilder.vertex(matrix4f, -30, -30, 30).endVertex();
-            bufferbuilder.vertex(matrix4f, 30, -30, 30).endVertex();
-            bufferbuilder.vertex(matrix4f, 30, -30, -30).endVertex();
+            bufferbuilder.vertex(matrix4f, -1, -1, -1).endVertex();
+            bufferbuilder.vertex(matrix4f, -1, -1, 1).endVertex();
+            bufferbuilder.vertex(matrix4f, 1, -1, 1).endVertex();
+            bufferbuilder.vertex(matrix4f, 1, -1, -1).endVertex();
             tesselator.end();
             poseStack.popPose();
         }

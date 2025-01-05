@@ -1,5 +1,7 @@
 #version 150
 
+precision highp float;
+
 uniform sampler2D Depth;
 uniform vec4 LightColor;
 uniform mat4 ProjMat;
@@ -16,6 +18,7 @@ vec3 projectAndDivide(mat4 projectionMatrix, vec3 position) {
     return homogeneousPos.xyz / homogeneousPos.w;
 }
 
+//BEHOLD! the least efficient point light you have ever seen
 void main() {
 
     vec2 normCoords = gl_FragCoord.xy / ScreenSize;

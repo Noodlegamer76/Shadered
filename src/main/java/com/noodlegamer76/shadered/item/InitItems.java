@@ -31,4 +31,6 @@ public class InitItems {
             () -> new BlockItem(InitBlocks.END_BLOCK.get(), new Item.Properties()));
     public static final RegistryObject<Item> END_SKY_BLOCK = ITEMS.register("end_sky_block",
             () -> new BlockItem(InitBlocks.END_SKY_BLOCK.get(), new Item.Properties()));
+    public static final RegistryObject<Item> DARK_SOURCE = ITEMS.register("dark_source",
+            () -> new BlockItem(InitBlocks.DARK_SOURCE.get(), new Item.Properties()));
 }

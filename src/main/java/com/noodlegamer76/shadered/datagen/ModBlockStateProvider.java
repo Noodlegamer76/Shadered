@@ -22,6 +22,7 @@ public class ModBlockStateProvider extends BlockStateProvider {
         blockWithItem(InitBlocks.DARKNESS_BLOCK);
         blockWithItem(InitBlocks.END_BLOCK);
         blockWithItem(InitBlocks.END_SKY_BLOCK);
+        blockWithItem(InitBlocks.DARK_SOURCE);
     }
     private void cutout(RegistryObject<Block> blockRegistryObject) {
         simpleBlock(blockRegistryObject.get(),

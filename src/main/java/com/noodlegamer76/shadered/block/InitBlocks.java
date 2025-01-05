@@ -35,4 +35,7 @@ public class InitBlocks {
 
     public static final RegistryObject<Block> END_SKY_BLOCK = BLOCKS.register("end_sky_block",
             () -> new EndSkyBlock(BlockBehaviour.Properties.copy(Blocks.STONE).mapColor(DyeColor.PURPLE)));
+
+    public static final RegistryObject<Block> DARK_SOURCE = BLOCKS.register("dark_source",
+            () -> new DarkSource(BlockBehaviour.Properties.copy(Blocks.STONE).mapColor(DyeColor.BLACK)));
 }

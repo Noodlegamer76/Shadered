@@ -6,7 +6,7 @@ import net.minecraft.client.renderer.RenderStateShard;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.blockentity.TheEndPortalRenderer;
 
-import static com.noodlegamer76.shadered.event.RegisterShadersEvent.skybox;
+import static com.noodlegamer76.shadered.event.RegisterShadersEvent.*;
 
 public class ModRenderTypes {
     protected static final RenderStateShard.OverlayStateShard OVERLAY = new RenderStateShard.OverlayStateShard(true);
@@ -35,6 +35,58 @@ public class ModRenderTypes {
             true,
             RenderType.CompositeState.builder()
                     .setShaderState(new RenderStateShard.ShaderStateShard(() -> skybox))
+                    .createCompositeState(true)
+    );
+
+
+    public static final RenderType SPACE = RenderType.create(
+            "space",
+            DefaultVertexFormat.POSITION,
+            VertexFormat.Mode.QUADS,
+            100000,
+            true,
+            true,
+            RenderType.CompositeState.builder()
+                    .setShaderState(new RenderStateShard.ShaderStateShard(() -> spaceShader))
+                    .createCompositeState(true)
+    );
+
+
+    public static final RenderType OCEAN = RenderType.create(
+            "ocean",
+            DefaultVertexFormat.POSITION,
+            VertexFormat.Mode.QUADS,
+            100000,
+            true,
+            true,
+            RenderType.CompositeState.builder()
+                    .setShaderState(new RenderStateShard.ShaderStateShard(() -> oceanShader))
+                    .createCompositeState(true)
+    );
+
+
+    public static final RenderType STORMY = RenderType.create(
+            "stormy",
+            DefaultVertexFormat.POSITION,
+            VertexFormat.Mode.QUADS,
+            100000,
+            true,
+            true,
+            RenderType.CompositeState.builder()
+                    .setShaderState(new RenderStateShard.ShaderStateShard(() -> stormyShader))
+                    .createCompositeState(true)
+    );
+
+
+    public static final RenderType END_SKY = RenderType.create(
+            "end_sky",
+            DefaultVertexFormat.POSITION,
+            VertexFormat.Mode.QUADS,
+            100000,
+            true,
+            true,
+            RenderType.CompositeState.builder()
+                    .setShaderState(new RenderStateShard.ShaderStateShard(() -> endSkyShader))
                     .createCompositeState(true)
     );
 }

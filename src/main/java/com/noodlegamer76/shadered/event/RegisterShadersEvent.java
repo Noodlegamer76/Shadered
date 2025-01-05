@@ -17,6 +17,12 @@ public class RegisterShadersEvent {
     public static ShaderInstance TEST;
     public static ShaderInstance skybox;
     public static ShaderInstance pointLight;
+    public static ShaderInstance subtractPointLight;
+    public static ShaderInstance postDepth;
+    public static ShaderInstance spaceShader;
+    public static ShaderInstance oceanShader;
+    public static ShaderInstance stormyShader;
+    public static ShaderInstance endSkyShader;
 
     @SubscribeEvent
     public static void registerShaders(net.minecraftforge.client.event.RegisterShadersEvent event) throws IOException {
@@ -27,8 +33,38 @@ public class RegisterShadersEvent {
                 (e) -> skybox = e);
 
         event.registerShader(new ShaderInstance(event.getResourceProvider(),
+                        new ResourceLocation(ShaderedMod.MODID, "skybox"),
+                        DefaultVertexFormat.POSITION),
+                (e) -> spaceShader = e);
+
+        event.registerShader(new ShaderInstance(event.getResourceProvider(),
+                        new ResourceLocation(ShaderedMod.MODID, "skybox"),
+                        DefaultVertexFormat.POSITION),
+                (e) -> stormyShader = e);
+
+        event.registerShader(new ShaderInstance(event.getResourceProvider(),
+                        new ResourceLocation(ShaderedMod.MODID, "skybox"),
+                        DefaultVertexFormat.POSITION),
+                (e) -> endSkyShader = e);
+
+        event.registerShader(new ShaderInstance(event.getResourceProvider(),
                         new ResourceLocation(ShaderedMod.MODID, "point_light"),
                         DefaultVertexFormat.POSITION),
                 (e) -> pointLight = e);
+
+        event.registerShader(new ShaderInstance(event.getResourceProvider(),
+                        new ResourceLocation(ShaderedMod.MODID, "subtract_point_light"),
+                        DefaultVertexFormat.POSITION),
+                (e) -> subtractPointLight = e);
+
+        event.registerShader(new ShaderInstance(event.getResourceProvider(),
+                        new ResourceLocation(ShaderedMod.MODID, "post_depth"),
+                        DefaultVertexFormat.POSITION),
+                (e) -> postDepth = e);
+
+        event.registerShader(new ShaderInstance(event.getResourceProvider(),
+                        new ResourceLocation(ShaderedMod.MODID, "skybox"),
+                        DefaultVertexFormat.POSITION),
+                (e) -> oceanShader = e);
     }
 }

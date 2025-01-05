@@ -40,8 +40,8 @@ public class RenderEventsForFbos {
     public static int width;
     public static int height;
 
-    private static int previousSizeX;
-    private static int previousSizeY;
+    public static int previousSizeX;
+    public static int previousSizeY;
 
     public static ArrayList<BlockPos> spacePositions = new ArrayList<>();
     public static ArrayList<BlockPos> stormyPositions = new ArrayList<>();
@@ -58,6 +58,8 @@ public class RenderEventsForFbos {
     public static void levelRenderEvent(RenderLevelStageEvent event) {
 
         if (event.getStage() == RenderLevelStageEvent.Stage.AFTER_SKY && !fboSetup) {
+            RenderEventsForMaps.createTexturesAndFbos();
+
             int current = GL44.glGetInteger(GL44.GL_FRAMEBUFFER_BINDING);
             previousSizeX = width;
             previousSizeY = height;
@@ -128,46 +130,52 @@ public class RenderEventsForFbos {
             width = Minecraft.getInstance().getWindow().getWidth();
             height = Minecraft.getInstance().getWindow().getHeight();
             changeTextureSize();
+
+
+            int current = GL44.glGetInteger(GL44.GL_FRAMEBUFFER_BINDING);
+
+            GlStateManager._glBindFramebuffer(GL44.GL_FRAMEBUFFER, spaceFbo);
+            GlStateManager._clear(GL_COLOR_BUFFER_BIT, true);
+            //if (!spacePositions.isEmpty()) {
+                SkyBoxRenderer.renderBlockSkybox(event.getPoseStack(), NEBULA);
+            //}
+
+            GlStateManager._glBindFramebuffer(GL44.GL_FRAMEBUFFER, stormyFbo);
+            GlStateManager._clear(GL_COLOR_BUFFER_BIT, true);
+            //if (!stormyPositions.isEmpty()) {
+            SkyBoxRenderer.renderBlockSkybox(event.getPoseStack(), STORMY);
+            //}
+
+            GlStateManager._glBindFramebuffer(GL44.GL_FRAMEBUFFER, oceanFbo);
+            GlStateManager._clear(GL_COLOR_BUFFER_BIT, true);
+            //if (!oceanPositions.isEmpty()) {
+            SkyBoxRenderer.renderBlockSkybox(event.getPoseStack(), OCEAN);
+            //}
+
+            GlStateManager._glBindFramebuffer(GL44.GL_FRAMEBUFFER, endSkyFbo);
+            GlStateManager._clear(GL_COLOR_BUFFER_BIT, true);
+            //if (!endSkyPositions.isEmpty()) {
+            SkyBoxRenderer.renderEndSky(event.getPoseStack());
+            //}
+
+            GlStateManager._glBindFramebuffer(GL44.GL_FRAMEBUFFER, current);
+            
+            RegisterShadersEvent.spaceShader.setSampler("Skybox", spaceTexture);
+            RegisterShadersEvent.stormyShader.setSampler("Skybox", stormyTexture);
+            RegisterShadersEvent.oceanShader.setSampler("Skybox", oceanTexture);
+            RegisterShadersEvent.endSkyShader.setSampler("Skybox", endSkyTexture);
         }
 
         if (event.getStage() == RenderLevelStageEvent.Stage.AFTER_BLOCK_ENTITIES) {
 
-            int current = GL44.glGetInteger(GL44.GL_FRAMEBUFFER_BINDING);
-
-            if (!spacePositions.isEmpty()) {
-                GlStateManager._glBindFramebuffer(GL44.GL_FRAMEBUFFER, spaceFbo);
-                SkyBoxRenderer.renderBlockSkybox(event.getPoseStack(), NEBULA);
-            }
-
-            if (!stormyPositions.isEmpty()) {
-                GlStateManager._glBindFramebuffer(GL44.GL_FRAMEBUFFER, stormyFbo);
-                SkyBoxRenderer.renderBlockSkybox(event.getPoseStack(), STORMY);
-            }
-
-            if (!oceanPositions.isEmpty()) {
-                GlStateManager._glBindFramebuffer(GL44.GL_FRAMEBUFFER, oceanFbo);
-                SkyBoxRenderer.renderBlockSkybox(event.getPoseStack(), OCEAN);
-            }
-
-            if (!endSkyPositions.isEmpty()) {
-                GlStateManager._glBindFramebuffer(GL44.GL_FRAMEBUFFER, endSkyFbo);
-                SkyBoxRenderer.renderEndSky(event.getPoseStack());
-            }
-
-            GlStateManager._glBindFramebuffer(GL44.GL_FRAMEBUFFER, current);
-
             //BATCH RENDER SKY BLOCKS HERE
-            RegisterShadersEvent.skybox.setSampler("Skybox", spaceTexture);
-            RenderCube.renderSkyBlocks(spacePositions, event.getPartialTick(), spacePose);
+            RenderCube.renderSkyBlocks(spacePositions, event.getPartialTick(), spacePose, RegisterShadersEvent.spaceShader);
 
-            RegisterShadersEvent.skybox.setSampler("Skybox", stormyTexture);
-            RenderCube.renderSkyBlocks(stormyPositions, event.getPartialTick(), stormyPose);
+            RenderCube.renderSkyBlocks(stormyPositions, event.getPartialTick(), stormyPose, RegisterShadersEvent.stormyShader);
 
-            RegisterShadersEvent.skybox.setSampler("Skybox", oceanTexture);
-            RenderCube.renderSkyBlocks(oceanPositions, event.getPartialTick(), oceanPose);
+            RenderCube.renderSkyBlocks(oceanPositions, event.getPartialTick(), oceanPose, RegisterShadersEvent.oceanShader);
 
-            RegisterShadersEvent.skybox.setSampler("Skybox", endSkyTexture);
-            RenderCube.renderSkyBlocks(endSkyPositions, event.getPartialTick(), endSkyPose);
+            RenderCube.renderSkyBlocks(endSkyPositions, event.getPartialTick(), endSkyPose, RegisterShadersEvent.endSkyShader);
 
             RenderCube.renderCubeWithRenderType(endPositions, event.getPartialTick(), RenderType.endPortal(), endPose);
 
@@ -177,21 +185,6 @@ public class RenderEventsForFbos {
             previousSizeY = height;
             previousSizeX = width;
 
-            int current = GL44.glGetInteger(GL44.GL_FRAMEBUFFER_BINDING);
-
-            GlStateManager._glBindFramebuffer(GL44.GL_FRAMEBUFFER, spaceFbo);
-            GlStateManager._clear(GL_COLOR_BUFFER_BIT, true);
-
-            GlStateManager._glBindFramebuffer(GL44.GL_FRAMEBUFFER, stormyFbo);
-            GlStateManager._clear(GL_COLOR_BUFFER_BIT, true);
-
-            GlStateManager._glBindFramebuffer(GL44.GL_FRAMEBUFFER, oceanFbo);
-            GlStateManager._clear(GL_COLOR_BUFFER_BIT, true);
-
-            GlStateManager._glBindFramebuffer(GL44.GL_FRAMEBUFFER, endSkyFbo);
-            GlStateManager._clear(GL_COLOR_BUFFER_BIT, true);
-
-            GlStateManager._glBindFramebuffer(GL44.GL_FRAMEBUFFER, current);
         }
     }
 
@@ -199,6 +192,9 @@ public class RenderEventsForFbos {
     public static void changeTextureSize() {
         if (previousSizeX != width || previousSizeY != height) {
             int current = GL44.glGetInteger(GL44.GL_FRAMEBUFFER_BINDING);
+
+            RenderEventsForMaps.deleteTexturesAndFbos();
+            RenderEventsForMaps.createTexturesAndFbos();
 
             //SPACE
             GlStateManager._glDeleteFramebuffers(spaceFbo);
