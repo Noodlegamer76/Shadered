@@ -21,10 +21,9 @@ public class RenderEventsForLights {
     public static void levelRenderEvent(RenderLevelStageEvent event) {
         if (event.getStage() == RenderLevelStageEvent.Stage.AFTER_WEATHER) {
 
-           // lights.add(new PointLight()
-           //                 .setSubtract()
-           //                 .setColor(new Vector3f(0, 0, 0))
-           //                 .setPosition(Minecraft.getInstance().player.position().toVector3f()));
+            lights.add(new PointLight()
+                            .setColor(new Vector3f(1, 1, 1))
+                            .setPosition(Minecraft.getInstance().player.position().toVector3f()));
 
             //Render Point Lights
             for (Light light: lights) {

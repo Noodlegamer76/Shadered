@@ -6,6 +6,7 @@ import com.noodlegamer76.shadered.entity.block.DarkSourceEntity;
 import com.noodlegamer76.shadered.entity.block.EndBlockEntity;
 import com.noodlegamer76.shadered.event.RenderEventsForFbos;
 import com.noodlegamer76.shadered.event.RenderEventsForLights;
+import foundry.veil.Veil;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
@@ -20,15 +21,16 @@ public class DarkSourceRenderer implements BlockEntityRenderer<DarkSourceEntity>
 
     @Override
     public void render(DarkSourceEntity pBlockEntity, float pPartialTick, PoseStack pPoseStack, MultiBufferSource pBuffer, int pPackedLight, int pPackedOverlay) {
-        RenderEventsForLights.lights.add(
-                new PointLight()
-                        .setConstant(3)
-                        .setLinear(0)
-                        .setQuadratic(0.0025f)
-                        .setAlpha(0.9f)
-                        .setSubtract()
-                        .setColor(new Vector3f(0, 0, 0))
-                        .setPosition(pBlockEntity.getBlockPos().getCenter().toVector3f()));
+       // RenderEventsForLights.lights.add(
+       //         new PointLight()
+       //                 .setConstant(3)
+       //                 .setLinear(0)
+       //                 .setQuadratic(0.0025f)
+       //                 .setAlpha(0.9f)
+       //                 .setSubtract()
+       //                 .setColor(new Vector3f(0, 0, 0))
+       //                 .setPosition(pBlockEntity.getBlockPos().getCenter().toVector3f()));
+
     }
 
     @Override

@@ -8,6 +8,7 @@ import com.noodlegamer76.shadered.creativetabs.InitCreativeTabs;
 import com.noodlegamer76.shadered.creativetabs.ShaderedTab;
 import com.noodlegamer76.shadered.entity.block.InitBlockEntities;
 import com.noodlegamer76.shadered.item.InitItems;
+import foundry.veil.Veil;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.EntityRenderersEvent;
