@@ -6,7 +6,6 @@ import com.noodlegamer76.shadered.entity.block.DarkSourceEntity;
 import com.noodlegamer76.shadered.entity.block.EndBlockEntity;
 import com.noodlegamer76.shadered.event.RenderEventsForFbos;
 import com.noodlegamer76.shadered.event.RenderEventsForLights;
-import foundry.veil.Veil;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
