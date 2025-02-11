@@ -89,4 +89,16 @@ public class ModRenderTypes {
                     .setShaderState(new RenderStateShard.ShaderStateShard(() -> endSkyShader))
                     .createCompositeState(true)
     );
+
+    public static final RenderType PAINTING1 = RenderType.create(
+            "painting1",
+            DefaultVertexFormat.POSITION,
+            VertexFormat.Mode.QUADS,
+            100000,
+            true,
+            true,
+            RenderType.CompositeState.builder()
+                    .setShaderState(new RenderStateShard.ShaderStateShard(() -> painting1Shader))
+                    .createCompositeState(true)
+    );
 }

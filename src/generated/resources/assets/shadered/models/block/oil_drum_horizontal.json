@@ -1,0 +1,8 @@
+{
+  "parent": "minecraft:block/cube_bottom_top",
+  "textures": {
+    "bottom": "shadered:block/oil_drum_bottom",
+    "side": "shadered:block/oil_drum_side",
+    "top": "shadered:block/oil_drum_top"
+  }
+}

@@ -23,6 +23,8 @@ public class RegisterShadersEvent {
     public static ShaderInstance oceanShader;
     public static ShaderInstance stormyShader;
     public static ShaderInstance endSkyShader;
+    public static ShaderInstance areaFog;
+    public static ShaderInstance painting1Shader;
 
     @SubscribeEvent
     public static void registerShaders(net.minecraftforge.client.event.RegisterShadersEvent event) throws IOException {
@@ -66,5 +68,15 @@ public class RegisterShadersEvent {
                         new ResourceLocation(ShaderedMod.MODID, "skybox"),
                         DefaultVertexFormat.POSITION),
                 (e) -> oceanShader = e);
+
+        event.registerShader(new ShaderInstance(event.getResourceProvider(),
+                        new ResourceLocation(ShaderedMod.MODID, "area_fog"),
+                        DefaultVertexFormat.POSITION),
+                (e) -> areaFog = e);
+
+        event.registerShader(new ShaderInstance(event.getResourceProvider(),
+                        new ResourceLocation(ShaderedMod.MODID, "skybox"),
+                        DefaultVertexFormat.POSITION),
+                (e) -> painting1Shader = e);
     }
 }

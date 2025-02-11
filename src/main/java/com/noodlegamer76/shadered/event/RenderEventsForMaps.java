@@ -23,8 +23,6 @@ import java.util.ArrayList;
 public class RenderEventsForMaps {
     public static int fabulousDepthTexture = -1;
     public static int mapFbo = -1;
-    public static int width = Minecraft.getInstance().getWindow().getWidth();
-    public static int height = Minecraft.getInstance().getWindow().getHeight();
     @SubscribeEvent
     public static void levelRenderEvent(RenderLevelStageEvent event) {
         if (mapFbo == -1) {
@@ -76,6 +74,9 @@ public class RenderEventsForMaps {
     }
 
     public static void createTexturesAndFbos() {
+        int width = Minecraft.getInstance().getWindow().getWidth();
+        int height = Minecraft.getInstance().getWindow().getHeight();
+
         int current = GL44.glGetInteger(GL44.GL_FRAMEBUFFER_BINDING);
         mapFbo = GlStateManager.glGenFramebuffers();
 

@@ -29,6 +29,10 @@ public class ModBlockTagGenerator extends BlockTagsProvider  {
                 .add(InitBlocks.LIGHT_BLOCK.get())
                 .add(InitBlocks.END_BLOCK.get())
                 .add(InitBlocks.END_SKY_BLOCK.get())
-                .add(InitBlocks.DARK_SOURCE.get());
+                .add(InitBlocks.DARK_SOURCE.get())
+                .add(InitBlocks.OIL_DRUM.get());
+
+        tag(BlockTags.MINEABLE_WITH_AXE)
+                .add(InitBlocks.SKYBLOCK_PAINTING.get());
     }
 }

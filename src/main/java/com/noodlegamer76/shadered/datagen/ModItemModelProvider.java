@@ -21,6 +21,7 @@ public class ModItemModelProvider extends ItemModelProvider {
     @Override
     protected void registerModels() {
         evenSimplerBlockItem(InitBlocks.LIGHT_BLOCK);
+        evenSimplerBlockItem(InitBlocks.OIL_DRUM);
     }
 
     private ItemModelBuilder saplingItem(RegistryObject<Block> item) {

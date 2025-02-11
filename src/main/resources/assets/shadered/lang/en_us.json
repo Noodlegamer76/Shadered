@@ -7,5 +7,6 @@
   "block.shadered.darkness_block": "Darkness Block",
   "block.shadered.light_block": "Light Block",
   "block.shadered.end_block": "End Block",
-  "block.shadered.end_sky_block": "End Sky Block"
+  "block.shadered.end_sky_block": "End Sky Block",
+  "block.shadered.skyblock_painting": "Skyblock 3D Painting"
 }

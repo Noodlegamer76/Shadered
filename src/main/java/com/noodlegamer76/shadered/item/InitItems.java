@@ -33,4 +33,8 @@ public class InitItems {
             () -> new BlockItem(InitBlocks.END_SKY_BLOCK.get(), new Item.Properties()));
     public static final RegistryObject<Item> DARK_SOURCE = ITEMS.register("dark_source",
             () -> new BlockItem(InitBlocks.DARK_SOURCE.get(), new Item.Properties()));
+    public static final RegistryObject<Item> OIL_DRUM = ITEMS.register("oil_drum",
+            () -> new BlockItem(InitBlocks.OIL_DRUM.get(), new Item.Properties()));
+    public static final RegistryObject<Item> SKYBLOCK_PAINTING = ITEMS.register("skyblock_painting",
+            () -> new SkyblockPaintingItem(InitBlocks.SKYBLOCK_PAINTING.get(), new Item.Properties()));
 }

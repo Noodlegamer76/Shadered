@@ -6,6 +6,8 @@
     "shadered:darkness_block",
     "shadered:light_block",
     "shadered:end_block",
-    "shadered:end_sky_block"
+    "shadered:end_sky_block",
+    "shadered:dark_source",
+    "shadered:oil_drum"
   ]
 }
