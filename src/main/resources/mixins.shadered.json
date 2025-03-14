@@ -1,0 +1,18 @@
+{
+  "required": true,
+  "minVersion": "0.8.",
+  "package": "com.noodlegamer76.shadered.mixin",
+  "compatibilityLevel": "JAVA_17",
+  "refmap": "shadered.refmap.json",
+  "client": [
+    "IrisPipelineFields",
+    "PostPipelineCreation",
+    "ProgramSourceAccessor",
+    "ProgramSourceFieldSet",
+    "ShaderPackManagerMixin",
+    "IrisPipelineAccessor"
+  ],
+  "mixins": [
+    "IrisIdMapMixin"
+  ]
+}

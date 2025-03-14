@@ -14,7 +14,8 @@ import net.minecraft.resources.ResourceLocation;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
 
-public class TestRenderer<T extends RenderTester> implements BlockEntityRenderer<RenderTester> {
+public class
+TestRenderer<T extends RenderTester> implements BlockEntityRenderer<RenderTester> {
     public static final ResourceLocation TEXTURE = new ResourceLocation("minecraft", "textures/block/stone.png");
 
     public TestRenderer(BlockEntityRendererProvider.Context context) {

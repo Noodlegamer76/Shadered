@@ -1,12 +1,39 @@
 package com.noodlegamer76.shadered.event;
 
 import com.mojang.blaze3d.platform.GlStateManager;
+import com.mojang.blaze3d.platform.TextureUtil;
+import com.mojang.blaze3d.platform.Window;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.noodlegamer76.shadered.ShaderedMod;
 import com.noodlegamer76.shadered.client.util.RenderCube;
 import com.noodlegamer76.shadered.client.util.SkyBoxRenderer;
+import com.noodlegamer76.shadered.compat.iris.ShaderInjector;
+import it.unimi.dsi.fastutil.objects.Object2ObjectMap;
+import it.unimi.dsi.fastutil.objects.Object2ObjectMaps;
+import net.irisshaders.iris.Iris;
+import net.irisshaders.iris.api.v0.IrisApi;
+import net.irisshaders.iris.gl.IrisRenderSystem;
+import net.irisshaders.iris.gl.framebuffer.GlFramebuffer;
+import net.irisshaders.iris.gl.program.ProgramSamplers;
+import net.irisshaders.iris.gl.sampler.GlSampler;
+import net.irisshaders.iris.gl.texture.*;
+import net.irisshaders.iris.gl.uniform.UniformHolder;
+import net.irisshaders.iris.helpers.Tri;
+import net.irisshaders.iris.pipeline.CustomTextureManager;
+import net.irisshaders.iris.pipeline.IrisRenderingPipeline;
+import net.irisshaders.iris.samplers.IrisImages;
+import net.irisshaders.iris.samplers.IrisSamplers;
+import net.irisshaders.iris.shaderpack.ShaderPack;
+import net.irisshaders.iris.shaderpack.loading.ProgramId;
+import net.irisshaders.iris.shaderpack.programs.ProgramSource;
+import net.irisshaders.iris.shaderpack.texture.CustomTextureData;
+import net.irisshaders.iris.shaderpack.texture.TextureFilteringData;
+import net.irisshaders.iris.shaderpack.texture.TextureStage;
+import net.irisshaders.iris.texture.TextureTracker;
+import net.irisshaders.iris.uniforms.custom.CustomUniformFixedInputUniformsHolder;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.texture.TextureManager;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
@@ -15,10 +42,17 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import org.joml.Matrix4f;
 import org.lwjgl.opengl.GL44;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
 
 import static com.mojang.blaze3d.platform.GlConst.GL_COLOR_BUFFER_BIT;
+import static com.noodlegamer76.shadered.compat.iris.ShaderInjector.getTextureData;
+import static org.lwjgl.opengl.GL11C.GL_TEXTURE_2D;
 
 
 @Mod.EventBusSubscriber(modid = ShaderedMod.MODID, value = Dist.CLIENT)
@@ -26,6 +60,7 @@ public class RenderEventsForFbos {
     public static final ResourceLocation NEBULA = new ResourceLocation(ShaderedMod.MODID, "textures/environment/nebula");
     public static final ResourceLocation STORMY = new ResourceLocation(ShaderedMod.MODID, "textures/environment/stormy");
     public static final ResourceLocation OCEAN = new ResourceLocation(ShaderedMod.MODID, "textures/environment/ocean");
+    private static final Logger log = LoggerFactory.getLogger(RenderEventsForFbos.class);
     private static boolean fboSetup = false;
     public static int spaceFbo;
     public static int stormyFbo;
@@ -55,6 +90,10 @@ public class RenderEventsForFbos {
     public static ArrayList<Matrix4f> oceanPose = new ArrayList<>();
     public static ArrayList<Matrix4f> endPose = new ArrayList<>();
     public static ArrayList<Matrix4f> endSkyPose = new ArrayList<>();
+
+    public static ShaderPack pack = null;
+
+    public static GlFramebuffer spaceGlFbo;
 
     @SubscribeEvent
     public static void levelRenderEvent(RenderLevelStageEvent event) {
@@ -166,6 +205,10 @@ public class RenderEventsForFbos {
 
             GlStateManager._glBindFramebuffer(GL44.GL_FRAMEBUFFER, spaceFbo);
             GlStateManager._clear(GL_COLOR_BUFFER_BIT, true);
+            if (IrisApi.getInstance().isShaderPackInUse() && spaceGlFbo != null) {
+                spaceGlFbo.bind();
+            }
+
             //if (!spacePositions.isEmpty()) {
                 SkyBoxRenderer.renderBlockSkybox(event.getPoseStack(), NEBULA);
             //}
@@ -174,22 +217,7 @@ public class RenderEventsForFbos {
             GlStateManager._clear(GL_COLOR_BUFFER_BIT, true);
             //if (!stormyPositions.isEmpty()) {
             SkyBoxRenderer.renderBlockSkybox(event.getPoseStack(), STORMY);
-            //Minecraft mc = Minecraft.getInstance();
-            //Vec3 vec3 = event.getCamera().getPosition();
-            //double d0 = vec3.x();
-            //double d1 = vec3.y();
-            //double d2 = vec3.z();
-            //float f = mc.gameRenderer.getRenderDistance();
-            //boolean flag1 = mc.level.effects().isFoggyAt(Mth.floor(d0), Mth.floor(d1)) || mc.gui.getBossOverlay().shouldCreateWorldFog();
-            //FogRenderer.setupFog(event.getCamera(), FogRenderer.FogMode.FOG_SKY, f, flag1, event.getPartialTick());
-            //RenderSystem.setShader(GameRenderer::getPositionShader);
-            //Minecraft.getInstance().levelRenderer.renderSky(event.getPoseStack(), event.getProjectionMatrix(), event.getPartialTick(), event.getCamera(), flag1, () -> {
-            //    FogRenderer.setupFog(event.getCamera(), FogRenderer.FogMode.FOG_SKY, f, flag1, event.getPartialTick());
-            //});
-            //RenderSystem.setShader(GameRenderer::getPositionTexColorNormalShader);
-            //mc.gameRenderer.lightTexture().turnOffLightLayer();
-            //mc.levelRenderer.renderClouds(event.getPoseStack(), event.getProjectionMatrix(), event.getPartialTick(), d0, d1, d2);
-            ////}
+            //}
 
             GlStateManager._glBindFramebuffer(GL44.GL_FRAMEBUFFER, oceanFbo);
             GlStateManager._clear(GL_COLOR_BUFFER_BIT, true);
@@ -203,6 +231,7 @@ public class RenderEventsForFbos {
             SkyBoxRenderer.renderEndSky(event.getPoseStack());
             //}
 
+
             GlStateManager._glBindFramebuffer(GL44.GL_FRAMEBUFFER, painting1Fbo);
             GlStateManager._clear(GL_COLOR_BUFFER_BIT | GL44.GL_DEPTH_BUFFER_BIT, true);
 
@@ -213,6 +242,38 @@ public class RenderEventsForFbos {
             RegisterShadersEvent.oceanShader.setSampler("Skybox", oceanTexture);
             RegisterShadersEvent.endSkyShader.setSampler("Skybox", endSkyTexture);
             RegisterShadersEvent.painting1Shader.setSampler("Skybox", painting1ColorTexture);
+
+            if (IrisApi.getInstance().isShaderPackInUse() && pack != null) {
+                Window window = Minecraft.getInstance().getWindow();
+                //pack.getIrisCustomTextureDataMap().put("skybox1212", new CustomTextureData.RawData2D(getTextureData(RenderEventsForFbos.stormyTexture, window.getWidth(), window.getHeight()),
+                //        new TextureFilteringData(false, false), InternalTextureFormat.RGBA, PixelFormat.RGBA, PixelType.BYTE, window.getWidth(), window.getHeight()));
+                ProgramSource source = pack.getProgramSet(Iris.getCurrentDimension()).getGbuffersBlock().get();
+                //Iris.getPipelineManager().getPipeline().get().getTextureMap().put(new Tri<>("skybox1212", TextureType.TEXTURE_2D, TextureStage.GBUFFERS_AND_SHADOW), "skybox1212");
+
+                //pack.getIrisCustomTextureDataMap().put("skybox1212", new CustomTextureData.RawData2D(ShaderInjector.getTextureData(spaceTexture, window.getWidth(), window.getHeight()),
+                //        new TextureFilteringData(false, false), InternalTextureFormat.RGBA, PixelFormat.RGBA, PixelType.UNSIGNED_BYTE, window.getWidth(), window.getHeight()));
+
+
+                //pack.getIrisCustomTextureDataMap().put("skybox1212", new CustomTextureData.RawData2D(ShaderInjector.getTextureData(spaceTexture, window.getWidth(), window.getHeight()),
+                //        new TextureFilteringData(false, true), InternalTextureFormat.RGBA, PixelFormat.RGBA, PixelType.UNSIGNED_BYTE, window.getWidth(), window.getHeight()));
+
+
+               // IrisSamplers.addCustomTextures(,
+               //         Object2ObjectMaps.singleton("skybox1212",
+               //                 new GlTexture(TextureType.TEXTURE_2D,
+               //                         window.getWidth(), window.getHeight(), 0,
+               //                         InternalTextureFormat.RGBA.getGlFormat(),
+               //                         PixelFormat.RGBA.getGlFormat(),
+               //                         PixelType.UNSIGNED_BYTE.getGlFormat(),
+               //                         getTextureData(spaceTexture, window.getWidth(), window.getHeight()),
+               //                         new TextureFilteringData(false, true))));
+                //if (
+                //        ProgramSamplers.builder(ProgramId.Block.ordinal(), Set.of(31)).addDynamicSampler(
+                //                TextureType.TEXTURE_2D, () -> spaceFbo, new GlSampler(true, true, false, false), "skybox1212"
+                //        )) {
+                //    System.out.println(true);
+                //}
+            }
         }
 
         if (event.getStage() == RenderLevelStageEvent.Stage.AFTER_BLOCK_ENTITIES) {
@@ -220,13 +281,13 @@ public class RenderEventsForFbos {
 
 
             //BATCH RENDER SKY BLOCKS HERE
-            RenderCube.renderSkyBlocks(spacePositions, event.getPartialTick(), spacePose, RegisterShadersEvent.spaceShader);
+            //RenderCube.renderSkyBlocks(spacePositions, event.getPartialTick(), spacePose, RegisterShadersEvent.spaceShader);
 
-            RenderCube.renderSkyBlocks(stormyPositions, event.getPartialTick(), stormyPose, RegisterShadersEvent.stormyShader);
+           //RenderCube.renderSkyBlocks(stormyPositions, event.getPartialTick(), stormyPose, RegisterShadersEvent.stormyShader);
 
-            RenderCube.renderSkyBlocks(oceanPositions, event.getPartialTick(), oceanPose, RegisterShadersEvent.oceanShader);
+           //RenderCube.renderSkyBlocks(oceanPositions, event.getPartialTick(), oceanPose, RegisterShadersEvent.oceanShader);
 
-            RenderCube.renderSkyBlocks(endSkyPositions, event.getPartialTick(), endSkyPose, RegisterShadersEvent.endSkyShader);
+           //RenderCube.renderSkyBlocks(endSkyPositions, event.getPartialTick(), endSkyPose, RegisterShadersEvent.endSkyShader);
 
             RenderCube.renderCubeWithRenderType(endPositions, event.getPartialTick(), RenderType.endPortal(), endPose);
 
@@ -247,23 +308,38 @@ public class RenderEventsForFbos {
             RenderEventsForMaps.deleteTexturesAndFbos();
             RenderEventsForMaps.createTexturesAndFbos();
 
+
+
+
+
+
             //SPACE
+
             GlStateManager._glDeleteFramebuffers(spaceFbo);
-            spaceFbo = GlStateManager.glGenFramebuffers();
+            spaceFbo = IrisRenderSystem.createFramebuffer();
 
             GlStateManager._glBindFramebuffer(GL44.GL_FRAMEBUFFER, spaceFbo);
 
             GlStateManager._deleteTexture(spaceTexture);
 
-            spaceTexture = GlStateManager._genTexture();
-            RenderSystem.bindTexture(spaceTexture);
+            spaceTexture = IrisRenderSystem.createTexture(GL_TEXTURE_2D);
+            IrisRenderSystem.bindTextureForSetup(GL_TEXTURE_2D, spaceTexture);
+
+            IrisRenderSystem.texImage2D(spaceTexture, GL44.GL_TEXTURE_2D, 0, GL44.GL_RGBA,
+                    width, height,
+                    0, GL44.GL_RGBA, GL44.GL_UNSIGNED_BYTE, null);
 
             GlStateManager._texImage2D(GL44.GL_TEXTURE_2D, 0, GL44.GL_RGBA,
                     width, height,
                     0, GL44.GL_RGBA, GL44.GL_UNSIGNED_BYTE, null);
             GlStateManager._texParameter(GL44.GL_TEXTURE_2D, GL44.GL_TEXTURE_MIN_FILTER, GL44.GL_LINEAR);
             GlStateManager._texParameter(GL44.GL_TEXTURE_2D, GL44.GL_TEXTURE_MAG_FILTER, GL44.GL_LINEAR);
-            GlStateManager._glFramebufferTexture2D(GL44.GL_FRAMEBUFFER, GL44.GL_COLOR_ATTACHMENT0, GL44.GL_TEXTURE_2D, spaceTexture, 0);
+            IrisRenderSystem.framebufferTexture2D(spaceFbo, GL44.GL_FRAMEBUFFER, GL44.GL_COLOR_ATTACHMENT0, GL44.GL_TEXTURE_2D, spaceTexture, 0);
+
+
+
+
+
 
             //STORMY
             GlStateManager._glDeleteFramebuffers(stormyFbo);

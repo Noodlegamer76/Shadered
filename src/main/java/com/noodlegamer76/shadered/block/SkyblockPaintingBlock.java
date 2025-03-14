@@ -43,6 +43,4 @@ public class SkyblockPaintingBlock extends Painting3dBlock implements EntityBloc
             case WEST -> WEST;
         };
     }
-
-
 }
