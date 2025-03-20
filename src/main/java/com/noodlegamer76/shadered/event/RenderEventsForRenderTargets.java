@@ -5,6 +5,7 @@ import com.mojang.blaze3d.pipeline.RenderTarget;
 import com.mojang.blaze3d.pipeline.TextureTarget;
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.noodlegamer76.shadered.ShaderedMod;
+import com.noodlegamer76.shadered.client.renderer.ModRenderTypes;
 import com.noodlegamer76.shadered.client.util.RenderCube;
 import com.noodlegamer76.shadered.client.util.SkyBoxRenderer;
 import com.noodlegamer76.shadered.mixin.IrisPipelineAccessor;
@@ -49,6 +50,8 @@ public class RenderEventsForRenderTargets {
 
             if (!init) {
                 spaceTarget = new TextureTarget(width, height, false, false);
+
+                ModRenderTypes.setupRenderTypes(spaceTarget.getColorTextureId());
 
                 init = true;
             }

@@ -180,7 +180,7 @@ public class RenderCube {
     }
 
     public static void renderSkyBlock(BlockPos pos, float partialTicks, Matrix4f pose, TextureTarget target) {
-        RenderSystem.setShaderTexture(0, target.getColorTextureId());
+        //RenderSystem.setShaderTexture(0, target.getColorTextureId());
 
         Tesselator tesselator = Tesselator.getInstance();
         BufferBuilder bufferBuilder = tesselator.getBuilder();
@@ -195,7 +195,7 @@ public class RenderCube {
         }
 
         //test, overriding shader
-        RenderSystem.setShader(GameRenderer::getRendertypeSolidShader);
+        //RenderSystem.setShader(GameRenderer::getPositionTexShader);
 
         RenderSystem.setShaderTexture(0, target.getColorTextureId());
 

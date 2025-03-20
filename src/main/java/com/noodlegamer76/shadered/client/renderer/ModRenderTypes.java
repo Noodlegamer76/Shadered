@@ -1,7 +1,9 @@
 package com.noodlegamer76.shadered.client.renderer;
 
+import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.*;
 import com.noodlegamer76.shadered.event.RegisterShadersEvent;
+import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.renderer.RenderStateShard;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.blockentity.TheEndPortalRenderer;
@@ -11,6 +13,7 @@ import static com.noodlegamer76.shadered.event.RegisterShadersEvent.*;
 public class ModRenderTypes {
     protected static final RenderStateShard.OverlayStateShard OVERLAY = new RenderStateShard.OverlayStateShard(true);
     protected static final RenderStateShard.OverlayStateShard NO_OVERLAY = new RenderStateShard.OverlayStateShard(false);
+    protected static final RenderStateShard.LightmapStateShard LIGHTMAP = new RenderStateShard.LightmapStateShard(true);
 
     public static final RenderType TEST_RENDERER = RenderType.create(
             "test",
@@ -50,6 +53,9 @@ public class ModRenderTypes {
                     .setShaderState(new RenderStateShard.ShaderStateShard(() -> spaceShader))
                     .createCompositeState(true)
     );
+
+
+    public static RenderType SPACE_OCULUS;
 
 
     public static final RenderType OCEAN = RenderType.create(
@@ -101,4 +107,21 @@ public class ModRenderTypes {
                     .setShaderState(new RenderStateShard.ShaderStateShard(() -> painting1Shader))
                     .createCompositeState(true)
     );
+
+    public static void setupRenderTypes(int spaceTextureId) {
+        SPACE_OCULUS = RenderType.create(
+                "space_oculus",
+                DefaultVertexFormat.BLOCK,
+                VertexFormat.Mode.QUADS,
+                2097152,
+                true,
+                false,
+                RenderType.CompositeState.builder()
+                        .setShaderState(new RenderStateShard.ShaderStateShard(GameRenderer::getRendertypeSolidShader))
+                        .setTextureState(new RenderStateShard.EmptyTextureStateShard(() -> {
+                            RenderSystem.setShaderTexture(0, spaceTextureId);
+                        }, () -> {}))
+                        .setLightmapState(LIGHTMAP)
+                        .createCompositeState(true));
+    }
 }
