@@ -1,5 +1,7 @@
 package com.noodlegamer76.shadered.event;
 
+import com.mojang.blaze3d.pipeline.RenderTarget;
+import com.mojang.blaze3d.pipeline.TextureTarget;
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.noodlegamer76.shadered.ShaderedMod;
@@ -38,6 +40,8 @@ public class RenderEventsForFbos {
     public static int endSkyTexture;
     public static int painting1ColorTexture;
     public static int painting1DepthTexture;
+    public static RenderTarget albedoTarget;
+    public static RenderTarget tempTarget;
     public static int width;
     public static int height;
 
@@ -60,6 +64,9 @@ public class RenderEventsForFbos {
     public static void levelRenderEvent(RenderLevelStageEvent event) {
 
         if (event.getStage() == RenderLevelStageEvent.Stage.AFTER_SKY && !fboSetup) {
+            width = Minecraft.getInstance().getWindow().getWidth();
+            height = Minecraft.getInstance().getWindow().getHeight();
+
             RenderEventsForMaps.createTexturesAndFbos();
 
             int current = GL44.glGetInteger(GL44.GL_FRAMEBUFFER_BINDING);
@@ -154,6 +161,9 @@ public class RenderEventsForFbos {
 
             //BACK TO CURRENT FBO
             GlStateManager._glBindFramebuffer(GL44.GL_FRAMEBUFFER, current);
+
+            albedoTarget = new TextureTarget(width, height, false, false);
+            tempTarget = new TextureTarget(width, height, false, false);
         }
 
         if (event.getStage() == RenderLevelStageEvent.Stage.AFTER_SKY) {
@@ -354,6 +364,9 @@ public class RenderEventsForFbos {
 
             //BACK TO CURRENT
             GlStateManager._glBindFramebuffer(GL44.GL_FRAMEBUFFER, current);
+
+            albedoTarget = new TextureTarget(width, height, false, false);
+            tempTarget = new TextureTarget(width, height, false, false);
         }
     }
 }

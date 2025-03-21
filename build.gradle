@@ -84,6 +84,11 @@ repositories {
 
 }
 
+mixin {
+    add sourceSets.main, 'shadered.refmap.json'
+    config 'shadered.mixins.json'
+}
+
 dependencies {
     //compileOnly fg.deobf("com.jozufozu.flywheel:flywheel-forge-${minecraft_version}:${flywheel_version}")
     //runtimeOnly fg.deobf("com.jozufozu.flywheel:flywheel-forge-${minecraft_version}:${flywheel_version}")
