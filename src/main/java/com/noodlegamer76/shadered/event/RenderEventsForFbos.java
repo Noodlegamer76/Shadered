@@ -4,7 +4,14 @@ import com.mojang.blaze3d.pipeline.RenderTarget;
 import com.mojang.blaze3d.pipeline.TextureTarget;
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.blaze3d.vertex.BufferBuilder;
+import com.mojang.blaze3d.vertex.DefaultVertexFormat;
+import com.mojang.blaze3d.vertex.Tesselator;
+import com.mojang.blaze3d.vertex.VertexFormat;
 import com.noodlegamer76.shadered.ShaderedMod;
+import com.noodlegamer76.shadered.client.renderer.puddle.PuddleCubeRenderer;
+import com.noodlegamer76.shadered.client.renderer.puddle.PuddleInfo;
+import com.noodlegamer76.shadered.client.util.ExtendedShaderInstance;
 import com.noodlegamer76.shadered.client.util.RenderCube;
 import com.noodlegamer76.shadered.client.util.SkyBoxRenderer;
 import net.minecraft.client.Minecraft;
@@ -171,6 +178,9 @@ public class RenderEventsForFbos {
             height = Minecraft.getInstance().getWindow().getHeight();
             changeTextureSize();
 
+            ExtendedShaderInstance.setUniforms();
+            ExtendedShaderInstance.setSamplers();
+
 
             int current = GL44.glGetInteger(GL44.GL_FRAMEBUFFER_BINDING);
 
@@ -245,6 +255,34 @@ public class RenderEventsForFbos {
         if (event.getStage() == RenderLevelStageEvent.Stage.AFTER_WEATHER) {
             previousSizeY = height;
             previousSizeX = width;
+
+        }
+
+        if (event.getStage() == RenderLevelStageEvent.Stage.AFTER_WEATHER) {
+            ExtendedShaderInstance.setUniforms();
+
+            Tesselator tesselator = Tesselator.getInstance();
+            BufferBuilder bufferbuilder = tesselator.getBuilder();
+
+            RenderSystem.disableDepthTest();
+            RenderSystem.disableBlend();
+
+            bufferbuilder.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_COLOR);
+
+            for (PuddleInfo info: PuddleCubeRenderer.puddles) {
+                PuddleCubeRenderer.renderPuddles(event.getPoseStack(), info);
+            }
+            if (!PuddleCubeRenderer.puddles.isEmpty()) {
+                //note to future self: memory barrier comes after tesselator ends
+                GL44.glMemoryBarrier(GL44.GL_FRAMEBUFFER_BARRIER_BIT);
+            }
+            tesselator.end();
+            RenderSystem.enableDepthTest();
+            if (!PuddleCubeRenderer.puddles.isEmpty()) {
+                //note to future self: memory barrier comes after tesselator ends
+                GL44.glMemoryBarrier(GL44.GL_FRAMEBUFFER_BARRIER_BIT);
+            }
+
 
         }
     }

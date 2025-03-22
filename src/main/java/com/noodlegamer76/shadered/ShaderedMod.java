@@ -9,6 +9,7 @@ import com.noodlegamer76.shadered.creativetabs.InitCreativeTabs;
 import com.noodlegamer76.shadered.creativetabs.ShaderedTab;
 import com.noodlegamer76.shadered.entity.block.InitBlockEntities;
 import com.noodlegamer76.shadered.item.InitItems;
+import com.noodlegamer76.shadered.item.TestItem;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.EntityRenderersEvent;
@@ -83,6 +84,7 @@ public class ShaderedMod
     {
         @SubscribeEvent
         public static void onClientSetup(FMLClientSetupEvent event) {
+            TestItem.makeBlood();
         }
 
         @SubscribeEvent

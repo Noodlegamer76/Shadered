@@ -2,6 +2,7 @@ package com.noodlegamer76.shadered.event;
 
 import com.mojang.blaze3d.vertex.DefaultVertexFormat;
 import com.noodlegamer76.shadered.ShaderedMod;
+import com.noodlegamer76.shadered.client.util.ExtendedShaderInstance;
 import net.minecraft.client.renderer.ShaderInstance;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
@@ -25,6 +26,7 @@ public class RegisterShadersEvent {
     public static ShaderInstance endSkyShader;
     public static ShaderInstance areaFog;
     public static ShaderInstance painting1Shader;
+    public static ExtendedShaderInstance puddleShader;
 
     @SubscribeEvent
     public static void registerShaders(net.minecraftforge.client.event.RegisterShadersEvent event) throws IOException {
@@ -78,5 +80,10 @@ public class RegisterShadersEvent {
                         new ResourceLocation(ShaderedMod.MODID, "skybox"),
                         DefaultVertexFormat.POSITION),
                 (e) -> painting1Shader = e);
+
+        event.registerShader(new ExtendedShaderInstance(event.getResourceProvider(),
+                        new ResourceLocation(ShaderedMod.MODID, "puddle"),
+                        DefaultVertexFormat.POSITION_COLOR),
+                (e) -> puddleShader = (ExtendedShaderInstance) e);
     }
 }

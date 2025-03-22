@@ -5,7 +5,7 @@
         "dstrgb": "one"
     },
     "vertex": "shadered:point_light",
-    "fragment": "shadered:point_light",
+    "fragment": "minecraft:position_color",
     "attributes": [ ],
     "samplers": [
         { "name": "Depth" }
