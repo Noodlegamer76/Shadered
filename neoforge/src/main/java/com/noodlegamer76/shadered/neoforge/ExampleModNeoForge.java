@@ -2,12 +2,12 @@ package com.noodlegamer76.shadered.neoforge;
 
 import net.neoforged.fml.common.Mod;
 
-import com.noodlegamer76.shadered.ExampleMod;
+import com.noodlegamer76.shadered.ShaderedMod;
 
-@Mod(ExampleMod.MOD_ID)
+@Mod(ShaderedMod.MOD_ID)
 public final class ExampleModNeoForge {
     public ExampleModNeoForge() {
         // Run our common setup.
-        ExampleMod.init();
+        ShaderedMod.init();
     }
 }

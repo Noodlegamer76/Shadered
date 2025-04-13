@@ -2,7 +2,7 @@ package com.noodlegamer76.shadered.fabric;
 
 import net.fabricmc.api.ModInitializer;
 
-import com.noodlegamer76.shadered.ExampleMod;
+import com.noodlegamer76.shadered.ShaderedMod;
 
 public final class ExampleModFabric implements ModInitializer {
     @Override
@@ -12,6 +12,6 @@ public final class ExampleModFabric implements ModInitializer {
         // Proceed with mild caution.
 
         // Run our common setup.
-        ExampleMod.init();
+        ShaderedMod.init();
     }
 }
