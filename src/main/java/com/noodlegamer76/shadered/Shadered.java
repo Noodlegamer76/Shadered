@@ -1,5 +1,8 @@
 package com.noodlegamer76.shadered;
 
+import com.noodlegamer76.shadered.block.InitBlocks;
+import com.noodlegamer76.shadered.item.InitItem;
+import com.noodlegamer76.shadered.tile.InitBlockEntities;
 import org.slf4j.Logger;
 
 import com.mojang.logging.LogUtils;
@@ -48,6 +51,9 @@ public class Shadered
         // Register the commonSetup method for modloading
         modEventBus.addListener(this::commonSetup);
 
+        InitItem.ITEMS.register(modEventBus);
+        InitBlocks.BLOCKS.register(modEventBus);
+        InitBlockEntities.BLOCK_ENTITIES.register(modEventBus);
 
         NeoForge.EVENT_BUS.register(this);
     }
