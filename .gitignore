@@ -1,11 +1,26 @@
-/common/run/
-/.gradle/
-/.idea/
-/common/build/
-/common/.gradle/
-/fabric/.gradle/
-/fabric/build/
-/fabric/run/
-/neoforge/.gradle/
-/neoforge/build/
-/neoforge/run/
+# eclipse
+bin
+*.launch
+.settings
+.metadata
+.classpath
+.project
+
+# idea
+out
+*.ipr
+*.iws
+*.iml
+.idea
+
+# gradle
+build
+.gradle
+
+# other
+eclipse
+run
+runs
+run-data
+
+repo
