@@ -1,0 +1,11 @@
+{
+  "values": [
+    "shadered:space_block",
+    "shadered:stormy_block",
+    "shadered:ocean_block",
+    "shadered:darkness_block",
+    "shadered:light_block",
+    "shadered:end_block",
+    "shadered:end_sky_block"
+  ]
+}

@@ -1,0 +1,22 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "key": {
+    "#": {
+      "item": "minecraft:black_wool"
+    },
+    "-": {
+      "item": "minecraft:ink_sac"
+    }
+  },
+  "pattern": [
+    "###",
+    "#-#",
+    "###"
+  ],
+  "result": {
+    "count": 8,
+    "id": "shadered:darkness_block"
+  },
+  "show_notification": true
+}

@@ -1,0 +1,23 @@
+{
+    "blend": {
+        "func": "add",
+        "srcrgb": "one",
+        "dstrgb": "zero"
+    },
+    "vertex": "shadered:post_depth",
+    "fragment": "shadered:post_depth",
+    "attributes": [ ],
+    "samplers": [
+        { "name": "EntityDepth" },
+        { "name": "CloudDepth" },
+        { "name": "ItemEntityDepth" },
+        { "name": "TranslucentDepth" },
+        { "name": "WeatherDepth" },
+        { "name": "ParticlesDepth" }
+    ],
+    "uniforms": [
+        { "name": "ModelViewMat", "type": "matrix4x4", "count": 16, "values": [ 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0 ] },
+        { "name": "ProjMat", "type": "matrix4x4", "count": 16, "values": [ 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0 ] },
+        { "name": "ScreenSize", "type": "float",     "count": 2,  "values": [ 1.0, 1.0 ] }
+    ]
+}

@@ -1,5 +1,12 @@
 {
-  "itemGroup.shadered": "Example Mod Tab",
-  "block.shadered.example_block": "Example Block",
-  "item.shadered.example_item": "Example Item"
+  "shadered.creative_tab": "Shadered",
+
+  "block.shadered.space_block": "Space Block",
+  "block.shadered.stormy_block": "Stormy Block",
+  "block.shadered.ocean_block": "Ocean Block",
+  "block.shadered.darkness_block": "Darkness Block",
+  "block.shadered.light_block": "Light Block",
+  "block.shadered.end_block": "End Block",
+  "block.shadered.end_sky_block": "End Sky Block",
+  "block.shadered.skyblock_painting": "Skyblock 3D Painting"
 }
