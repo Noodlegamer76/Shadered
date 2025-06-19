@@ -62,13 +62,6 @@ public class RenderEventsForMaps {
         postDepth.setSampler("WeatherDepth", renderer.getWeatherTarget().getDepthTextureId());
         postDepth.setSampler("ParticlesDepth", renderer.getParticlesTarget().getDepthTextureId());
 
-        System.out.println(renderer.entityTarget().getDepthTextureId());
-        System.out.println(renderer.getCloudsTarget().getDepthTextureId());
-        System.out.println(renderer.getItemEntityTarget().getDepthTextureId());
-        System.out.println(renderer.getTranslucentTarget().getDepthTextureId());
-        System.out.println(renderer.getWeatherTarget().getDepthTextureId());
-        System.out.println(renderer.getParticlesTarget().getDepthTextureId());
-
         RenderCubeAroundPlayer.renderCubeWithShader(poseStack);
         GlStateManager._glBindFramebuffer(GL44.GL_FRAMEBUFFER, current);
     }
