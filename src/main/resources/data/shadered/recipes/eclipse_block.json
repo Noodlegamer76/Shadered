@@ -1,0 +1,23 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    " #B",
+    "#Z#",
+    " # "
+  ],
+  "key": {
+    "#": {
+      "item": "minecraft:red_stained_glass"
+    },
+    "B": {
+      "item": "minecraft:black_stained_glass"
+    },
+    "Z": {
+      "item": "minecraft:black_wool"
+    }
+  },
+  "result": {
+    "item": "shadered:eclipse_block",
+    "count": 4
+  }
+}

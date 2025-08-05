@@ -1,0 +1,7 @@
+{
+  "variants": {
+    "": {
+      "model": "shadered:block/eclipse_block"
+    }
+  }
+}

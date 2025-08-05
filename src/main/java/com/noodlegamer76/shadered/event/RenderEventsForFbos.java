@@ -29,12 +29,14 @@ public class RenderEventsForFbos {
     public static final ResourceLocation NEBULA = new ResourceLocation(ShaderedMod.MODID, "textures/environment/nebula");
     public static final ResourceLocation STORMY = new ResourceLocation(ShaderedMod.MODID, "textures/environment/stormy");
     public static final ResourceLocation OCEAN = new ResourceLocation(ShaderedMod.MODID, "textures/environment/ocean");
+    public static final ResourceLocation ECLIPSE = new ResourceLocation(ShaderedMod.MODID, "textures/environment/eclipse");
     private static boolean fboSetup = false;
 
     public static TextureTarget nebulaTarget;
     public static TextureTarget stormyTarget;
     public static TextureTarget oceanTarget;
     public static TextureTarget endSkyTarget;
+    public static TextureTarget eclipseTarget;
 
     public static TextureTarget skyboxTarget;
 
@@ -49,12 +51,14 @@ public class RenderEventsForFbos {
     public static ArrayList<BlockPos> oceanPositions = new ArrayList<>();
     public static ArrayList<BlockPos> endPositions = new ArrayList<>();
     public static ArrayList<BlockPos> endSkyPositions = new ArrayList<>();
+    public static ArrayList<BlockPos> eclipsePositions = new ArrayList<>();
 
     public static ArrayList<Matrix4f> spacePose = new ArrayList<>();
     public static ArrayList<Matrix4f> stormyPose = new ArrayList<>();
     public static ArrayList<Matrix4f> oceanPose = new ArrayList<>();
     public static ArrayList<Matrix4f> endPose = new ArrayList<>();
     public static ArrayList<Matrix4f> endSkyPose = new ArrayList<>();
+    public static ArrayList<Matrix4f> eclipsePose = new ArrayList<>();
 
     @SubscribeEvent
     public static void levelRenderEvent(RenderLevelStageEvent event) {
@@ -67,6 +71,7 @@ public class RenderEventsForFbos {
             stormyTarget = new TextureTarget(width, height, true, true);
             oceanTarget = new TextureTarget(width, height, true, true);
             endSkyTarget = new TextureTarget(width, height, true, true);
+            eclipseTarget = new TextureTarget(width, height, true, true);
             skyboxTarget = new TextureTarget(width, height, false, true);
 
             previousSizeX = width;
@@ -82,6 +87,7 @@ public class RenderEventsForFbos {
             stormyTarget.clear(true);
             oceanTarget.clear(true);
             endSkyTarget.clear(true);
+            eclipseTarget.clear(true);
             skyboxTarget.clear(true);
 
             if (width != previousSizeX || height != previousSizeY) {
@@ -89,6 +95,7 @@ public class RenderEventsForFbos {
                 stormyTarget.resize(width, height, true);
                 oceanTarget.resize(width, height, true);
                 endSkyTarget.resize(width, height, true);
+                eclipseTarget.resize(width, height, true);
                 skyboxTarget.resize(width, height, true);
             }
 
@@ -98,6 +105,7 @@ public class RenderEventsForFbos {
         if (event.getStage() == RenderLevelStageEvent.Stage.AFTER_BLOCK_ENTITIES) {
             Minecraft mc = Minecraft.getInstance();
             RenderTarget mainTarget = mc.getMainRenderTarget();
+
 
             nebulaTarget.bindWrite(true);
             renderBlockEntities(event.getPartialTick(), spacePositions, spacePose);
@@ -135,6 +143,18 @@ public class RenderEventsForFbos {
 
 
 
+            eclipseTarget.bindWrite(true);
+            renderBlockEntities(event.getPartialTick(), eclipsePositions, eclipsePose);
+
+            skyboxTarget.bindWrite(true);
+            SkyBoxRenderer.renderBlockSkybox(event.getPoseStack(), ECLIPSE);
+            GlUtils.copyColorFrom(eclipseTarget, skyboxTarget);
+
+            eclipseTarget.bindWrite(true);
+            renderWithoutInfiniteDepth(eclipseTarget, event.getPoseStack());
+
+
+
             endSkyTarget.bindWrite(true);
             renderBlockEntities(event.getPartialTick(), endSkyPositions, endSkyPose);
 
@@ -150,7 +170,6 @@ public class RenderEventsForFbos {
             mainTarget.bindWrite(true);
 
 
-
             RenderSystem.backupProjectionMatrix();
             RenderSystem.setProjectionMatrix(new Matrix4f().ortho(-1, 1, -1, 1, -1, 1), VertexSorting.ORTHOGRAPHIC_Z);
 
@@ -161,6 +180,7 @@ public class RenderEventsForFbos {
             render(poseStack, nebulaTarget);
             render(poseStack, stormyTarget);
             render(poseStack, oceanTarget);
+            render(poseStack, eclipseTarget);
             render(poseStack, endSkyTarget);
 
             RenderCube.renderCubeWithRenderType(endPositions, event.getPartialTick(), RenderType.endPortal(), endPose);

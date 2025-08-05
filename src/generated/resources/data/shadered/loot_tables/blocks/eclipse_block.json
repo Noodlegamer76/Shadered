@@ -11,11 +11,11 @@
       "entries": [
         {
           "type": "minecraft:item",
-          "name": "shadered:dark_source"
+          "name": "shadered:eclipse_block"
         }
       ],
       "rolls": 1.0
     }
   ],
-  "random_sequence": "shadered:blocks/dark_source"
+  "random_sequence": "shadered:blocks/eclipse_block"
 }
