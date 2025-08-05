@@ -24,11 +24,6 @@ public class ModBlockStateProvider extends BlockStateProvider {
         blockWithItem(InitBlocks.END_BLOCK);
         blockWithItem(InitBlocks.END_SKY_BLOCK);
 
-        cubeBottomTop(InitBlocks.OIL_DRUM,
-                new ResourceLocation(ShaderedMod.MODID, "block/oil_drum_top"),
-                new ResourceLocation(ShaderedMod.MODID, "block/oil_drum_side"),
-                new ResourceLocation(ShaderedMod.MODID, "block/oil_drum_bottom"));
-
     }
 
     private void cubeBottomTop(RegistryObject<Block> block, ResourceLocation top, ResourceLocation side, ResourceLocation bottom) {

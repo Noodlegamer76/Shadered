@@ -2,6 +2,7 @@ package com.noodlegamer76.shadered.client.util;
 
 import com.mojang.blaze3d.vertex.*;
 import com.mojang.math.Axis;
+import net.minecraft.client.Minecraft;
 import org.joml.Matrix4f;
 
 import java.awt.*;
@@ -54,12 +55,13 @@ public class RenderCubeAroundPlayer {
                 poseStack.mulPose(Axis.ZP.rotationDegrees(0.0F));
                 poseStack.mulPose(Axis.YN.rotationDegrees(180));
             }
+            float far = Minecraft.getInstance().gameRenderer.getRenderDistance();
             Matrix4f matrix4f = poseStack.last().pose();
             bufferbuilder.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION);
-            bufferbuilder.vertex(matrix4f, -1, -1, -1).endVertex();
-            bufferbuilder.vertex(matrix4f, -1, -1, 1).endVertex();
-            bufferbuilder.vertex(matrix4f, 1, -1, 1).endVertex();
-            bufferbuilder.vertex(matrix4f, 1, -1, -1).endVertex();
+            bufferbuilder.vertex(matrix4f, -far, -far, -far).endVertex();
+            bufferbuilder.vertex(matrix4f, -far, -far, far).endVertex();
+            bufferbuilder.vertex(matrix4f, far, -far, far).endVertex();
+            bufferbuilder.vertex(matrix4f, far, -far, -far).endVertex();
             tesselator.end();
             poseStack.popPose();
         }

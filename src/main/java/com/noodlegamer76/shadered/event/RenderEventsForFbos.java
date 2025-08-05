@@ -4,17 +4,14 @@ import com.mojang.blaze3d.pipeline.RenderTarget;
 import com.mojang.blaze3d.pipeline.TextureTarget;
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.BufferBuilder;
-import com.mojang.blaze3d.vertex.DefaultVertexFormat;
-import com.mojang.blaze3d.vertex.Tesselator;
-import com.mojang.blaze3d.vertex.VertexFormat;
+import com.mojang.blaze3d.vertex.*;
 import com.noodlegamer76.shadered.ShaderedMod;
-import com.noodlegamer76.shadered.client.renderer.puddle.PuddleCubeRenderer;
-import com.noodlegamer76.shadered.client.renderer.puddle.PuddleInfo;
-import com.noodlegamer76.shadered.client.util.ExtendedShaderInstance;
+import com.noodlegamer76.shadered.client.util.GlUtils;
 import com.noodlegamer76.shadered.client.util.RenderCube;
+import com.noodlegamer76.shadered.client.util.RenderCubeAroundPlayer;
 import com.noodlegamer76.shadered.client.util.SkyBoxRenderer;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
@@ -23,11 +20,8 @@ import net.minecraftforge.client.event.RenderLevelStageEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import org.joml.Matrix4f;
-import org.lwjgl.opengl.GL44;
 
 import java.util.ArrayList;
-
-import static com.mojang.blaze3d.platform.GlConst.GL_COLOR_BUFFER_BIT;
 
 
 @Mod.EventBusSubscriber(modid = ShaderedMod.MODID, value = Dist.CLIENT)
@@ -36,19 +30,14 @@ public class RenderEventsForFbos {
     public static final ResourceLocation STORMY = new ResourceLocation(ShaderedMod.MODID, "textures/environment/stormy");
     public static final ResourceLocation OCEAN = new ResourceLocation(ShaderedMod.MODID, "textures/environment/ocean");
     private static boolean fboSetup = false;
-    public static int spaceFbo;
-    public static int stormyFbo;
-    public static int oceanFbo;
-    public static int endSkyFbo;
-    public static int painting1Fbo;
-    public static int spaceTexture;
-    public static int stormyTexture;
-    public static int oceanTexture;
-    public static int endSkyTexture;
-    public static int painting1ColorTexture;
-    public static int painting1DepthTexture;
-    public static RenderTarget albedoTarget;
-    public static RenderTarget tempTarget;
+
+    public static TextureTarget nebulaTarget;
+    public static TextureTarget stormyTarget;
+    public static TextureTarget oceanTarget;
+    public static TextureTarget endSkyTarget;
+
+    public static TextureTarget skyboxTarget;
+
     public static int width;
     public static int height;
 
@@ -74,337 +63,157 @@ public class RenderEventsForFbos {
             width = Minecraft.getInstance().getWindow().getWidth();
             height = Minecraft.getInstance().getWindow().getHeight();
 
-            RenderEventsForMaps.createTexturesAndFbos();
+            nebulaTarget = new TextureTarget(width, height, true, true);
+            stormyTarget = new TextureTarget(width, height, true, true);
+            oceanTarget = new TextureTarget(width, height, true, true);
+            endSkyTarget = new TextureTarget(width, height, true, true);
+            skyboxTarget = new TextureTarget(width, height, false, true);
 
-            int current = GL44.glGetInteger(GL44.GL_FRAMEBUFFER_BINDING);
             previousSizeX = width;
             previousSizeY = height;
             fboSetup = true;
-
-            spaceFbo = GlStateManager.glGenFramebuffers();
-            stormyFbo = GlStateManager.glGenFramebuffers();
-            oceanFbo = GlStateManager.glGenFramebuffers();
-            endSkyFbo = GlStateManager.glGenFramebuffers();
-            painting1Fbo = GlStateManager.glGenFramebuffers();
-            GlStateManager._glBindFramebuffer(GL44.GL_FRAMEBUFFER, spaceFbo);
-
-            //SPACE TEXTURE
-            spaceTexture = GlStateManager._genTexture();
-            RenderSystem.bindTexture(spaceTexture);
-
-            GlStateManager._texImage2D(GL44.GL_TEXTURE_2D, 0, GL44.GL_RGBA,
-                    width, height,
-                    0, GL44.GL_RGBA, GL44.GL_UNSIGNED_BYTE, null);
-            GlStateManager._texParameter(GL44.GL_TEXTURE_2D, GL44.GL_TEXTURE_MIN_FILTER, GL44.GL_LINEAR);
-            GlStateManager._texParameter(GL44.GL_TEXTURE_2D, GL44.GL_TEXTURE_MAG_FILTER, GL44.GL_LINEAR);
-            GlStateManager._glFramebufferTexture2D(GL44.GL_FRAMEBUFFER, GL44.GL_COLOR_ATTACHMENT0, GL44.GL_TEXTURE_2D, spaceTexture, 0);
-
-
-
-            //STORMY TEXTURE
-            GlStateManager._glBindFramebuffer(GL44.GL_FRAMEBUFFER, stormyFbo);
-
-            stormyTexture = GlStateManager._genTexture();
-            RenderSystem.bindTexture(stormyTexture);
-
-            GlStateManager._texImage2D(GL44.GL_TEXTURE_2D, 0, GL44.GL_RGBA,
-                    width, height,
-                    0, GL44.GL_RGBA, GL44.GL_UNSIGNED_BYTE, null);
-            GlStateManager._texParameter(GL44.GL_TEXTURE_2D, GL44.GL_TEXTURE_MIN_FILTER, GL44.GL_LINEAR);
-            GlStateManager._texParameter(GL44.GL_TEXTURE_2D, GL44.GL_TEXTURE_MAG_FILTER, GL44.GL_LINEAR);
-            GlStateManager._glFramebufferTexture2D(GL44.GL_FRAMEBUFFER, GL44.GL_COLOR_ATTACHMENT0, GL44.GL_TEXTURE_2D, stormyTexture, 0);
-
-            //OCEAN TEXTURE
-            GlStateManager._glBindFramebuffer(GL44.GL_FRAMEBUFFER, oceanFbo);
-
-            oceanTexture = GlStateManager._genTexture();
-            RenderSystem.bindTexture(oceanTexture);
-
-            GlStateManager._texImage2D(GL44.GL_TEXTURE_2D, 0, GL44.GL_RGBA,
-                    width, height,
-                    0, GL44.GL_RGBA, GL44.GL_UNSIGNED_BYTE, null);
-            GlStateManager._texParameter(GL44.GL_TEXTURE_2D, GL44.GL_TEXTURE_MIN_FILTER, GL44.GL_LINEAR);
-            GlStateManager._texParameter(GL44.GL_TEXTURE_2D, GL44.GL_TEXTURE_MAG_FILTER, GL44.GL_LINEAR);
-            GlStateManager._glFramebufferTexture2D(GL44.GL_FRAMEBUFFER, GL44.GL_COLOR_ATTACHMENT0, GL44.GL_TEXTURE_2D, oceanTexture, 0);
-
-            //END SKY TEXTURE
-            GlStateManager._glBindFramebuffer(GL44.GL_FRAMEBUFFER, endSkyFbo);
-
-            endSkyTexture = GlStateManager._genTexture();
-            RenderSystem.bindTexture(endSkyTexture);
-
-            GlStateManager._texImage2D(GL44.GL_TEXTURE_2D, 0, GL44.GL_RGBA,
-                    width, height,
-                    0, GL44.GL_RGBA, GL44.GL_UNSIGNED_BYTE, null);
-            GlStateManager._texParameter(GL44.GL_TEXTURE_2D, GL44.GL_TEXTURE_MIN_FILTER, GL44.GL_LINEAR);
-            GlStateManager._texParameter(GL44.GL_TEXTURE_2D, GL44.GL_TEXTURE_MAG_FILTER, GL44.GL_LINEAR);
-            GlStateManager._glFramebufferTexture2D(GL44.GL_FRAMEBUFFER, GL44.GL_COLOR_ATTACHMENT0, GL44.GL_TEXTURE_2D, endSkyTexture, 0);
-
-            //PAINTING 1 TEXTURE
-            GlStateManager._glBindFramebuffer(GL44.GL_FRAMEBUFFER, painting1Fbo);
-
-            painting1ColorTexture = GlStateManager._genTexture();
-            RenderSystem.bindTexture(painting1ColorTexture);
-
-            GlStateManager._texImage2D(GL44.GL_TEXTURE_2D, 0, GL44.GL_RGBA,
-                    width, height,
-                    0, GL44.GL_RGBA, GL44.GL_UNSIGNED_BYTE, null);
-            GlStateManager._texParameter(GL44.GL_TEXTURE_2D, GL44.GL_TEXTURE_MIN_FILTER, GL44.GL_LINEAR);
-            GlStateManager._texParameter(GL44.GL_TEXTURE_2D, GL44.GL_TEXTURE_MAG_FILTER, GL44.GL_LINEAR);
-            GlStateManager._glFramebufferTexture2D(GL44.GL_FRAMEBUFFER, GL44.GL_COLOR_ATTACHMENT0, GL44.GL_TEXTURE_2D, painting1ColorTexture, 0);
-
-            //PAINTING 1 DEPTH TEXTURE
-            painting1DepthTexture = GlStateManager._genTexture();
-            RenderSystem.bindTexture(painting1DepthTexture);
-
-            GlStateManager._texImage2D(GL44.GL_TEXTURE_2D, 0, GL44.GL_DEPTH_COMPONENT24,
-                    width, height,
-                    0, GL44.GL_DEPTH_COMPONENT, GL44.GL_FLOAT, null);
-            GlStateManager._texParameter(GL44.GL_TEXTURE_2D, GL44.GL_TEXTURE_MIN_FILTER, GL44.GL_NEAREST);
-            GlStateManager._texParameter(GL44.GL_TEXTURE_2D, GL44.GL_TEXTURE_MAG_FILTER, GL44.GL_NEAREST);
-
-            GlStateManager._glFramebufferTexture2D(GL44.GL_FRAMEBUFFER, GL44.GL_DEPTH_ATTACHMENT, GL44.GL_TEXTURE_2D, painting1DepthTexture, 0);
-
-
-            //BACK TO CURRENT FBO
-            GlStateManager._glBindFramebuffer(GL44.GL_FRAMEBUFFER, current);
-
-            albedoTarget = new TextureTarget(width, height, false, false);
-            tempTarget = new TextureTarget(width, height, false, false);
         }
 
         if (event.getStage() == RenderLevelStageEvent.Stage.AFTER_SKY) {
             width = Minecraft.getInstance().getWindow().getWidth();
             height = Minecraft.getInstance().getWindow().getHeight();
-            changeTextureSize();
 
-            ExtendedShaderInstance.setUniforms();
-            ExtendedShaderInstance.setSamplers();
+            nebulaTarget.clear(true);
+            stormyTarget.clear(true);
+            oceanTarget.clear(true);
+            endSkyTarget.clear(true);
+            skyboxTarget.clear(true);
 
+            if (width != previousSizeX || height != previousSizeY) {
+                nebulaTarget.resize(width, height, true);
+                stormyTarget.resize(width, height, true);
+                oceanTarget.resize(width, height, true);
+                endSkyTarget.resize(width, height, true);
+                skyboxTarget.resize(width, height, true);
+            }
 
-            int current = GL44.glGetInteger(GL44.GL_FRAMEBUFFER_BINDING);
-
-            GlStateManager._glBindFramebuffer(GL44.GL_FRAMEBUFFER, spaceFbo);
-            GlStateManager._clear(GL_COLOR_BUFFER_BIT, true);
-            //if (!spacePositions.isEmpty()) {
-                SkyBoxRenderer.renderBlockSkybox(event.getPoseStack(), NEBULA);
-            //}
-
-            GlStateManager._glBindFramebuffer(GL44.GL_FRAMEBUFFER, stormyFbo);
-            GlStateManager._clear(GL_COLOR_BUFFER_BIT, true);
-            //if (!stormyPositions.isEmpty()) {
-            SkyBoxRenderer.renderBlockSkybox(event.getPoseStack(), STORMY);
-            //Minecraft mc = Minecraft.getInstance();
-            //Vec3 vec3 = event.getCamera().getPosition();
-            //double d0 = vec3.x();
-            //double d1 = vec3.y();
-            //double d2 = vec3.z();
-            //float f = mc.gameRenderer.getRenderDistance();
-            //boolean flag1 = mc.level.effects().isFoggyAt(Mth.floor(d0), Mth.floor(d1)) || mc.gui.getBossOverlay().shouldCreateWorldFog();
-            //FogRenderer.setupFog(event.getCamera(), FogRenderer.FogMode.FOG_SKY, f, flag1, event.getPartialTick());
-            //RenderSystem.setShader(GameRenderer::getPositionShader);
-            //Minecraft.getInstance().levelRenderer.renderSky(event.getPoseStack(), event.getProjectionMatrix(), event.getPartialTick(), event.getCamera(), flag1, () -> {
-            //    FogRenderer.setupFog(event.getCamera(), FogRenderer.FogMode.FOG_SKY, f, flag1, event.getPartialTick());
-            //});
-            //RenderSystem.setShader(GameRenderer::getPositionTexColorNormalShader);
-            //mc.gameRenderer.lightTexture().turnOffLightLayer();
-            //mc.levelRenderer.renderClouds(event.getPoseStack(), event.getProjectionMatrix(), event.getPartialTick(), d0, d1, d2);
-            ////}
-
-            GlStateManager._glBindFramebuffer(GL44.GL_FRAMEBUFFER, oceanFbo);
-            GlStateManager._clear(GL_COLOR_BUFFER_BIT, true);
-            //if (!oceanPositions.isEmpty()) {
-            SkyBoxRenderer.renderBlockSkybox(event.getPoseStack(), OCEAN);
-            //}
-
-            GlStateManager._glBindFramebuffer(GL44.GL_FRAMEBUFFER, endSkyFbo);
-            GlStateManager._clear(GL_COLOR_BUFFER_BIT, true);
-            //if (!endSkyPositions.isEmpty()) {
-            SkyBoxRenderer.renderEndSky(event.getPoseStack());
-            //}
-
-            GlStateManager._glBindFramebuffer(GL44.GL_FRAMEBUFFER, painting1Fbo);
-            GlStateManager._clear(GL_COLOR_BUFFER_BIT | GL44.GL_DEPTH_BUFFER_BIT, true);
-
-            GlStateManager._glBindFramebuffer(GL44.GL_FRAMEBUFFER, current);
-            
-            RegisterShadersEvent.spaceShader.setSampler("Skybox", spaceTexture);
-            RegisterShadersEvent.stormyShader.setSampler("Skybox", stormyTexture);
-            RegisterShadersEvent.oceanShader.setSampler("Skybox", oceanTexture);
-            RegisterShadersEvent.endSkyShader.setSampler("Skybox", endSkyTexture);
-            RegisterShadersEvent.painting1Shader.setSampler("Skybox", painting1ColorTexture);
+            Minecraft.getInstance().getMainRenderTarget().bindWrite(true);
         }
 
         if (event.getStage() == RenderLevelStageEvent.Stage.AFTER_BLOCK_ENTITIES) {
+            Minecraft mc = Minecraft.getInstance();
+            RenderTarget mainTarget = mc.getMainRenderTarget();
+
+            nebulaTarget.bindWrite(true);
+            renderBlockEntities(event.getPartialTick(), spacePositions, spacePose);
+
+            skyboxTarget.bindWrite(true);
+            SkyBoxRenderer.renderBlockSkybox(event.getPoseStack(), NEBULA);
+            GlUtils.copyColorFrom(nebulaTarget, skyboxTarget);
+
+            nebulaTarget.bindWrite(true);
+            renderWithoutInfiniteDepth(nebulaTarget, event.getPoseStack());
 
 
 
-            //BATCH RENDER SKY BLOCKS HERE
-            RenderCube.renderSkyBlocks(spacePositions, event.getPartialTick(), spacePose, RegisterShadersEvent.spaceShader);
+            stormyTarget.bindWrite(true);
+            renderBlockEntities(event.getPartialTick(), stormyPositions, stormyPose);
 
-            RenderCube.renderSkyBlocks(stormyPositions, event.getPartialTick(), stormyPose, RegisterShadersEvent.stormyShader);
+            skyboxTarget.bindWrite(true);
+            SkyBoxRenderer.renderBlockSkybox(event.getPoseStack(), STORMY);
+            GlUtils.copyColorFrom(stormyTarget, skyboxTarget);
 
-            RenderCube.renderSkyBlocks(oceanPositions, event.getPartialTick(), oceanPose, RegisterShadersEvent.oceanShader);
+            stormyTarget.bindWrite(true);
+            renderWithoutInfiniteDepth(stormyTarget, event.getPoseStack());
 
-            RenderCube.renderSkyBlocks(endSkyPositions, event.getPartialTick(), endSkyPose, RegisterShadersEvent.endSkyShader);
+
+
+            oceanTarget.bindWrite(true);
+            renderBlockEntities(event.getPartialTick(), oceanPositions, oceanPose);
+
+            skyboxTarget.bindWrite(true);
+            SkyBoxRenderer.renderBlockSkybox(event.getPoseStack(), OCEAN);
+            GlUtils.copyColorFrom(oceanTarget, skyboxTarget);
+
+            oceanTarget.bindWrite(true);
+            renderWithoutInfiniteDepth(oceanTarget, event.getPoseStack());
+
+
+
+            endSkyTarget.bindWrite(true);
+            renderBlockEntities(event.getPartialTick(), endSkyPositions, endSkyPose);
+
+            skyboxTarget.bindWrite(true);
+            SkyBoxRenderer.renderEndSky(event.getPoseStack());
+            GlUtils.copyColorFrom(endSkyTarget, skyboxTarget);
+
+            endSkyTarget.bindWrite(true);
+            renderWithoutInfiniteDepth(endSkyTarget, event.getPoseStack());
+
+
+
+            mainTarget.bindWrite(true);
+
+
+
+            RenderSystem.backupProjectionMatrix();
+            RenderSystem.setProjectionMatrix(new Matrix4f().ortho(-1, 1, -1, 1, -1, 1), VertexSorting.ORTHOGRAPHIC_Z);
+
+            PoseStack poseStack = event.getPoseStack();
+            poseStack.pushPose();
+            poseStack.setIdentity();
+
+            render(poseStack, nebulaTarget);
+            render(poseStack, stormyTarget);
+            render(poseStack, oceanTarget);
+            render(poseStack, endSkyTarget);
 
             RenderCube.renderCubeWithRenderType(endPositions, event.getPartialTick(), RenderType.endPortal(), endPose);
 
+            poseStack.popPose();
+
+            RenderSystem.restoreProjectionMatrix();
         }
 
         if (event.getStage() == RenderLevelStageEvent.Stage.AFTER_WEATHER) {
             previousSizeY = height;
             previousSizeX = width;
-
-        }
-
-        if (event.getStage() == RenderLevelStageEvent.Stage.AFTER_WEATHER) {
-            ExtendedShaderInstance.setUniforms();
-
-            Tesselator tesselator = Tesselator.getInstance();
-            BufferBuilder bufferbuilder = tesselator.getBuilder();
-
-            RenderSystem.disableDepthTest();
-            RenderSystem.disableBlend();
-
-            bufferbuilder.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_COLOR);
-
-            for (PuddleInfo info: PuddleCubeRenderer.puddles) {
-                PuddleCubeRenderer.renderPuddles(event.getPoseStack(), info);
-            }
-            if (!PuddleCubeRenderer.puddles.isEmpty()) {
-                //note to future self: memory barrier comes after tesselator ends
-                GL44.glMemoryBarrier(GL44.GL_FRAMEBUFFER_BARRIER_BIT);
-            }
-            tesselator.end();
-            RenderSystem.enableDepthTest();
-            if (!PuddleCubeRenderer.puddles.isEmpty()) {
-                //note to future self: memory barrier comes after tesselator ends
-                GL44.glMemoryBarrier(GL44.GL_FRAMEBUFFER_BARRIER_BIT);
-            }
-
-
         }
     }
 
+    public static void renderWithoutInfiniteDepth(TextureTarget target, PoseStack poseStack) {
+        RenderSystem.setShader(() -> RegisterShadersEvent.depthDiscarder);
+        RegisterShadersEvent.depthDiscarder.setSampler("Skybox", target.getColorTextureId());
+        RegisterShadersEvent.depthDiscarder.setSampler("SkyboxDepth", target.getDepthTextureId());
+        RegisterShadersEvent.depthDiscarder.setSampler("MainDepth", Minecraft.getInstance().getMainRenderTarget().getDepthTextureId());
+        RenderCubeAroundPlayer.renderCubeWithShader(poseStack);
 
-    public static void changeTextureSize() {
-        if (previousSizeX != width || previousSizeY != height) {
-            int current = GL44.glGetInteger(GL44.GL_FRAMEBUFFER_BINDING);
+        Minecraft.getInstance().getMainRenderTarget().copyDepthFrom(target);
 
-            RenderEventsForMaps.deleteTexturesAndFbos();
-            RenderEventsForMaps.createTexturesAndFbos();
+    }
 
-            //SPACE
-            GlStateManager._glDeleteFramebuffers(spaceFbo);
-            spaceFbo = GlStateManager.glGenFramebuffers();
+    public static void render(PoseStack poseStack, RenderTarget target) {
+        RenderSystem.disableCull();
+        RenderSystem.disableDepthTest();
 
-            GlStateManager._glBindFramebuffer(GL44.GL_FRAMEBUFFER, spaceFbo);
+        RenderSystem.setShader(GameRenderer::getPositionTexShader);
+        RenderSystem.setShaderTexture(0, target.getColorTextureId());
 
-            GlStateManager._deleteTexture(spaceTexture);
+        Tesselator tesselator = Tesselator.getInstance();
+        BufferBuilder buffer = tesselator.getBuilder();
 
-            spaceTexture = GlStateManager._genTexture();
-            RenderSystem.bindTexture(spaceTexture);
+        buffer.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
+        buffer.vertex(poseStack.last().pose(), -1f,  1f, 0f).uv(0, 1).endVertex(); // top-left
+        buffer.vertex(poseStack.last().pose(), 1f,  1f, 0f).uv(1, 1).endVertex(); // top-right
+        buffer.vertex(poseStack.last().pose(), 1f, -1f, 0f).uv(1, 0).endVertex(); // bottom-right
+        buffer.vertex(poseStack.last().pose(), -1f, -1f, 0f).uv(0, 0).endVertex(); // bottom-left
+        tesselator.end();
 
-            GlStateManager._texImage2D(GL44.GL_TEXTURE_2D, 0, GL44.GL_RGBA,
-                    width, height,
-                    0, GL44.GL_RGBA, GL44.GL_UNSIGNED_BYTE, null);
-            GlStateManager._texParameter(GL44.GL_TEXTURE_2D, GL44.GL_TEXTURE_MIN_FILTER, GL44.GL_LINEAR);
-            GlStateManager._texParameter(GL44.GL_TEXTURE_2D, GL44.GL_TEXTURE_MAG_FILTER, GL44.GL_LINEAR);
-            GlStateManager._glFramebufferTexture2D(GL44.GL_FRAMEBUFFER, GL44.GL_COLOR_ATTACHMENT0, GL44.GL_TEXTURE_2D, spaceTexture, 0);
-
-            //STORMY
-            GlStateManager._glDeleteFramebuffers(stormyFbo);
-            stormyFbo = GlStateManager.glGenFramebuffers();
-
-            GlStateManager._glBindFramebuffer(GL44.GL_FRAMEBUFFER, stormyFbo);
-
-            GlStateManager._deleteTexture(stormyTexture);
-
-            stormyTexture = GlStateManager._genTexture();
-            RenderSystem.bindTexture(stormyTexture);
-
-            GlStateManager._texImage2D(GL44.GL_TEXTURE_2D, 0, GL44.GL_RGBA,
-                    width, height,
-                    0, GL44.GL_RGBA, GL44.GL_UNSIGNED_BYTE, null);
-            GlStateManager._texParameter(GL44.GL_TEXTURE_2D, GL44.GL_TEXTURE_MIN_FILTER, GL44.GL_LINEAR);
-            GlStateManager._texParameter(GL44.GL_TEXTURE_2D, GL44.GL_TEXTURE_MAG_FILTER, GL44.GL_LINEAR);
-            GlStateManager._glFramebufferTexture2D(GL44.GL_FRAMEBUFFER, GL44.GL_COLOR_ATTACHMENT0, GL44.GL_TEXTURE_2D, stormyTexture, 0);
-
-            //OCEAN
-            GlStateManager._glDeleteFramebuffers(oceanFbo);
-            oceanFbo = GlStateManager.glGenFramebuffers();
-
-            GlStateManager._glBindFramebuffer(GL44.GL_FRAMEBUFFER, oceanFbo);
-
-            GlStateManager._deleteTexture(oceanTexture);
-
-            oceanTexture = GlStateManager._genTexture();
-            RenderSystem.bindTexture(oceanTexture);
-
-            GlStateManager._texImage2D(GL44.GL_TEXTURE_2D, 0, GL44.GL_RGBA,
-                    width, height,
-                    0, GL44.GL_RGBA, GL44.GL_UNSIGNED_BYTE, null);
-            GlStateManager._texParameter(GL44.GL_TEXTURE_2D, GL44.GL_TEXTURE_MIN_FILTER, GL44.GL_LINEAR);
-            GlStateManager._texParameter(GL44.GL_TEXTURE_2D, GL44.GL_TEXTURE_MAG_FILTER, GL44.GL_LINEAR);
-            GlStateManager._glFramebufferTexture2D(GL44.GL_FRAMEBUFFER, GL44.GL_COLOR_ATTACHMENT0, GL44.GL_TEXTURE_2D, oceanTexture, 0);
-
-            //END SKY
-            GlStateManager._glDeleteFramebuffers(endSkyFbo);
-            endSkyFbo = GlStateManager.glGenFramebuffers();
-
-            GlStateManager._glBindFramebuffer(GL44.GL_FRAMEBUFFER, endSkyFbo);
-
-            GlStateManager._deleteTexture(endSkyTexture);
-
-            endSkyTexture = GlStateManager._genTexture();
-            RenderSystem.bindTexture(endSkyTexture);
-
-            GlStateManager._texImage2D(GL44.GL_TEXTURE_2D, 0, GL44.GL_RGBA,
-                    width, height,
-                    0, GL44.GL_RGBA, GL44.GL_UNSIGNED_BYTE, null);
-            GlStateManager._texParameter(GL44.GL_TEXTURE_2D, GL44.GL_TEXTURE_MIN_FILTER, GL44.GL_LINEAR);
-            GlStateManager._texParameter(GL44.GL_TEXTURE_2D, GL44.GL_TEXTURE_MAG_FILTER, GL44.GL_LINEAR);
-            GlStateManager._glFramebufferTexture2D(GL44.GL_FRAMEBUFFER, GL44.GL_COLOR_ATTACHMENT0, GL44.GL_TEXTURE_2D, endSkyTexture, 0);
-
-            //PAINTING 1
-            GlStateManager._glDeleteFramebuffers(painting1Fbo);
-            painting1Fbo = GlStateManager.glGenFramebuffers();
-
-            GlStateManager._glBindFramebuffer(GL44.GL_FRAMEBUFFER, painting1Fbo);
-
-            GlStateManager._deleteTexture(painting1ColorTexture);
-
-            painting1ColorTexture = GlStateManager._genTexture();
-            RenderSystem.bindTexture(painting1ColorTexture);
-
-            GlStateManager._texImage2D(GL44.GL_TEXTURE_2D, 0, GL44.GL_RGBA,
-                    width, height,
-                    0, GL44.GL_RGBA, GL44.GL_UNSIGNED_BYTE, null);
-            GlStateManager._texParameter(GL44.GL_TEXTURE_2D, GL44.GL_TEXTURE_MIN_FILTER, GL44.GL_LINEAR);
-            GlStateManager._texParameter(GL44.GL_TEXTURE_2D, GL44.GL_TEXTURE_MAG_FILTER, GL44.GL_LINEAR);
-            GlStateManager._glFramebufferTexture2D(GL44.GL_FRAMEBUFFER, GL44.GL_COLOR_ATTACHMENT0, GL44.GL_TEXTURE_2D, painting1ColorTexture, 0);
+        RenderSystem.enableDepthTest();
+        RenderSystem.enableCull();
+    }
 
 
-            //PAINTING 1 DEPTH TEXTURE
-            GlStateManager._deleteTexture(painting1DepthTexture);
-
-            painting1DepthTexture = GlStateManager._genTexture();
-            RenderSystem.bindTexture(painting1DepthTexture);
-
-            GlStateManager._texImage2D(GL44.GL_TEXTURE_2D, 0, GL44.GL_DEPTH_COMPONENT24,
-                    width, height,
-                    0, GL44.GL_DEPTH_COMPONENT, GL44.GL_FLOAT, null);
-            GlStateManager._texParameter(GL44.GL_TEXTURE_2D, GL44.GL_TEXTURE_MIN_FILTER, GL44.GL_NEAREST);
-            GlStateManager._texParameter(GL44.GL_TEXTURE_2D, GL44.GL_TEXTURE_MAG_FILTER, GL44.GL_NEAREST);
-
-            GlStateManager._glFramebufferTexture2D(GL44.GL_FRAMEBUFFER, GL44.GL_DEPTH_ATTACHMENT, GL44.GL_TEXTURE_2D, painting1DepthTexture, 0);
-
-            //BACK TO CURRENT
-            GlStateManager._glBindFramebuffer(GL44.GL_FRAMEBUFFER, current);
-
-            albedoTarget = new TextureTarget(width, height, false, false);
-            tempTarget = new TextureTarget(width, height, false, false);
+    public static void renderBlockEntities(float partialTick, ArrayList<BlockPos> positions, ArrayList<Matrix4f> poses) {
+        if (positions.size() != poses.size()) {
+            return;
         }
+
+        RenderCube.renderSkyBlocks(positions, partialTick, poses, GameRenderer.getPositionColorShader());
     }
 }

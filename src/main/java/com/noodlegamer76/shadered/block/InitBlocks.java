@@ -35,13 +35,4 @@ public class InitBlocks {
 
     public static final RegistryObject<Block> END_SKY_BLOCK = BLOCKS.register("end_sky_block",
             () -> new EndSkyBlock(BlockBehaviour.Properties.copy(Blocks.STONE).mapColor(DyeColor.PURPLE).lightLevel((state) -> 15)));
-
-    public static final RegistryObject<Block> DARK_SOURCE = BLOCKS.register("dark_source",
-            () -> new DarkSource(BlockBehaviour.Properties.copy(Blocks.STONE).mapColor(DyeColor.BLACK)));
-
-    public static final RegistryObject<Block> OIL_DRUM = BLOCKS.register("oil_drum",
-            () -> new RotatedPillarBlock(BlockBehaviour.Properties.copy(Blocks.STONE).mapColor(DyeColor.GRAY)));
-
-    public static final RegistryObject<Block> SKYBLOCK_PAINTING = BLOCKS.register("skyblock_painting",
-            () -> new SkyblockPaintingBlock(BlockBehaviour.Properties.copy(Blocks.OAK_PLANKS)));
 }

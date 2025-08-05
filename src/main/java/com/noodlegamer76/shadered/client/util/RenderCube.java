@@ -69,10 +69,10 @@ public class RenderCube {
 
                 Matrix4f matrix4f = poseStack.last().pose();
 
-                bufferBuilder.vertex(matrix4f, -1, 0, -1).endVertex();
-                bufferBuilder.vertex(matrix4f, 1, 0, -1).endVertex();
-                bufferBuilder.vertex(matrix4f, 1, 0, 1).endVertex();
-                bufferBuilder.vertex(matrix4f, -1, 0, 1).endVertex();
+                bufferBuilder.vertex(matrix4f, -1, 0, -1).color(0, 0, 0, 1).endVertex();
+                bufferBuilder.vertex(matrix4f, 1, 0, -1).color(0, 0, 0, 1).endVertex();
+                bufferBuilder.vertex(matrix4f, 1, 0, 1).color(0, 0, 0, 1).endVertex();
+                bufferBuilder.vertex(matrix4f, -1, 0, 1).color(0, 0, 0, 1).endVertex();
 
                 poseStack.popPose();
             }

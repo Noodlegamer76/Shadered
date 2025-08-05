@@ -11,13 +11,10 @@ public class ShaderedTab {
             event.accept(InitItems.SPACE_BLOCK);
             event.accept(InitItems.OCEAN_BLOCK);
             event.accept(InitItems.STORMY_BLOCK);
-            event.accept(InitItems.DARKNESS_BLOCK);
             event.accept(InitItems.LIGHT_BLOCK);
+            event.accept(InitItems.DARKNESS_BLOCK);
             event.accept(InitItems.END_BLOCK);
             event.accept(InitItems.END_SKY_BLOCK);
-            event.accept(InitItems.SKYBLOCK_PAINTING);
-            //event.accept(InitItems.OIL_DRUM);
-            //event.accept(InitItems.DARK_SOURCE);
         }
     }
 }

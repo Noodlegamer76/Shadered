@@ -2,14 +2,11 @@ package com.noodlegamer76.shadered;
 
 import com.mojang.logging.LogUtils;
 import com.noodlegamer76.shadered.block.InitBlocks;
-import com.noodlegamer76.shadered.block.SkyblockPaintingBlock;
-import com.noodlegamer76.shadered.client.model.BlockModel;
 import com.noodlegamer76.shadered.client.renderer.block.*;
 import com.noodlegamer76.shadered.creativetabs.InitCreativeTabs;
 import com.noodlegamer76.shadered.creativetabs.ShaderedTab;
 import com.noodlegamer76.shadered.entity.block.InitBlockEntities;
 import com.noodlegamer76.shadered.item.InitItems;
-import com.noodlegamer76.shadered.item.TestItem;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.EntityRenderersEvent;
@@ -84,7 +81,6 @@ public class ShaderedMod
     {
         @SubscribeEvent
         public static void onClientSetup(FMLClientSetupEvent event) {
-            TestItem.makeBlood();
         }
 
         @SubscribeEvent
@@ -95,13 +91,6 @@ public class ShaderedMod
             event.registerBlockEntityRenderer(InitBlockEntities.OCEAN_BLOCK.get(), OceanBlockRenderer::new);
             event.registerBlockEntityRenderer(InitBlockEntities.END_BLOCK.get(), EndBlockRenderer::new);
             event.registerBlockEntityRenderer(InitBlockEntities.END_SKY_BLOCK.get(), EndSkyBlockRenderer::new);
-            event.registerBlockEntityRenderer(InitBlockEntities.DARK_SOURCE.get(), DarkSourceRenderer::new);
-            event.registerBlockEntityRenderer(InitBlockEntities.SKYBLOCK_PAINTING.get(), SkyblockPaintingRenderer::new);
-        }
-
-        @SubscribeEvent
-        public static void registerModelLayers(EntityRenderersEvent.RegisterLayerDefinitions event) {
-            event.registerLayerDefinition(BlockModel.LAYER_LOCATION, BlockModel::createBodyLayer);
         }
     }
 }
