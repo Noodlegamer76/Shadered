@@ -18,6 +18,8 @@ public class RegisterShadersEvent {
     public static ShaderInstance endSkyShader;
     public static ShaderInstance depthDiscarder;
     public static ShaderInstance depthMerge;
+    public static ShaderInstance invert;
+    public static ShaderInstance compressor;
 
     @SubscribeEvent
     public static void registerShaders(net.minecraftforge.client.event.RegisterShadersEvent event) throws IOException {
@@ -52,5 +54,15 @@ public class RegisterShadersEvent {
                         new ResourceLocation(ShaderedMod.MODID, "depth_merge"),
                         DefaultVertexFormat.POSITION_TEX),
                 (e) -> depthMerge = e);
+
+        event.registerShader(new ShaderInstance(event.getResourceProvider(),
+                        new ResourceLocation(ShaderedMod.MODID, "invert"),
+                        DefaultVertexFormat.POSITION),
+                (e) -> invert = e);
+
+        event.registerShader(new ShaderInstance(event.getResourceProvider(),
+                        new ResourceLocation(ShaderedMod.MODID, "compressor"),
+                        DefaultVertexFormat.POSITION),
+                (e) -> compressor = e);
     }
 }

@@ -42,4 +42,10 @@ public class InitItems {
 
     public static final RegistryObject<Item> ECLIPSE_BLOCK = ITEMS.register("eclipse_block",
             () -> new BlockItem(InitBlocks.ECLIPSE_BLOCK.get(), new Item.Properties()));
+
+    public static final RegistryObject<Item> SPACE_COMPRESSOR = ITEMS.register("space_compressor",
+            () -> new BlockItem(InitBlocks.SPACE_COMPRESSOR.get(), new Item.Properties()));
+
+    public static final RegistryObject<Item> CONFIGURATOR = ITEMS.register("configurator",
+            () -> new Configurator(new Item.Properties()));
 }

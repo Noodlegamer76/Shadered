@@ -24,6 +24,7 @@ public class ModBlockStateProvider extends BlockStateProvider {
         blockWithItem(InitBlocks.END_BLOCK);
         blockWithItem(InitBlocks.END_SKY_BLOCK);
         blockWithItem(InitBlocks.ECLIPSE_BLOCK);
+        blockWithItem(InitBlocks.SPACE_COMPRESSOR);
 
     }
 

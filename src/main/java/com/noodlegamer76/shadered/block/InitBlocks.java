@@ -38,4 +38,7 @@ public class InitBlocks {
 
     public static final RegistryObject<Block> ECLIPSE_BLOCK = BLOCKS.register("eclipse_block",
             () -> new EclipseBlock(BlockBehaviour.Properties.copy(Blocks.STONE).mapColor(DyeColor.RED).lightLevel((state) -> 5)));
+
+    public static final RegistryObject<Block> SPACE_COMPRESSOR = BLOCKS.register("space_compressor",
+            () -> new SpaceCompressorBlock(BlockBehaviour.Properties.copy(Blocks.STONE).mapColor(DyeColor.WHITE)));
 }

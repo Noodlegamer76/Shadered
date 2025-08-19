@@ -3,6 +3,7 @@ package com.noodlegamer76.shadered.event;
 import com.mojang.blaze3d.pipeline.RenderTarget;
 import com.mojang.blaze3d.pipeline.TextureTarget;
 import com.mojang.blaze3d.platform.GlStateManager;
+import com.mojang.blaze3d.shaders.Uniform;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.*;
 import com.noodlegamer76.shadered.ShaderedMod;
@@ -13,6 +14,8 @@ import com.noodlegamer76.shadered.client.util.SkyBoxRenderer;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.texture.AbstractTexture;
+import net.minecraft.client.renderer.texture.TextureManager;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
@@ -80,6 +83,16 @@ public class RenderEventsForFbos {
         }
 
         if (event.getStage() == RenderLevelStageEvent.Stage.AFTER_SKY) {
+            RegisterShadersEvent.invert.setSampler("Color", Minecraft.getInstance().getMainRenderTarget().getColorTextureId());
+            RegisterShadersEvent.compressor.setSampler("Color", Minecraft.getInstance().getMainRenderTarget().getColorTextureId());
+            RegisterShadersEvent.compressor.setSampler("Manifold", getTextureId(new ResourceLocation(ShaderedMod.MODID, "textures/noise/manifold.png")));
+            RegisterShadersEvent.compressor.setSampler("Grainy2", getTextureId(new ResourceLocation(ShaderedMod.MODID, "textures/noise/grainy2.png")));
+
+            Uniform screenSize = RegisterShadersEvent.compressor.getUniform("ScreenSize");
+            if (screenSize != null) {
+                screenSize.set((float) width, (float) height);
+            }
+
             width = Minecraft.getInstance().getWindow().getWidth();
             height = Minecraft.getInstance().getWindow().getHeight();
 
@@ -236,5 +249,11 @@ public class RenderEventsForFbos {
         }
 
         RenderCube.renderSkyBlocks(positions, partialTick, poses, GameRenderer.getPositionColorShader());
+    }
+
+    public static int getTextureId(ResourceLocation resourceLocation) {
+        TextureManager texturemanager = Minecraft.getInstance().getTextureManager();
+        AbstractTexture abstracttexture = texturemanager.getTexture(resourceLocation);
+        return abstracttexture.getId();
     }
 }

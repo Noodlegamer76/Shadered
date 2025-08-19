@@ -6,6 +6,7 @@ import com.noodlegamer76.shadered.client.renderer.block.*;
 import com.noodlegamer76.shadered.creativetabs.InitCreativeTabs;
 import com.noodlegamer76.shadered.creativetabs.ShaderedTab;
 import com.noodlegamer76.shadered.entity.block.InitBlockEntities;
+import com.noodlegamer76.shadered.entity.block.SpaceCompressorBlockEntity;
 import com.noodlegamer76.shadered.item.InitItems;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraftforge.api.distmarker.Dist;
@@ -92,6 +93,7 @@ public class ShaderedMod
             event.registerBlockEntityRenderer(InitBlockEntities.END_BLOCK.get(), EndBlockRenderer::new);
             event.registerBlockEntityRenderer(InitBlockEntities.END_SKY_BLOCK.get(), EndSkyBlockRenderer::new);
             event.registerBlockEntityRenderer(InitBlockEntities.ECLIPSE_BLOCK.get(), EclipseBlockEntityRenderer::new);
+            event.registerBlockEntityRenderer(InitBlockEntities.SPACE_COMPRESSOR.get(), SpaceCompressorBlockRenderer::new);
         }
     }
 }
