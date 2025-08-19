@@ -107,6 +107,7 @@ public class RenderEventsForFbos {
             RenderTarget mainTarget = mc.getMainRenderTarget();
 
 
+
             nebulaTarget.bindWrite(true);
             renderBlockEntities(event.getPartialTick(), spacePositions, spacePose);
 
@@ -183,11 +184,11 @@ public class RenderEventsForFbos {
             render(poseStack, eclipseTarget);
             render(poseStack, endSkyTarget);
 
-            RenderCube.renderCubeWithRenderType(endPositions, event.getPartialTick(), RenderType.endPortal(), endPose);
-
             poseStack.popPose();
 
             RenderSystem.restoreProjectionMatrix();
+
+            RenderCube.renderCubeWithRenderType(endPositions, event.getPartialTick(), RenderType.endPortal(), endPose);
         }
 
         if (event.getStage() == RenderLevelStageEvent.Stage.AFTER_WEATHER) {
