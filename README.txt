@@ -14,4 +14,4 @@ https://opengameart.org/content/ulukais-space-skyboxes
 
 Author: slimeslabs
 Ps1 Sky
-https://modrinth.com/user/slimeslabs
+https://modrinth.com/user/slimeslabss
