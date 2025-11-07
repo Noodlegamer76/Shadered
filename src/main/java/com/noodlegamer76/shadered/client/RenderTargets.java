@@ -11,10 +11,14 @@ public class RenderTargets {
     public static RenderTarget OCEAN = new TextureTarget(1, 1, false, false);
     public static RenderTarget STORMY = new TextureTarget(1, 1, false, false);
     public static RenderTarget END_SKY = new TextureTarget(1, 1, false, false);
+    public static RenderTarget ECLIPSE = new TextureTarget(1, 1, false, false);
+    public static RenderTarget PS1 = new TextureTarget(1, 1, false, false);
 
     public static final ArrayList<SkyBlockRenderInfo> spaceRenderInfos = new ArrayList<>();
     public static final ArrayList<SkyBlockRenderInfo> oceanRenderInfos = new ArrayList<>();
     public static final ArrayList<SkyBlockRenderInfo> stormyRenderInfos = new ArrayList<>();
     public static final ArrayList<SkyBlockRenderInfo> endRenderInfos = new ArrayList<>();
     public static final ArrayList<SkyBlockRenderInfo> endSkyRenderInfos = new ArrayList<>();
+    public static final ArrayList<SkyBlockRenderInfo> eclipseInfos = new ArrayList<>();
+    public static final ArrayList<SkyBlockRenderInfo> ps1Infos = new ArrayList<>();
 }

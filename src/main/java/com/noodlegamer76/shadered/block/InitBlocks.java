@@ -30,4 +30,10 @@ public class InitBlocks {
 
     public static final DeferredBlock<EndSkyBlock> END_SKY_BLOCK = BLOCKS.register("end_sky_block",
             () -> new EndSkyBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.STONE).mapColor(DyeColor.MAGENTA).lightLevel((state) -> 15)));
+
+    public static final DeferredBlock<EclipseBlock> ECLIPSE_BLOCK = BLOCKS.register("eclipse_block",
+            () -> new EclipseBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.STONE).mapColor(DyeColor.RED).lightLevel((state) -> 15)));
+
+    public static final DeferredBlock<PS1Block> PS1_BLOCK = BLOCKS.register("ps1_block",
+            () -> new PS1Block(BlockBehaviour.Properties.ofFullCopy(Blocks.STONE).mapColor(DyeColor.RED).lightLevel((state) -> 15)));
 }

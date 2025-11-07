@@ -18,6 +18,8 @@ public class RegisterShaders {
     public static ExtendedShaderInstance oceanSkybox;
     public static ExtendedShaderInstance stormySkybox;
     public static ExtendedShaderInstance endSkybox;
+    public static ExtendedShaderInstance eclipseSkybox;
+    public static ExtendedShaderInstance ps1Skybox;
 
     @SubscribeEvent
     public static void registerShaders(RegisterShadersEvent event) throws IOException {
@@ -40,5 +42,15 @@ public class RegisterShaders {
                         ResourceLocation.fromNamespaceAndPath(Shadered.MODID, "skybox"),
                         DefaultVertexFormat.POSITION),
                 (e) -> endSkybox = (ExtendedShaderInstance) e);
+
+        event.registerShader(new ExtendedShaderInstance(event.getResourceProvider(),
+                        ResourceLocation.fromNamespaceAndPath(Shadered.MODID, "skybox"),
+                        DefaultVertexFormat.POSITION),
+                (e) -> eclipseSkybox = (ExtendedShaderInstance) e);
+
+        event.registerShader(new ExtendedShaderInstance(event.getResourceProvider(),
+                        ResourceLocation.fromNamespaceAndPath(Shadered.MODID, "skybox"),
+                        DefaultVertexFormat.POSITION),
+                (e) -> ps1Skybox = (ExtendedShaderInstance) e);
     }
 }

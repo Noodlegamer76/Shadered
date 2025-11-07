@@ -69,6 +69,8 @@ public class Shadered
             event.registerBlockEntityRenderer(InitBlockEntities.STORMY_BLOCK.get(), StormyBlockRenderer::new);
             event.registerBlockEntityRenderer(InitBlockEntities.END_BLOCK.get(), EndBlockRenderer::new);
             event.registerBlockEntityRenderer(InitBlockEntities.END_SKY_BLOCK.get(), EndSkyBlockRenderer::new);
+            event.registerBlockEntityRenderer(InitBlockEntities.ECLIPSE_BLOCK.get(), EclipseBlockRenderer::new);
+            event.registerBlockEntityRenderer(InitBlockEntities.PS1_BLOCK.get(), Ps1BlockRenderer::new);
         }
     }
 }

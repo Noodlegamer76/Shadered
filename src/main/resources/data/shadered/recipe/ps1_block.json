@@ -1,0 +1,20 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    " # ",
+    "#Z#",
+    " # "
+  ],
+  "key": {
+    "#": {
+      "item": "minecraft:red_dye"
+    },
+    "Z": {
+      "item": "minecraft:black_wool"
+    }
+  },
+  "result": {
+    "id": "shadered:ps1_block",
+    "count": 4
+  }
+}

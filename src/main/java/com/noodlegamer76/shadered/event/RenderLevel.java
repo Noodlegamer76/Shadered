@@ -19,6 +19,8 @@ public class RenderLevel {
     public static final ResourceLocation NEBULA = ResourceLocation.fromNamespaceAndPath(Shadered.MODID, "textures/environment/nebula");
     public static final ResourceLocation STORMY = ResourceLocation.fromNamespaceAndPath(Shadered.MODID, "textures/environment/stormy");
     public static final ResourceLocation OCEAN = ResourceLocation.fromNamespaceAndPath(Shadered.MODID, "textures/environment/ocean");
+    public static final ResourceLocation ECLIPSE = ResourceLocation.fromNamespaceAndPath(Shadered.MODID, "textures/environment/eclipse");
+    public static final ResourceLocation PS1 = ResourceLocation.fromNamespaceAndPath(Shadered.MODID, "textures/environment/ps1");
     public static int width, height, prevWidth, prevHeight;
 
     @SubscribeEvent
@@ -31,6 +33,8 @@ public class RenderLevel {
             RenderTargets.OCEAN.clear(false);
             RenderTargets.STORMY.clear(false);
             RenderTargets.END_SKY.clear(false);
+            RenderTargets.ECLIPSE.clear(false);
+            RenderTargets.PS1.clear(false);
 
             if (prevWidth != width || prevHeight != height) {
                 prevWidth = width;
@@ -40,6 +44,8 @@ public class RenderLevel {
                 RenderTargets.OCEAN.resize(width, height, false);
                 RenderTargets.STORMY.resize(width, height, false);
                 RenderTargets.END_SKY.resize(width, height, false);
+                RenderTargets.ECLIPSE.resize(width, height, false);
+                RenderTargets.PS1.resize(width, height, false);
             }
 
             RenderTargets.SPACE.bindWrite(true);
@@ -58,12 +64,22 @@ public class RenderLevel {
             SkyBoxRenderer.renderEndSky(event.getPoseStack());
             RenderTargets.END_SKY.unbindWrite();
 
+            RenderTargets.ECLIPSE.bindWrite(true);
+            SkyBoxRenderer.renderBlockSkybox(event.getPoseStack(), ECLIPSE);
+            RenderTargets.ECLIPSE.unbindWrite();
+
+            RenderTargets.PS1.bindWrite(true);
+            SkyBoxRenderer.renderBlockSkybox(event.getPoseStack(), PS1);
+            RenderTargets.PS1.unbindWrite();
+
             Minecraft.getInstance().getMainRenderTarget().bindWrite(true);
 
             RegisterShaders.spaceSkybox.setSampler("Skybox", RenderTargets.SPACE.getColorTextureId());
             RegisterShaders.oceanSkybox.setSampler("Skybox", RenderTargets.OCEAN.getColorTextureId());
             RegisterShaders.stormySkybox.setSampler("Skybox", RenderTargets.STORMY.getColorTextureId());
             RegisterShaders.endSkybox.setSampler("Skybox", RenderTargets.END_SKY.getColorTextureId());
+            RegisterShaders.eclipseSkybox.setSampler("Skybox", RenderTargets.ECLIPSE.getColorTextureId());
+            RegisterShaders.ps1Skybox.setSampler("Skybox", RenderTargets.PS1.getColorTextureId());
         }
 
         if (event.getStage() == RenderLevelStageEvent.Stage.AFTER_BLOCK_ENTITIES) {
@@ -71,6 +87,8 @@ public class RenderLevel {
             RenderCube.renderSkyBlocks(RenderTargets.oceanRenderInfos, RegisterShaders.oceanSkybox);
             RenderCube.renderSkyBlocks(RenderTargets.stormyRenderInfos, RegisterShaders.stormySkybox);
             RenderCube.renderSkyBlocks(RenderTargets.endSkyRenderInfos, RegisterShaders.endSkybox);
+            RenderCube.renderSkyBlocks(RenderTargets.eclipseInfos, RegisterShaders.eclipseSkybox);
+            RenderCube.renderSkyBlocks(RenderTargets.ps1Infos, RegisterShaders.ps1Skybox);
             RenderCube.renderCubeWithRenderType(RenderTargets.endRenderInfos, RenderType.endPortal());
         }
     }

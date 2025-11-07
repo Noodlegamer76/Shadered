@@ -24,4 +24,8 @@ public class InitItems {
             () -> new BlockItem(InitBlocks.END_BLOCK.get(), new Item.Properties()));
     public static final DeferredItem<Item> END_SKY_BLOCK = ITEMS.register("end_sky_block",
             () -> new BlockItem(InitBlocks.END_SKY_BLOCK.get(), new Item.Properties()));
+    public static final DeferredItem<Item> ECLIPSE_BLOCK = ITEMS.register("eclipse_block",
+            () -> new BlockItem(InitBlocks.ECLIPSE_BLOCK.get(), new Item.Properties()));
+    public static final DeferredItem<Item> PS1_BLOCK = ITEMS.register("ps1_block",
+            () -> new BlockItem(InitBlocks.PS1_BLOCK.get(), new Item.Properties()));
 }
