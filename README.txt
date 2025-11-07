@@ -11,3 +11,7 @@ https://opengameart.org/content/retro-skyboxes-pack
 Author: Ulukai
 Eclipse and Nebula skybox
 https://opengameart.org/content/ulukais-space-skyboxes
+
+Author: slimeslabs
+Ps1 Sky
+https://modrinth.com/user/slimeslabs
