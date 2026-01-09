@@ -7,6 +7,7 @@ import com.mojang.math.Axis;
 import com.noodlegamer76.shadered.event.RegisterShadersEvent;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
+import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.ShaderInstance;
 import net.minecraft.core.BlockPos;
@@ -23,29 +24,26 @@ import java.util.List;
 
 public class RenderCube {
 
-    public static void renderSkyBlocks(ArrayList<BlockPos> positions, float partialTicks, ArrayList<Matrix4f> pose, ShaderInstance shader) {
-        Tesselator tesselator = Tesselator.getInstance();
-        BufferBuilder bufferBuilder = tesselator.getBuilder();
-
-        Vec3 camera = Minecraft.getInstance().gameRenderer.getMainCamera().getPosition();
+    public static void renderSkyBlocks(SkyblockData data, RenderType renderType) {
+        MultiBufferSource.BufferSource bufferSource = Minecraft.getInstance().renderBuffers().bufferSource();
+        VertexConsumer vertexConsumer = bufferSource.getBuffer(renderType);
 
         RenderSystem.depthMask(true);
         RenderSystem.enableDepthTest();
-        RenderSystem.setShader(() -> shader);
 
-        bufferBuilder.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION);
+        RenderSystem.setShader(() -> RegisterShadersEvent.skybox);
+
         PoseStack poseStack = new PoseStack();
 
-        for (int i = 0; i < positions.size(); i++) {
-            BlockPos pos = positions.get(i);
+        for (int i = 0; i < data.getPos().size(); i++) {
+            BlockPos pos = data.getPos().get(i);
             for (int j = 0; j < 6; j++) {
-                // Check for backface culling based on face direction
                 if (shouldCull(pos, j)) {
-                    continue; // Skip rendering backfaces
+                    continue;
                 }
 
                 poseStack.pushPose();
-                poseStack.mulPoseMatrix(pose.get(i));
+                poseStack.mulPoseMatrix(data.getMatrices().get(i));
                 poseStack.translate(0.5, 0.5, 0.5);
 
                 switch (j) {
@@ -73,19 +71,16 @@ public class RenderCube {
 
                 Matrix4f matrix4f = poseStack.last().pose();
 
-                bufferBuilder.vertex(matrix4f, -1, 0, -1).color(0, 0, 0, 1).endVertex();
-                bufferBuilder.vertex(matrix4f, 1, 0, -1).color(0, 0, 0, 1).endVertex();
-                bufferBuilder.vertex(matrix4f, 1, 0, 1).color(0, 0, 0, 1).endVertex();
-                bufferBuilder.vertex(matrix4f, -1, 0, 1).color(0, 0, 0, 1).endVertex();
+                vertexConsumer.vertex(matrix4f, -1, 0, -1).endVertex();
+                vertexConsumer.vertex(matrix4f, 1, 0, -1).endVertex();
+                vertexConsumer.vertex(matrix4f, 1, 0, 1).endVertex();
+                vertexConsumer.vertex(matrix4f, -1, 0, 1).endVertex();
 
                 poseStack.popPose();
             }
         }
 
-        tesselator.end();
-
-        positions.clear();
-        pose.clear();
+        data.clear();
     }
 
     public static void renderCubeWithRenderType(List<BlockPos> positions, float partialTicks, RenderType renderType, List<Matrix4f> pose) {

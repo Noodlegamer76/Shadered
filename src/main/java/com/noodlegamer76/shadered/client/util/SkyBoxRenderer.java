@@ -3,29 +3,22 @@ package com.noodlegamer76.shadered.client.util;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.*;
 import com.mojang.math.Axis;
-import com.noodlegamer76.shadered.ShaderedMod;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GameRenderer;
-import net.minecraft.client.renderer.RenderType;
 import net.minecraft.resources.ResourceLocation;
 import org.joml.Matrix4f;
+
+import static com.noodlegamer76.shadered.client.util.SkyboxTranslation.*;
 
 import static net.minecraft.client.renderer.blockentity.TheEndPortalRenderer.END_SKY_LOCATION;
 
 public class SkyBoxRenderer {
-    public static final ResourceLocation TEXTURE2 = new ResourceLocation(ShaderedMod.MODID, "textures/environment/layer1/skybox2");
-    public static final ResourceLocation TEXTURE_EEE = new ResourceLocation(ShaderedMod.MODID, "textures/environment/layer1/eee");
-
-    //this stuff is a nightmare
-    public static void renderBlockSkybox(PoseStack poseStack, int ticks, float partialTick, int alpha, float speed,
+    public static void renderBlockSkybox(PoseStack poseStack, SkyboxTranslation translation, int ticks, float partialTick, float speed,
                                          ResourceLocation frontTexture, ResourceLocation backTexture, ResourceLocation leftTexture,
                                          ResourceLocation rightTexture, ResourceLocation topTexture, ResourceLocation bottomTexture) {
         RenderSystem.depthMask(false);
         RenderSystem.enableBlend();
-        RenderSystem.setShader(GameRenderer::getPositionTexColorShader);
-
-        Tesselator tesselator = Tesselator.getInstance();
-        BufferBuilder bufferbuilder = tesselator.getBuilder();
+        RenderSystem.setShader(GameRenderer::getPositionTexShader);
 
         float far = Minecraft.getInstance().gameRenderer.getRenderDistance();
         float rotation = (ticks + partialTick) * speed;
@@ -34,66 +27,71 @@ public class SkyBoxRenderer {
 
         poseStack.mulPose(Axis.YN.rotationDegrees(rotation));
 
-
-        // Front face (+Z)
-        poseStack.pushPose();
+        // Front face (−Z, north)
         RenderSystem.setShaderTexture(0, frontTexture);
-        drawQuad(bufferbuilder, tesselator, poseStack, -far, -far, far,  // bottom-left
-                -far, far, far,   // top-left
-                far, far, far,    // top-right
-                far, -far, far,   // bottom-right
-                alpha);
-        poseStack.popPose();
-
-        // Back face (-Z)
-        poseStack.pushPose();
-        RenderSystem.setShaderTexture(0, backTexture);
-        drawQuad(bufferbuilder, tesselator, poseStack, far, -far, -far,
-                far, far, -far,
-                -far, far, -far,
+        drawQuad(poseStack,
                 -far, -far, -far,
-                alpha);
-        poseStack.popPose();
+                far,  -far, -far,
+                far,   far, -far,
+                -far,  far, -far,
+                translation.frontRot,
+                translation.frontFlip
+        );
 
-        // Left face (-X)
-        poseStack.pushPose();
+        // Back face (+Z, south)
+        RenderSystem.setShaderTexture(0, backTexture);
+        drawQuad(poseStack,
+                far,  -far,  far,
+                -far, -far,  far,
+                -far,  far,  far,
+                far,   far,  far,
+                translation.backRot,
+                translation.backFlip
+        );
+
+        // Left face (+X, east)
         RenderSystem.setShaderTexture(0, leftTexture);
-        drawQuad(bufferbuilder, tesselator, poseStack, -far, -far, -far,
-                -far, far, -far,
-                -far, far, far,
-                -far, -far, far,
-                alpha);
-        poseStack.popPose();
+        drawQuad(poseStack,
+                far,  -far, -far,
+                far,  -far,  far,
+                far,   far,  far,
+                far,   far, -far,
+                translation.leftRot,
+                translation.leftFlip
+        );
 
-        // Right face (+X)
-        poseStack.pushPose();
+        // Right face (−X, west)
         RenderSystem.setShaderTexture(0, rightTexture);
-        drawQuad(bufferbuilder, tesselator, poseStack, far, -far, far,
-                far, far, far,
-                far, far, -far,
-                far, -far, -far,
-                alpha);
-        poseStack.popPose();
+        drawQuad(poseStack,
+                -far, -far,  far,
+                -far, -far, -far,
+                -far,  far, -far,
+                -far,  far,  far,
+                translation.rightRot,
+                translation.rightFlip
+        );
 
         // Top face (+Y)
-        poseStack.pushPose();
         RenderSystem.setShaderTexture(0, topTexture);
-        drawQuad(bufferbuilder, tesselator, poseStack, -far, far, far,
-                -far, far, -far,
-                far, far, -far,
-                far, far, far,
-                alpha);
-        poseStack.popPose();
+        drawQuad(poseStack,
+                -far,  far, -far,
+                far,   far, -far,
+                far,   far,  far,
+                -far,  far,  far,
+                translation.topRot,
+                translation.topFlip
+        );
 
-        // Bottom face (-Y)
-        poseStack.pushPose();
+        // Bottom face (−Y)
         RenderSystem.setShaderTexture(0, bottomTexture);
-        drawQuad(bufferbuilder, tesselator, poseStack, -far, -far, -far,
-                -far, -far, far,
-                far, -far, far,
-                far, -far, -far,
-                alpha);
-        poseStack.popPose();
+        drawQuad(poseStack,
+                -far, -far,  far,
+                far,  -far,  far,
+                far,  -far, -far,
+                -far, -far, -far,
+                translation.bottomRot,
+                translation.bottomFlip
+        );;
 
         poseStack.popPose();
 
@@ -101,19 +99,60 @@ public class SkyBoxRenderer {
         RenderSystem.disableBlend();
     }
 
-    private static void drawQuad(BufferBuilder bufferbuilder, Tesselator tesselator, PoseStack poseStack,
+    public static VertexConsumer startQuad() {
+        BufferBuilder bufferBuilder = Tesselator.getInstance().getBuilder();
+        bufferBuilder.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
+        return bufferBuilder;
+    }
+
+    public static void endQuad() {
+        Tesselator.getInstance().end();
+    }
+
+    private static void vertexUV(VertexConsumer vc, Matrix4f m,
+                                 float x, float y, float z,
+                                 float u, float v,
+                                 SkyboxRotation rotation,
+                                 SkyboxFlip flip) {
+
+        float uu = u;
+        float vv = v;
+
+        switch (rotation) {
+            case ROTATE_90_CW -> { float t = uu; uu = 1.0F - vv; vv = t; }
+            case ROTATE_180   -> { uu = 1.0F - uu; vv = 1.0F - vv; }
+            case ROTATE_90_CCW-> { float t = uu; uu = vv; vv = 1.0F - t; }
+            default -> {}
+        }
+
+        switch (flip) {
+            case HORIZONTAL -> uu = 1.0F - uu;
+            case VERTICAL   -> vv = 1.0F - vv;
+            case BOTH       -> { uu = 1.0F - uu; vv = 1.0F - vv; }
+            default -> {}
+        }
+
+        vc.vertex(m, x, y, z).uv(uu, vv).endVertex();
+    }
+
+
+
+    private static void drawQuad(PoseStack poseStack,
                                  float x1, float y1, float z1,
                                  float x2, float y2, float z2,
                                  float x3, float y3, float z3,
                                  float x4, float y4, float z4,
-                                 int alpha) {
-        Matrix4f matrix4f = poseStack.last().pose();
-        bufferbuilder.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX_COLOR);
-        bufferbuilder.vertex(matrix4f, x1, y1, z1).uv(0.0F, 1.0F).color(255, 255, 255, alpha).endVertex();
-        bufferbuilder.vertex(matrix4f, x2, y2, z2).uv(0.0F, 0.0F).color(255, 255, 255, alpha).endVertex();
-        bufferbuilder.vertex(matrix4f, x3, y3, z3).uv(1.0F, 0.0F).color(255, 255, 255, alpha).endVertex();
-        bufferbuilder.vertex(matrix4f, x4, y4, z4).uv(1.0F, 1.0F).color(255, 255, 255, alpha).endVertex();
-        tesselator.end();
+                                 SkyboxRotation rotation, SkyboxFlip flip) {
+
+        VertexConsumer vc = startQuad();
+        Matrix4f m = poseStack.last().pose();
+
+        vertexUV(vc, m, x1, y1, z1, 0.0F, 1.0F, rotation, flip);
+        vertexUV(vc, m, x2, y2, z2, 0.0F, 0.0F, rotation, flip);
+        vertexUV(vc, m, x3, y3, z3, 1.0F, 0.0F, rotation, flip);
+        vertexUV(vc, m, x4, y4, z4, 1.0F, 1.0F, rotation, flip);
+
+        endQuad();
     }
 
     public static void renderEndSky(PoseStack poseStack) {
@@ -161,8 +200,13 @@ public class SkyBoxRenderer {
         RenderSystem.disableBlend();
     }
 
-    public static void renderBlockSkybox(PoseStack poseStack, ResourceLocation folder) {
-        SkyBoxRenderer.renderBlockSkybox(poseStack, 0, 0, 255, 0,
+    public static void renderBlockSkybox(
+            PoseStack poseStack,
+            ResourceLocation folder,
+            float rotSpeed, int ticks, float partialTick,
+            SkyboxTranslation translation) {
+        renderBlockSkybox(poseStack,
+                translation, ticks, partialTick, rotSpeed,
                 folder.withSuffix("/front.png"),
                 folder.withSuffix("/back.png"),
                 folder.withSuffix("/left.png"),
@@ -172,5 +216,15 @@ public class SkyBoxRenderer {
         );
     }
 
-
+    public static void renderBlockSkybox(PoseStack poseStack, ResourceLocation folder, SkyboxTranslation translation) {
+        renderBlockSkybox(poseStack,
+                translation, 0, 0, 0,
+                folder.withSuffix("/front.png"),
+                folder.withSuffix("/back.png"),
+                folder.withSuffix("/left.png"),
+                folder.withSuffix("/right.png"),
+                folder.withSuffix("/top.png"),
+                folder.withSuffix("/bottom.png")
+        );
+    }
 }

@@ -1,6 +1,6 @@
 package com.noodlegamer76.shadered.block;
 
-import com.noodlegamer76.shadered.ShaderedMod;
+import com.noodlegamer76.shadered.Shadered;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.state.BlockBehaviour;
@@ -10,7 +10,7 @@ import net.minecraftforge.registries.RegistryObject;
 
 public class InitBlocks {
 
-    public static final DeferredRegister<Block> BLOCKS = DeferredRegister.create(ForgeRegistries.BLOCKS, ShaderedMod.MODID);
+    public static final DeferredRegister<Block> BLOCKS = DeferredRegister.create(ForgeRegistries.BLOCKS, Shadered.MODID);
 
     public static final RegistryObject<Block> RENDER_TESTER_BLOCK = BLOCKS.register("render_tester",
             () -> new RenderTesterBlock(BlockBehaviour.Properties.copy(Blocks.STONE).mapColor(DyeColor.BLACK).noCollission().noOcclusion()));
@@ -38,7 +38,4 @@ public class InitBlocks {
 
     public static final RegistryObject<Block> ECLIPSE_BLOCK = BLOCKS.register("eclipse_block",
             () -> new EclipseBlock(BlockBehaviour.Properties.copy(Blocks.STONE).mapColor(DyeColor.RED).lightLevel((state) -> 5)));
-
-    public static final RegistryObject<Block> SPACE_COMPRESSOR = BLOCKS.register("space_compressor",
-            () -> new SpaceCompressorBlock(BlockBehaviour.Properties.copy(Blocks.STONE).mapColor(DyeColor.WHITE)));
 }

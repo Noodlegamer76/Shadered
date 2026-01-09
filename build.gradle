@@ -72,14 +72,6 @@ repositories {
         name = 'BlameJared Maven (CrT / Bookshelf)'
         url = 'https://maven.blamejared.com'
     }
-    maven {
-        name = 'GeckoLib'
-        url 'https://dl.cloudsmith.io/public/geckolib3/geckolib/maven/'
-        content {
-            includeGroupByRegex("software\\.bernie.*")
-            includeGroup("com.eliotlash.mclib")
-        }
-    }
     maven { url = 'https://repo.spongepowered.org/repository/maven-public/' }
 
 }
@@ -92,10 +84,6 @@ mixin {
 dependencies {
     //compileOnly fg.deobf("com.jozufozu.flywheel:flywheel-forge-${minecraft_version}:${flywheel_version}")
     //runtimeOnly fg.deobf("com.jozufozu.flywheel:flywheel-forge-${minecraft_version}:${flywheel_version}")
-
-    implementation fg.deobf("software.bernie.geckolib:geckolib-forge-${minecraft_version}:${geckolib_version}")
-    implementation("com.eliotlash.mclib:mclib:20")
-
     //implementation fg.deobf("foundry.veil:Veil-forge-${project.minecraft_version}:${project.veil_version}") { transitive = false }
     //annotationProcessor 'org.spongepowered:mixin:0.8.5:processor'
 

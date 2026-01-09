@@ -1,6 +1,7 @@
 package com.noodlegamer76.shadered.client.renderer.block;
 
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.noodlegamer76.shadered.client.renderer.SkyblockRenderer;
 import com.noodlegamer76.shadered.entity.block.EndSkyBlockEntity;
 import com.noodlegamer76.shadered.event.RenderEventsForFbos;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -15,8 +16,8 @@ public class EndSkyBlockRenderer implements BlockEntityRenderer<EndSkyBlockEntit
 
     @Override
     public void render(EndSkyBlockEntity pBlockEntity, float pPartialTick, PoseStack pPoseStack, MultiBufferSource pBuffer, int pPackedLight, int pPackedOverlay) {
-        RenderEventsForFbos.endSkyPositions.add(pBlockEntity.getBlockPos());
-        RenderEventsForFbos.endSkyPose.add(pPoseStack.last().pose());
+        SkyblockRenderer renderer = SkyblockRenderer.getInstance();
+        renderer.endSkyData.add(pBlockEntity.getBlockPos(), pPoseStack.last().pose());
     }
 
     @Override

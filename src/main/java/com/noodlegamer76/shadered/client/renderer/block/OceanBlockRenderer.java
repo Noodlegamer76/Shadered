@@ -1,6 +1,7 @@
 package com.noodlegamer76.shadered.client.renderer.block;
 
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.noodlegamer76.shadered.client.renderer.SkyblockRenderer;
 import com.noodlegamer76.shadered.entity.block.EndBlockEntity;
 import com.noodlegamer76.shadered.entity.block.OceanBlockEntity;
 import com.noodlegamer76.shadered.entity.block.RenderTester;
@@ -18,8 +19,8 @@ public class OceanBlockRenderer<T extends RenderTester> implements BlockEntityRe
 
     @Override
     public void render(OceanBlockEntity pBlockEntity, float pPartialTick, PoseStack pPoseStack, MultiBufferSource pBuffer, int pPackedLight, int pPackedOverlay) {
-        RenderEventsForFbos.oceanPositions.add(pBlockEntity.getBlockPos());
-        RenderEventsForFbos.oceanPose.add(pPoseStack.last().pose());
+        SkyblockRenderer renderer = SkyblockRenderer.getInstance();
+        renderer.oceanData.add(pBlockEntity.getBlockPos(), pPoseStack.last().pose());
     }
 
     @Override

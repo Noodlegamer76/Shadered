@@ -1,13 +1,9 @@
 package com.noodlegamer76.shadered.datagen;
 
-import com.noodlegamer76.shadered.ShaderedMod;
 import com.noodlegamer76.shadered.block.InitBlocks;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.PackOutput;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.BlockTags;
-import net.minecraft.tags.TagKey;
-import net.minecraft.world.level.block.Block;
 import net.minecraftforge.common.data.BlockTagsProvider;
 import net.minecraftforge.common.data.ExistingFileHelper;
 import org.jetbrains.annotations.Nullable;
@@ -29,7 +25,6 @@ public class ModBlockTagGenerator extends BlockTagsProvider  {
                 .add(InitBlocks.LIGHT_BLOCK.get())
                 .add(InitBlocks.END_BLOCK.get())
                 .add(InitBlocks.END_SKY_BLOCK.get())
-                .add(InitBlocks.ECLIPSE_BLOCK.get())
-                .add(InitBlocks.SPACE_COMPRESSOR.get());
+                .add(InitBlocks.ECLIPSE_BLOCK.get());
     }
 }

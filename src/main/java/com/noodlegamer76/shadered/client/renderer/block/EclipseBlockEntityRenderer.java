@@ -1,6 +1,7 @@
 package com.noodlegamer76.shadered.client.renderer.block;
 
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.noodlegamer76.shadered.client.renderer.SkyblockRenderer;
 import com.noodlegamer76.shadered.entity.block.EclipseBlockEntity;
 import com.noodlegamer76.shadered.event.RenderEventsForFbos;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -15,8 +16,8 @@ public class EclipseBlockEntityRenderer implements BlockEntityRenderer<EclipseBl
 
     @Override
     public void render(EclipseBlockEntity pBlockEntity, float pPartialTick, PoseStack pPoseStack, MultiBufferSource pBuffer, int pPackedLight, int pPackedOverlay) {
-        RenderEventsForFbos.eclipsePositions.add(pBlockEntity.getBlockPos());
-        RenderEventsForFbos.eclipsePose.add(pPoseStack.last().pose());
+        SkyblockRenderer renderer = SkyblockRenderer.getInstance();
+        renderer.eclipseData.add(pBlockEntity.getBlockPos(), pPoseStack.last().pose());
     }
 
     @Override

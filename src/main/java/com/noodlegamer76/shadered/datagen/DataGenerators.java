@@ -1,6 +1,6 @@
 package com.noodlegamer76.shadered.datagen;
 
-import com.noodlegamer76.shadered.ShaderedMod;
+import com.noodlegamer76.shadered.Shadered;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.data.PackOutput;
@@ -11,7 +11,7 @@ import net.minecraftforge.fml.common.Mod;
 
 import java.util.concurrent.CompletableFuture;
 
-@Mod.EventBusSubscriber(modid = ShaderedMod.MODID, bus = Mod.EventBusSubscriber.Bus.MOD)
+@Mod.EventBusSubscriber(modid = Shadered.MODID, bus = Mod.EventBusSubscriber.Bus.MOD)
 public class DataGenerators {
     @SubscribeEvent
     public static void gatherData(GatherDataEvent event) {
@@ -20,7 +20,7 @@ public class DataGenerators {
         ExistingFileHelper existingFileHelper = event.getExistingFileHelper();
         CompletableFuture<HolderLookup.Provider> lookupProvider = event.getLookupProvider();
 
-        ModBlockTagGenerator modBlockTagGenerator = new ModBlockTagGenerator(packOutput, lookupProvider, ShaderedMod.MODID, existingFileHelper);
+        ModBlockTagGenerator modBlockTagGenerator = new ModBlockTagGenerator(packOutput, lookupProvider, Shadered.MODID, existingFileHelper);
 
 
         generator.addProvider(true, new ModRecipeProvider(packOutput));

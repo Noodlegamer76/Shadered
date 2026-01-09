@@ -1,5 +1,0 @@
-due to an error I made a while back you need to transform the images a bit:
-
-front, back, left, and right: flip the image horizontally
-bottom: rotate image 90 degrees counter-clockwise then flip vertically
-top: rotate image 90 degrees clockwise then flip vertically

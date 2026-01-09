@@ -1,8 +1,7 @@
 package com.noodlegamer76.shadered.item;
 
-import com.noodlegamer76.shadered.ShaderedMod;
+import com.noodlegamer76.shadered.Shadered;
 import com.noodlegamer76.shadered.block.InitBlocks;
-import com.noodlegamer76.shadered.block.StormyBlock;
 import net.minecraft.world.item.*;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
@@ -10,7 +9,7 @@ import net.minecraftforge.registries.RegistryObject;
 
 public class InitItems {
 
-    public static final DeferredRegister<Item> ITEMS = DeferredRegister.create(ForgeRegistries.ITEMS, ShaderedMod.MODID);
+    public static final DeferredRegister<Item> ITEMS = DeferredRegister.create(ForgeRegistries.ITEMS, Shadered.MODID);
 
     //dev stuff
     public static final RegistryObject<Item> TEST_ITEM = ITEMS.register("test_item",
@@ -42,10 +41,4 @@ public class InitItems {
 
     public static final RegistryObject<Item> ECLIPSE_BLOCK = ITEMS.register("eclipse_block",
             () -> new BlockItem(InitBlocks.ECLIPSE_BLOCK.get(), new Item.Properties()));
-
-    public static final RegistryObject<Item> SPACE_COMPRESSOR = ITEMS.register("space_compressor",
-            () -> new BlockItem(InitBlocks.SPACE_COMPRESSOR.get(), new Item.Properties()));
-
-    public static final RegistryObject<Item> CONFIGURATOR = ITEMS.register("configurator",
-            () -> new Configurator(new Item.Properties()));
 }

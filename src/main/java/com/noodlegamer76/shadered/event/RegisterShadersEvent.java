@@ -1,7 +1,7 @@
 package com.noodlegamer76.shadered.event;
 
 import com.mojang.blaze3d.vertex.DefaultVertexFormat;
-import com.noodlegamer76.shadered.ShaderedMod;
+import com.noodlegamer76.shadered.Shadered;
 import net.minecraft.client.renderer.ShaderInstance;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
@@ -10,59 +10,15 @@ import net.minecraftforge.fml.common.Mod;
 
 import java.io.IOException;
 
-@Mod.EventBusSubscriber(modid = ShaderedMod.MODID, bus = Mod.EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
+@Mod.EventBusSubscriber(modid = Shadered.MODID, bus = Mod.EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
 public class RegisterShadersEvent {
-    public static ShaderInstance spaceShader;
-    public static ShaderInstance oceanShader;
-    public static ShaderInstance stormyShader;
-    public static ShaderInstance endSkyShader;
-    public static ShaderInstance depthDiscarder;
-    public static ShaderInstance depthMerge;
-    public static ShaderInstance invert;
-    public static ShaderInstance compressor;
+    public static ShaderInstance skybox;
 
     @SubscribeEvent
     public static void registerShaders(net.minecraftforge.client.event.RegisterShadersEvent event) throws IOException {
-
-
         event.registerShader(new ShaderInstance(event.getResourceProvider(),
-                        new ResourceLocation(ShaderedMod.MODID, "skybox"),
+                        new ResourceLocation(Shadered.MODID, "skybox"),
                         DefaultVertexFormat.POSITION),
-                (e) -> spaceShader = e);
-
-        event.registerShader(new ShaderInstance(event.getResourceProvider(),
-                        new ResourceLocation(ShaderedMod.MODID, "skybox"),
-                        DefaultVertexFormat.POSITION),
-                (e) -> stormyShader = e);
-
-        event.registerShader(new ShaderInstance(event.getResourceProvider(),
-                        new ResourceLocation(ShaderedMod.MODID, "skybox"),
-                        DefaultVertexFormat.POSITION),
-                (e) -> endSkyShader = e);
-
-        event.registerShader(new ShaderInstance(event.getResourceProvider(),
-                        new ResourceLocation(ShaderedMod.MODID, "skybox"),
-                        DefaultVertexFormat.POSITION),
-                (e) -> oceanShader = e);
-
-        event.registerShader(new ShaderInstance(event.getResourceProvider(),
-                        new ResourceLocation(ShaderedMod.MODID, "depth_discarder"),
-                        DefaultVertexFormat.POSITION_TEX),
-                (e) -> depthDiscarder = e);
-
-        event.registerShader(new ShaderInstance(event.getResourceProvider(),
-                        new ResourceLocation(ShaderedMod.MODID, "depth_merge"),
-                        DefaultVertexFormat.POSITION_TEX),
-                (e) -> depthMerge = e);
-
-        event.registerShader(new ShaderInstance(event.getResourceProvider(),
-                        new ResourceLocation(ShaderedMod.MODID, "invert"),
-                        DefaultVertexFormat.POSITION),
-                (e) -> invert = e);
-
-        event.registerShader(new ShaderInstance(event.getResourceProvider(),
-                        new ResourceLocation(ShaderedMod.MODID, "compressor"),
-                        DefaultVertexFormat.POSITION),
-                (e) -> compressor = e);
+                (e) -> skybox = e);
     }
 }

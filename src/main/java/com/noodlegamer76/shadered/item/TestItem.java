@@ -8,7 +8,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 
 public class TestItem extends Item {
-    //item i use to trigger stuff in the mod
+    //item I use to trigger stuff in the mod
     public TestItem(Properties pProperties) {
         super(pProperties);
     }

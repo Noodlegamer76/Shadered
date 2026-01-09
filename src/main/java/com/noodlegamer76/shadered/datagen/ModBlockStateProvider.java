@@ -1,6 +1,6 @@
 package com.noodlegamer76.shadered.datagen;
 
-import com.noodlegamer76.shadered.ShaderedMod;
+import com.noodlegamer76.shadered.Shadered;
 import com.noodlegamer76.shadered.block.InitBlocks;
 import net.minecraft.data.PackOutput;
 import net.minecraft.resources.ResourceLocation;
@@ -12,7 +12,7 @@ import net.minecraftforge.registries.RegistryObject;
 
 public class ModBlockStateProvider extends BlockStateProvider {
     public ModBlockStateProvider(PackOutput output, ExistingFileHelper exFileHelper) {
-        super(output, ShaderedMod.MODID, exFileHelper);
+        super(output, Shadered.MODID, exFileHelper);
     }
 
     @Override
@@ -24,7 +24,6 @@ public class ModBlockStateProvider extends BlockStateProvider {
         blockWithItem(InitBlocks.END_BLOCK);
         blockWithItem(InitBlocks.END_SKY_BLOCK);
         blockWithItem(InitBlocks.ECLIPSE_BLOCK);
-        blockWithItem(InitBlocks.SPACE_COMPRESSOR);
 
     }
 

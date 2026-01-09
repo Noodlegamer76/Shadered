@@ -1,12 +1,16 @@
 package com.noodlegamer76.shadered.client.util;
 
+import com.mojang.blaze3d.pipeline.TextureTarget;
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.DefaultVertexFormat;
 import com.mojang.blaze3d.vertex.VertexFormat;
+import com.noodlegamer76.shadered.client.renderer.SkyblockRenderer;
 import com.noodlegamer76.shadered.event.RegisterShadersEvent;
+import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.renderer.RenderStateShard;
 import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.ShaderInstance;
 import org.lwjgl.opengl.GL33;
 
 public class ModRenderTypes {
@@ -24,18 +28,31 @@ public class ModRenderTypes {
     protected static final RenderStateShard.DepthTestStateShard GREATER_DEPTH_TEST = new RenderStateShard.DepthTestStateShard(">", 516);
     protected static final RenderStateShard.DepthTestStateShard LESS_DEPTH_TEST = new RenderStateShard.DepthTestStateShard(">", GL33.GL_LESS);
 
+    public static final RenderType SPACE = getSkyboxRenderType(SkyblockRenderer.getInstance().getNebulaTarget());
+    public static final RenderType OCEAN = getSkyboxRenderType(SkyblockRenderer.getInstance().getOceanTarget());
+    public static final RenderType STORMY = getSkyboxRenderType(SkyblockRenderer.getInstance().getStormyTarget());
+    public static final RenderType END_SKY = getSkyboxRenderType(SkyblockRenderer.getInstance().getEndSkyTarget());
+    public static final RenderType ECLIPSE = getSkyboxRenderType(SkyblockRenderer.getInstance().getEclipseTarget());
 
-    public static final RenderType WARP_TRANSPARENT = RenderType.create(
-            "compressor",
-            DefaultVertexFormat.POSITION_TEX,
-            VertexFormat.Mode.QUADS,
-            256,
-            true,
-            true,
-            RenderType.CompositeState.builder()
-                    .setShaderState(new RenderStateShard.ShaderStateShard(() -> RegisterShadersEvent.compressor))
-                    .setTransparencyState(TRANSLUCENT_TRANSPARENCY)
-                    .setDepthTestState(LESS_DEPTH_TEST)
-                    .createCompositeState(false)
-    );
+    public static RenderType getSkyboxRenderType(TextureTarget textureTarget) {
+        return RenderType.create(
+                "skybox",
+                DefaultVertexFormat.POSITION,
+                VertexFormat.Mode.QUADS,
+                256,
+                true,
+                true,
+                RenderType.CompositeState.builder()
+                        .setShaderState(new RenderStateShard.ShaderStateShard(() -> RegisterShadersEvent.skybox))
+                        .setTextureState(new RenderStateShard.EmptyTextureStateShard(
+                                () -> {
+                                    ShaderInstance skybox = RegisterShadersEvent.skybox;
+                                    skybox.setSampler("Skybox", textureTarget.getColorTextureId());
+                                },
+                                () -> {
+
+                                }))
+                        .createCompositeState(false)
+        );
+    }
 }
