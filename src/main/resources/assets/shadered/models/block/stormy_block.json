@@ -1,0 +1,7 @@
+{
+  "parent": "minecraft:block/cube_all",
+  "render_type": "shadered:stormy",
+  "textures": {
+    "all": "shadered:item/stormy_block"
+  }
+}

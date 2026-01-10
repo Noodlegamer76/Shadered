@@ -16,13 +16,13 @@ public class InitBlocks {
             () -> new RenderTesterBlock(BlockBehaviour.Properties.copy(Blocks.STONE).mapColor(DyeColor.BLACK).noCollission().noOcclusion()));
 
     public static final RegistryObject<Block> SPACE_BLOCK = BLOCKS.register("space_block",
-            () -> new SpaceBlock(BlockBehaviour.Properties.copy(Blocks.STONE).mapColor(DyeColor.BLACK).lightLevel((state) -> 15)));
+            () -> new SkyboxBlock(BlockBehaviour.Properties.copy(Blocks.STONE).mapColor(DyeColor.BLACK).lightLevel((state) -> 15)));
 
     public static final RegistryObject<Block> STORMY_BLOCK = BLOCKS.register("stormy_block",
-            () -> new StormyBlock(BlockBehaviour.Properties.copy(Blocks.STONE).mapColor(DyeColor.WHITE).lightLevel((state) -> 15)));
+            () -> new SkyboxBlock(BlockBehaviour.Properties.copy(Blocks.STONE).mapColor(DyeColor.WHITE).lightLevel((state) -> 15)));
 
     public static final RegistryObject<Block> OCEAN_BLOCK = BLOCKS.register("ocean_block",
-            () -> new OceanBlock(BlockBehaviour.Properties.copy(Blocks.STONE).mapColor(DyeColor.BLUE).lightLevel((state) -> 15)));
+            () -> new SkyboxBlock(BlockBehaviour.Properties.copy(Blocks.STONE).mapColor(DyeColor.BLUE).lightLevel((state) -> 15)));
 
     public static final RegistryObject<Block> DARKNESS_BLOCK = BLOCKS.register("darkness_block",
             () -> new Block(BlockBehaviour.Properties.copy(Blocks.STONE).mapColor(DyeColor.BLACK)));
@@ -31,11 +31,11 @@ public class InitBlocks {
             () -> new Block(BlockBehaviour.Properties.copy(Blocks.STONE).mapColor(DyeColor.WHITE).emissiveRendering((state, getter, pos) -> true)));
 
     public static final RegistryObject<Block> END_BLOCK = BLOCKS.register("end_block",
-            () -> new EndBlock(BlockBehaviour.Properties.copy(Blocks.STONE).mapColor(DyeColor.BLACK).lightLevel((state) -> 15)));
+            () -> new SkyboxBlock(BlockBehaviour.Properties.copy(Blocks.STONE).mapColor(DyeColor.BLACK).lightLevel((state) -> 15)));
 
     public static final RegistryObject<Block> END_SKY_BLOCK = BLOCKS.register("end_sky_block",
-            () -> new EndSkyBlock(BlockBehaviour.Properties.copy(Blocks.STONE).mapColor(DyeColor.PURPLE).lightLevel((state) -> 15)));
+            () -> new SkyboxBlock(BlockBehaviour.Properties.copy(Blocks.STONE).mapColor(DyeColor.PURPLE).lightLevel((state) -> 15)));
 
     public static final RegistryObject<Block> ECLIPSE_BLOCK = BLOCKS.register("eclipse_block",
-            () -> new EclipseBlock(BlockBehaviour.Properties.copy(Blocks.STONE).mapColor(DyeColor.RED).lightLevel((state) -> 5)));
+            () -> new SkyboxBlock(BlockBehaviour.Properties.copy(Blocks.STONE).mapColor(DyeColor.RED).lightLevel((state) -> 5)));
 }

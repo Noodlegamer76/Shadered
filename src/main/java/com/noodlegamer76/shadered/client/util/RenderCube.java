@@ -1,23 +1,18 @@
 package com.noodlegamer76.shadered.client.util;
 
-import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.*;
 import com.mojang.math.Axis;
-import com.noodlegamer76.shadered.event.RegisterShadersEvent;
+import com.noodlegamer76.shadered.event.RegisterShaders;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
-import net.minecraft.client.renderer.ShaderInstance;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.phys.Vec3;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
-import org.lwjgl.opengl.GL11;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,7 +26,7 @@ public class RenderCube {
         RenderSystem.depthMask(true);
         RenderSystem.enableDepthTest();
 
-        RenderSystem.setShader(() -> RegisterShadersEvent.skybox);
+        RenderSystem.setShader(() -> RegisterShaders.skybox);
 
         PoseStack poseStack = new PoseStack();
 

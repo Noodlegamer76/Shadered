@@ -1,3 +1,4 @@
 {
-  "parent": "shadered:block/end_sky_block"
+  "parent": "shadered:block/end_sky_block",
+  "render_type": "minecraft:solid"
 }

@@ -21,6 +21,19 @@ public class ModItemModelProvider extends ItemModelProvider {
     @Override
     protected void registerModels() {
         evenSimplerBlockItem(InitBlocks.LIGHT_BLOCK);
+        blockItemWithRenderType(InitBlocks.SPACE_BLOCK, "solid");
+        blockItemWithRenderType(InitBlocks.ECLIPSE_BLOCK, "solid");
+        blockItemWithRenderType(InitBlocks.END_BLOCK, "solid");
+        blockItemWithRenderType(InitBlocks.END_SKY_BLOCK, "solid");
+        blockItemWithRenderType(InitBlocks.STORMY_BLOCK, "solid");
+        blockItemWithRenderType(InitBlocks.OCEAN_BLOCK, "solid");
+    }
+
+    public void blockItemWithRenderType(RegistryObject<Block> block, String renderType) {
+        String path = ForgeRegistries.BLOCKS.getKey(block.get()).getPath();
+        this.withExistingParent(Shadered.MODID + ":" + path,
+                        modLoc("block/" + path))
+                .renderType(renderType);
     }
 
     private ItemModelBuilder saplingItem(RegistryObject<Block> item) {
@@ -60,7 +73,7 @@ public class ModItemModelProvider extends ItemModelProvider {
     }
     private ItemModelBuilder simpleBlockItem(RegistryObject<Block> block) {
         return withExistingParent(block.getId().getPath(),
-                new ResourceLocation("item/generated")).texture("layer0",
+                new ResourceLocation("block/cube_all")).texture("all",
                 new ResourceLocation(Shadered.MODID, "item/" + block.getId().getPath()));
     }
     private ItemModelBuilder slabItem(RegistryObject<Block> item) {

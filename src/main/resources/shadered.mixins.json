@@ -6,6 +6,9 @@
   "mixins": [
   ],
   "client": [
+    "LevelRendererMixin",
+    "RenderTypeMixin",
+    "accessor.ItemBlockRenderTypesAccessor"
   ],
   "minVersion": "0.8"
 }

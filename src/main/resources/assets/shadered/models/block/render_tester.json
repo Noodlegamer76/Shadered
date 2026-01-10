@@ -1,0 +1,7 @@
+{
+  "parent": "minecraft:block/cube_all",
+  "render_type": "shadered:skybox",
+  "textures": {
+    "all": "minecraft:block/dirt"
+  }
+}

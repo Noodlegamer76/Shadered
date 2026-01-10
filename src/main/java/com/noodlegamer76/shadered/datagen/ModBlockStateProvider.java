@@ -17,13 +17,7 @@ public class ModBlockStateProvider extends BlockStateProvider {
 
     @Override
     protected void registerStatesAndModels() {
-        blockWithItem(InitBlocks.SPACE_BLOCK);
-        blockWithItem(InitBlocks.STORMY_BLOCK);
-        blockWithItem(InitBlocks.OCEAN_BLOCK);
         blockWithItem(InitBlocks.DARKNESS_BLOCK);
-        blockWithItem(InitBlocks.END_BLOCK);
-        blockWithItem(InitBlocks.END_SKY_BLOCK);
-        blockWithItem(InitBlocks.ECLIPSE_BLOCK);
 
     }
 

@@ -3,7 +3,6 @@ package com.noodlegamer76.shadered;
 import com.mojang.logging.LogUtils;
 import com.noodlegamer76.shadered.block.InitBlocks;
 import com.noodlegamer76.shadered.creativetabs.InitCreativeTabs;
-import com.noodlegamer76.shadered.entity.block.InitBlockEntities;
 import com.noodlegamer76.shadered.item.InitItems;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.IEventBus;
@@ -23,7 +22,6 @@ public class Shadered {
 
         InitBlocks.BLOCKS.register(modEventBus);
         InitItems.ITEMS.register(modEventBus);
-        InitBlockEntities.BLOCK_ENTITIES.register(modEventBus);
         InitCreativeTabs.CREATIVE_TABS.register(modEventBus);
     }
 }

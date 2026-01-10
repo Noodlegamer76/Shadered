@@ -1,3 +1,4 @@
 {
-  "parent": "shadered:block/stormy_block"
+  "parent": "shadered:block/stormy_block",
+  "render_type": "minecraft:solid"
 }

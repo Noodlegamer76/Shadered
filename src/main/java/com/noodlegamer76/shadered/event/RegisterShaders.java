@@ -11,8 +11,10 @@ import net.minecraftforge.fml.common.Mod;
 import java.io.IOException;
 
 @Mod.EventBusSubscriber(modid = Shadered.MODID, bus = Mod.EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
-public class RegisterShadersEvent {
+public class RegisterShaders {
     public static ShaderInstance skybox;
+    public static ShaderInstance skyboxWarp;
+    public static ShaderInstance endCopy;
 
     @SubscribeEvent
     public static void registerShaders(net.minecraftforge.client.event.RegisterShadersEvent event) throws IOException {
@@ -20,5 +22,15 @@ public class RegisterShadersEvent {
                         new ResourceLocation(Shadered.MODID, "skybox"),
                         DefaultVertexFormat.POSITION),
                 (e) -> skybox = e);
+
+        event.registerShader(new ShaderInstance(event.getResourceProvider(),
+                        new ResourceLocation(Shadered.MODID, "skybox_warp"),
+                        DefaultVertexFormat.POSITION_TEX_COLOR),
+                (e) -> skyboxWarp = e);
+
+        event.registerShader(new ShaderInstance(event.getResourceProvider(),
+                        new ResourceLocation(Shadered.MODID, "end"),
+                        DefaultVertexFormat.BLOCK),
+                (e) -> endCopy = e);
     }
 }

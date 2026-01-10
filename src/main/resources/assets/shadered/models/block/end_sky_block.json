@@ -1,0 +1,7 @@
+{
+  "parent": "minecraft:block/cube_all",
+  "render_type": "shadered:end_sky",
+  "textures": {
+    "all": "shadered:item/end_sky_block"
+  }
+}

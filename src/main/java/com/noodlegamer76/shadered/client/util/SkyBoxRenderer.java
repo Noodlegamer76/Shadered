@@ -5,6 +5,7 @@ import com.mojang.blaze3d.vertex.*;
 import com.mojang.math.Axis;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GameRenderer;
+import net.minecraft.client.renderer.ShaderInstance;
 import net.minecraft.resources.ResourceLocation;
 import org.joml.Matrix4f;
 
@@ -13,19 +14,18 @@ import static com.noodlegamer76.shadered.client.util.SkyboxTranslation.*;
 import static net.minecraft.client.renderer.blockentity.TheEndPortalRenderer.END_SKY_LOCATION;
 
 public class SkyBoxRenderer {
-    public static void renderBlockSkybox(PoseStack poseStack, SkyboxTranslation translation, int ticks, float partialTick, float speed,
+    public static void renderBlockSkybox(PoseStack poseStack, SkyboxTranslation translation,
+                                         ShaderInstance shaderInstance,
+                                         int r, int g, int b, int a,
                                          ResourceLocation frontTexture, ResourceLocation backTexture, ResourceLocation leftTexture,
                                          ResourceLocation rightTexture, ResourceLocation topTexture, ResourceLocation bottomTexture) {
         RenderSystem.depthMask(false);
         RenderSystem.enableBlend();
-        RenderSystem.setShader(GameRenderer::getPositionTexShader);
+        RenderSystem.setShader(() -> shaderInstance);
 
         float far = Minecraft.getInstance().gameRenderer.getRenderDistance();
-        float rotation = (ticks + partialTick) * speed;
 
         poseStack.pushPose();
-
-        poseStack.mulPose(Axis.YN.rotationDegrees(rotation));
 
         // Front face (−Z, north)
         RenderSystem.setShaderTexture(0, frontTexture);
@@ -34,6 +34,7 @@ public class SkyBoxRenderer {
                 far,  -far, -far,
                 far,   far, -far,
                 -far,  far, -far,
+                r, g, b, a,
                 translation.frontRot,
                 translation.frontFlip
         );
@@ -45,6 +46,7 @@ public class SkyBoxRenderer {
                 -far, -far,  far,
                 -far,  far,  far,
                 far,   far,  far,
+                r, g, b, a,
                 translation.backRot,
                 translation.backFlip
         );
@@ -56,6 +58,7 @@ public class SkyBoxRenderer {
                 far,  -far,  far,
                 far,   far,  far,
                 far,   far, -far,
+                r, g, b, a,
                 translation.leftRot,
                 translation.leftFlip
         );
@@ -67,6 +70,7 @@ public class SkyBoxRenderer {
                 -far, -far, -far,
                 -far,  far, -far,
                 -far,  far,  far,
+                r, g, b, a,
                 translation.rightRot,
                 translation.rightFlip
         );
@@ -78,6 +82,7 @@ public class SkyBoxRenderer {
                 far,   far, -far,
                 far,   far,  far,
                 -far,  far,  far,
+                r, g, b, a,
                 translation.topRot,
                 translation.topFlip
         );
@@ -89,9 +94,10 @@ public class SkyBoxRenderer {
                 far,  -far,  far,
                 far,  -far, -far,
                 -far, -far, -far,
+                r, g, b, a,
                 translation.bottomRot,
                 translation.bottomFlip
-        );;
+        );
 
         poseStack.popPose();
 
@@ -101,7 +107,7 @@ public class SkyBoxRenderer {
 
     public static VertexConsumer startQuad() {
         BufferBuilder bufferBuilder = Tesselator.getInstance().getBuilder();
-        bufferBuilder.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
+        bufferBuilder.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX_COLOR);
         return bufferBuilder;
     }
 
@@ -112,6 +118,7 @@ public class SkyBoxRenderer {
     private static void vertexUV(VertexConsumer vc, Matrix4f m,
                                  float x, float y, float z,
                                  float u, float v,
+                                 int r, int g, int b, int a,
                                  SkyboxRotation rotation,
                                  SkyboxFlip flip) {
 
@@ -132,7 +139,10 @@ public class SkyBoxRenderer {
             default -> {}
         }
 
-        vc.vertex(m, x, y, z).uv(uu, vv).endVertex();
+        vc.vertex(m, x, y, z)
+                .uv(uu, vv)
+                .color(r, g, b, a)
+                .endVertex();
     }
 
 
@@ -142,15 +152,16 @@ public class SkyBoxRenderer {
                                  float x2, float y2, float z2,
                                  float x3, float y3, float z3,
                                  float x4, float y4, float z4,
+                                 int r, int g, int b, int a,
                                  SkyboxRotation rotation, SkyboxFlip flip) {
 
         VertexConsumer vc = startQuad();
         Matrix4f m = poseStack.last().pose();
 
-        vertexUV(vc, m, x1, y1, z1, 0.0F, 1.0F, rotation, flip);
-        vertexUV(vc, m, x2, y2, z2, 0.0F, 0.0F, rotation, flip);
-        vertexUV(vc, m, x3, y3, z3, 1.0F, 0.0F, rotation, flip);
-        vertexUV(vc, m, x4, y4, z4, 1.0F, 1.0F, rotation, flip);
+        vertexUV(vc, m, x1, y1, z1, 0.0F, 1.0F, r, g, b, a, rotation, flip);
+        vertexUV(vc, m, x2, y2, z2, 0.0F, 0.0F, r, g, b, a, rotation, flip);
+        vertexUV(vc, m, x3, y3, z3, 1.0F, 0.0F, r, g, b, a, rotation, flip);
+        vertexUV(vc, m, x4, y4, z4, 1.0F, 1.0F, r, g, b, a, rotation, flip);
 
         endQuad();
     }
@@ -203,10 +214,13 @@ public class SkyBoxRenderer {
     public static void renderBlockSkybox(
             PoseStack poseStack,
             ResourceLocation folder,
-            float rotSpeed, int ticks, float partialTick,
+            ShaderInstance shaderInstance,
+            int r, int g, int b, int a,
             SkyboxTranslation translation) {
         renderBlockSkybox(poseStack,
-                translation, ticks, partialTick, rotSpeed,
+                translation,
+                shaderInstance,
+                r, g, b, a,
                 folder.withSuffix("/front.png"),
                 folder.withSuffix("/back.png"),
                 folder.withSuffix("/left.png"),
@@ -216,9 +230,11 @@ public class SkyBoxRenderer {
         );
     }
 
-    public static void renderBlockSkybox(PoseStack poseStack, ResourceLocation folder, SkyboxTranslation translation) {
+    public static void renderBlockSkybox(PoseStack poseStack, ResourceLocation folder, ShaderInstance shaderInstance, SkyboxTranslation translation) {
         renderBlockSkybox(poseStack,
-                translation, 0, 0, 0,
+                translation,
+                shaderInstance,
+                255, 255, 255, 255,
                 folder.withSuffix("/front.png"),
                 folder.withSuffix("/back.png"),
                 folder.withSuffix("/left.png"),
