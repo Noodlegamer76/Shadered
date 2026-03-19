@@ -4,7 +4,7 @@ import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.DefaultVertexFormat;
 import com.mojang.blaze3d.vertex.VertexFormat;
-import com.noodlegamer76.shadered.event.RegisterShadersEvent;
+import com.noodlegamer76.shadered.event.RegisterShaders;
 import net.minecraft.client.renderer.RenderStateShard;
 import net.minecraft.client.renderer.RenderType;
 import org.lwjgl.opengl.GL33;
@@ -33,7 +33,7 @@ public class ModRenderTypes {
             true,
             true,
             RenderType.CompositeState.builder()
-                    .setShaderState(new RenderStateShard.ShaderStateShard(() -> RegisterShadersEvent.compressor))
+                    .setShaderState(new RenderStateShard.ShaderStateShard(() -> RegisterShaders.compressor))
                     .setTransparencyState(TRANSLUCENT_TRANSPARENCY)
                     .setDepthTestState(LESS_DEPTH_TEST)
                     .createCompositeState(false)
