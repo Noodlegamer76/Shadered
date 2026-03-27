@@ -7,6 +7,7 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.*;
 import com.mojang.math.Axis;
 import com.noodlegamer76.shadered.ShaderedMod;
+import com.noodlegamer76.shadered.client.renderer.ComplexPassRenderer;
 import com.noodlegamer76.shadered.client.renderer.SkyblockRenderer;
 import com.noodlegamer76.shadered.client.util.*;
 import net.minecraft.client.Minecraft;
@@ -28,6 +29,23 @@ public class RenderEventsForFbos {
 
     @SubscribeEvent
     public static void levelRenderEvent(RenderLevelStageEvent event) {
-        SkyblockRenderer.renderSkyblocks(event.getStage(), event.getPoseStack(), event.getRenderTick(), event.getPartialTick());
+        SkyblockRenderer.preRender();
+
+        RenderLevelStageEvent.Stage stage = event.getStage();
+        PoseStack poseStack = event.getPoseStack();
+        float partialTick = event.getPartialTick();
+        int renderTick = event.getRenderTick();
+
+        ComplexPassRenderer renderer = ComplexPassRenderer.getInstance();
+
+        if (stage == RenderLevelStageEvent.Stage.AFTER_SKY) {
+            renderer.render(RenderStage.AFTER_SKY, poseStack, renderTick, partialTick);
+        }
+        else if (stage == RenderLevelStageEvent.Stage.AFTER_BLOCK_ENTITIES) {
+            renderer.render(RenderStage.AFTER_BLOCK_ENTITIES, poseStack, renderTick, partialTick);
+        }
+        else if (stage == RenderLevelStageEvent.Stage.AFTER_LEVEL) {
+            renderer.render(RenderStage.AFTER_LEVEL, poseStack, renderTick, partialTick);
+        }
     }
 }

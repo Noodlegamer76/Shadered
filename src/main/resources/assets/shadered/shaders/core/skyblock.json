@@ -4,8 +4,8 @@
         "srcrgb": "one",
         "dstrgb": "zero"
     },
-    "vertex": "shadered:skybox",
-    "fragment": "shadered:skybox",
+    "vertex": "shadered:skyblock",
+    "fragment": "shadered:skyblock",
     "attributes": [ ],
     "samplers": [
         { "name": "Skybox" }

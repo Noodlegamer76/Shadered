@@ -16,6 +16,7 @@ public class RegisterShaders {
     public static ShaderInstance invert;
     public static ShaderInstance compressor;
     public static ShaderInstance skyboxWarp;
+    public static ShaderInstance skyblock;
 
     @SubscribeEvent
     public static void registerShaders(net.minecraftforge.client.event.RegisterShadersEvent event) throws IOException {
@@ -38,5 +39,10 @@ public class RegisterShaders {
                         new ResourceLocation(ShaderedMod.MODID, "compressor"),
                         DefaultVertexFormat.POSITION),
                 (e) -> compressor = e);
+
+        event.registerShader(new ShaderInstance(event.getResourceProvider(),
+                        new ResourceLocation(ShaderedMod.MODID, "skyblock"),
+                        DefaultVertexFormat.POSITION),
+                (e) -> skyblock = e);
     }
 }
