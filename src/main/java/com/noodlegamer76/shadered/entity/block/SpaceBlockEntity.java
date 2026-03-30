@@ -6,7 +6,7 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 
-public class SpaceBlockEntity extends BlockEntity {
+public class SpaceBlockEntity extends SkyblockEntity {
     public SpaceBlockEntity(BlockPos pPos, BlockState pBlockState) {
         super(InitBlockEntities.SPACE_BLOCK.get(), pPos, pBlockState);
     }

@@ -4,11 +4,15 @@ import com.mojang.blaze3d.pipeline.TextureTarget;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.noodlegamer76.shadered.client.renderer.ComplexPassRenderer;
+import com.noodlegamer76.shadered.client.renderer.SkyblockRenderer;
 import com.noodlegamer76.shadered.client.util.*;
-import com.noodlegamer76.shadered.event.RegisterShaders;
+import com.noodlegamer76.shadered.client.util.skyblock.SkyBoxRenderer;
+import com.noodlegamer76.shadered.client.util.skyblock.SkyblockBatchData;
+import com.noodlegamer76.shadered.client.util.skyblock.SkyblockPass;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.ShaderInstance;
+import net.minecraft.client.renderer.blockentity.TheEndPortalRenderer;
 
 public class EndBlockRenderPass implements RenderableComplexPass {
     private final SkyblockBatchData batchData;
@@ -29,7 +33,20 @@ public class EndBlockRenderPass implements RenderableComplexPass {
     //TODO: Make this work with shaders
     @Override
     public void render(RenderStage stage, PoseStack poseStack, int renderTick, float partialTick) {
-        RenderCube.renderCubeWithRenderType(RenderType.endPortal(), batchData);
+        ComplexPassRenderer renderer = ComplexPassRenderer.getInstance();
+        TextureTarget skyboxTarget = renderer.getWriteBuffer();
+
+        skyboxTarget.bindWrite(true);
+        SkyBoxRenderer.renderEndPortalSky(poseStack);
+
+        renderer.getRenderBuffer().bindWrite(true);
+
+        for (SkyblockPass pass : SkyblockPass.values()) {
+            ShaderInstance shader = pass.shader.get();
+            shader.setSampler("Skybox", skyboxTarget.getColorTextureId());
+
+            RenderCube.renderSkyBlocks(batchData.get(pass), shader);
+        }
 
         batchData.clear();
     }

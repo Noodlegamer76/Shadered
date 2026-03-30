@@ -3,26 +3,28 @@ package com.noodlegamer76.shadered.client.util;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.*;
 import com.mojang.math.Axis;
-import com.noodlegamer76.shadered.event.RegisterShaders;
+import com.noodlegamer76.shadered.client.util.skyblock.SkyblockBatchData;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
-import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.ShaderInstance;
+import net.minecraft.client.renderer.blockentity.TheEndPortalRenderer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.level.DataPackConfig;
 import net.minecraft.world.level.block.state.BlockState;
+import org.jetbrains.annotations.Nullable;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class RenderCube {
-    public static void renderSkyBlocks(SkyblockBatchData data, ShaderInstance shader) {
+    public static void renderSkyBlocks(SkyblockBatchData.PassData data, @Nullable ShaderInstance shader) {
+        if (data == null) return;
         Tesselator tesselator = Tesselator.getInstance();
         BufferBuilder bufferbuilder = tesselator.getBuilder();
-        bufferbuilder.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION);
+        bufferbuilder.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
 
         RenderSystem.depthMask(true);
         RenderSystem.enableDepthTest();
@@ -67,22 +69,86 @@ public class RenderCube {
 
                 Matrix4f matrix4f = poseStack.last().pose();
 
-                bufferbuilder.vertex(matrix4f, -1, 0, -1).endVertex();
-                bufferbuilder.vertex(matrix4f, 1, 0, -1).endVertex();
-                bufferbuilder.vertex(matrix4f, 1, 0, 1).endVertex();
-                bufferbuilder.vertex(matrix4f, -1, 0, 1).endVertex();
+                bufferbuilder.vertex(matrix4f, -1, 0, -1).uv(0f, 0f).endVertex();
+                bufferbuilder.vertex(matrix4f, 1, 0, -1).uv(1f, 0f).endVertex();
+                bufferbuilder.vertex(matrix4f, 1, 0, 1).uv(1f, 1f).endVertex();
+                bufferbuilder.vertex(matrix4f, -1, 0, 1).uv(0f, 1f).endVertex();
 
                 poseStack.popPose();
             }
         }
 
         tesselator.end();
-
-
-        data.clear();
     }
 
-    public static void renderCubeWithRenderType(RenderType renderType, SkyblockBatchData data) {
+    public static void renderEndPortalCubes(SkyblockBatchData.PassData data) {
+        if (data == null) return;
+        Tesselator tesselator = Tesselator.getInstance();
+        BufferBuilder bufferbuilder = tesselator.getBuilder();
+        bufferbuilder.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
+
+        RenderSystem.depthMask(true);
+        RenderSystem.enableDepthTest();
+
+        RenderSystem.setShader(GameRenderer::getRendertypeEndPortalShader);
+        ResourceLocation endSky = TheEndPortalRenderer.END_SKY_LOCATION;
+        ResourceLocation endPortal = TheEndPortalRenderer.END_PORTAL_LOCATION;
+
+        RenderSystem.setShaderTexture(0, endSky);
+        RenderSystem.setShaderTexture(1, endPortal);
+
+        PoseStack poseStack = new PoseStack();
+
+        for (int i = 0; i < data.getPose().size(); i++) {
+            BlockPos pos = data.getPositions().get(i);
+            for (int j = 0; j < 6; j++) {
+                if (shouldCull(pos, j)) {
+                    continue;
+                }
+
+                poseStack.pushPose();
+                poseStack.mulPoseMatrix(data.getPose().get(i));
+                poseStack.translate(0.5, 0.5, 0.5);
+
+                switch (j) {
+                    case 0:
+                        break;
+                    case 1:
+                        poseStack.mulPose(Axis.XP.rotationDegrees(90));
+                        break;
+                    case 2:
+                        poseStack.mulPose(Axis.XP.rotationDegrees(180));
+                        break;
+                    case 3:
+                        poseStack.mulPose(Axis.XP.rotationDegrees(-90));
+                        break;
+                    case 4:
+                        poseStack.mulPose(Axis.ZP.rotationDegrees(-90));
+                        break;
+                    case 5:
+                        poseStack.mulPose(Axis.ZN.rotationDegrees(-90));
+                        break;
+                }
+
+                poseStack.translate(0, -0.5, 0);
+                poseStack.scale(0.5f, 0.5f, 0.5f);
+
+                Matrix4f matrix4f = poseStack.last().pose();
+
+                bufferbuilder.vertex(matrix4f, -1, 0, -1).uv(0f, 0f).endVertex();
+                bufferbuilder.vertex(matrix4f, 1, 0, -1).uv(1f, 0f).endVertex();
+                bufferbuilder.vertex(matrix4f, 1, 0, 1).uv(1f, 1f).endVertex();
+                bufferbuilder.vertex(matrix4f, -1, 0, 1).uv(0f, 1f).endVertex();
+
+                poseStack.popPose();
+            }
+        }
+
+        tesselator.end();
+    }
+
+    public static void renderCubeWithRenderType(RenderType renderType, @Nullable SkyblockBatchData.PassData data) {
+        if (data == null) return;
         VertexConsumer vertexConsumer = Minecraft.getInstance().renderBuffers().bufferSource().getBuffer(renderType);
 
         RenderSystem.depthMask(true);
@@ -154,8 +220,6 @@ public class RenderCube {
                 poseStack.popPose();
             }
         }
-
-        data.clear();
     }
 
     public static void renderSpaceCompressorBox(BlockPos[] positions, float partialTicks, RenderType renderType, PoseStack poseStack) {

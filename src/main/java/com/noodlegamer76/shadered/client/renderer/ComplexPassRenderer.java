@@ -38,11 +38,9 @@ public class ComplexPassRenderer {
     private final Map<RenderStage, List<RenderableComplexPass>> complexPasses = new HashMap<>();
     private TextureTarget renderBuffer;
     private TextureTarget writeBuffer;
-    private TextureTarget maskBuffer;
     private boolean initialized;
     private int previousWidth;
     private int previousHeight;
-    private boolean useWrite = false;
 
     public void add(RenderStage stage, RenderableComplexPass effect) {
         complexPasses.computeIfAbsent(stage, s -> new ArrayList<>()).add(effect);
@@ -59,8 +57,6 @@ public class ComplexPassRenderer {
 
         renderBuffer = new TextureTarget(previousWidth, previousHeight, true, Minecraft.ON_OSX);
         writeBuffer = new TextureTarget(previousWidth, previousHeight, true, Minecraft.ON_OSX);
-
-        maskBuffer = new MaskTextureTarget(previousWidth, previousHeight);
 
         initialized = true;
     }
@@ -84,7 +80,6 @@ public class ComplexPassRenderer {
 
         TextureTarget current = renderBuffer;
         TextureTarget scratch = writeBuffer;
-        TextureTarget mask = maskBuffer;
 
         List<RenderableComplexPass> passes = complexPasses.getOrDefault(stage, List.of());
 
@@ -101,7 +96,6 @@ public class ComplexPassRenderer {
                 scratch.bindWrite(true);
 
                 current.bindRead();
-                mask.bindRead();
 
                 pass.render(stage, poseStack, renderTick, partialTick);
 
@@ -113,8 +107,6 @@ public class ComplexPassRenderer {
 
         renderBuffer = current;
         writeBuffer = scratch;
-
-        maskBuffer.clear(Minecraft.ON_OSX);
 
         postRender();
     }
@@ -140,21 +132,12 @@ public class ComplexPassRenderer {
         mainTarget.copyDepthFrom(renderBuffer);
     }
 
-    public void bindMaskBuffer(int unit) {
-        GlStateManager._bindTexture(maskBuffer.getColorTextureId());
-        GL42.glBindImageTexture(unit, maskBuffer.getColorTextureId(), 0, false, 0, GL15.GL_WRITE_ONLY, GL30.GL_R32UI);
-    }
-
     public TextureTarget getRenderBuffer() {
         return renderBuffer;
     }
 
     public TextureTarget getWriteBuffer() {
         return writeBuffer;
-    }
-
-    public TextureTarget getMaskBuffer() {
-        return maskBuffer;
     }
 
     public void clear() {

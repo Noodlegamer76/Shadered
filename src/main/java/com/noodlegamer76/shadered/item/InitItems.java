@@ -3,6 +3,7 @@ package com.noodlegamer76.shadered.item;
 import com.noodlegamer76.shadered.ShaderedMod;
 import com.noodlegamer76.shadered.block.InitBlocks;
 import com.noodlegamer76.shadered.block.StormyBlock;
+import com.noodlegamer76.shadered.client.util.skyblock.SkyblockPass;
 import net.minecraft.world.item.*;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
@@ -48,4 +49,22 @@ public class InitItems {
 
     public static final RegistryObject<Item> CONFIGURATOR = ITEMS.register("configurator",
             () -> new Configurator(new Item.Properties()));
+
+    public static final RegistryObject<Item> SKYBLOCK_FILTER_NORMAL = ITEMS.register("skyblock_filter_normal",
+            () -> new SkyblockFilter(new Item.Properties(), SkyblockPass.NORMAL));
+
+    public static final RegistryObject<Item> SKYBLOCK_FILTER_INVERTED = ITEMS.register("skyblock_filter_inverted",
+            () -> new SkyblockFilter(new Item.Properties(), SkyblockPass.INVERTED));
+
+    public static final RegistryObject<Item> SKYBLOCK_FILTER_GRAYSCALE = ITEMS.register("skyblock_filter_grayscale",
+            () -> new SkyblockFilter(new Item.Properties(), SkyblockPass.GRAYSCALE));
+
+    public static final RegistryObject<Item> SKYBLOCK_FILTER_POSTERIZE = ITEMS.register("skyblock_filter_posterize",
+            () -> new SkyblockFilter(new Item.Properties(), SkyblockPass.POSTERIZE));
+
+    public static final RegistryObject<Item> SKYBLOCK_FILTER_CHROMATIC_ABERRATION = ITEMS.register("skyblock_filter_chromatic_aberration",
+            () -> new SkyblockFilter(new Item.Properties(), SkyblockPass.CHROMATIC_ABERRATION));
+
+    public static final RegistryObject<Item> SKYBLOCK_FILTER_SCREEN = ITEMS.register("skyblock_filter_screen",
+            () -> new SkyblockFilter(new Item.Properties(), SkyblockPass.SCREEN));
 }

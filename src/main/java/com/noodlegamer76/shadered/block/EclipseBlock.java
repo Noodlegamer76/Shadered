@@ -12,7 +12,7 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Nullable;
 
-public class EclipseBlock extends Block implements EntityBlock {
+public class EclipseBlock extends Skyblock implements EntityBlock {
     public EclipseBlock(Properties pProperties) {
         super(pProperties);
     }
@@ -20,15 +20,5 @@ public class EclipseBlock extends Block implements EntityBlock {
     @Override
     public @Nullable BlockEntity newBlockEntity(BlockPos pPos, BlockState pState) {
         return new EclipseBlockEntity(pPos, pState);
-    }
-
-    @Override
-    public boolean skipRendering(BlockState pState, BlockState pAdjacentBlockState, Direction pDirection) {
-        return true;
-    }
-
-    @Override
-    public boolean addRunningEffects(BlockState state, Level level, BlockPos pos, Entity entity) {
-        return true;
     }
 }

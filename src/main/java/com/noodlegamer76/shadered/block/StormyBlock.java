@@ -12,8 +12,7 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Nullable;
 
-public class StormyBlock extends Block implements EntityBlock
-{
+public class StormyBlock extends Skyblock implements EntityBlock {
     public StormyBlock(Properties pProperties) {
         super(pProperties);
     }
@@ -21,15 +20,5 @@ public class StormyBlock extends Block implements EntityBlock
     @Override
     public @Nullable BlockEntity newBlockEntity(BlockPos pPos, BlockState pState) {
         return new StormyBlockEntity(pPos, pState);
-    }
-
-    @Override
-    public RenderShape getRenderShape(BlockState pState) {
-        return RenderShape.ENTITYBLOCK_ANIMATED;
-    }
-
-    @Override
-    public boolean addRunningEffects(BlockState state, Level level, BlockPos pos, Entity entity) {
-        return true;
     }
 }

@@ -1,11 +1,13 @@
 package com.noodlegamer76.shadered.client.renderer;
 
-import com.mojang.blaze3d.pipeline.TextureTarget;
+import com.eliotlash.mclib.math.functions.limit.Min;
 import com.noodlegamer76.shadered.ShaderedMod;
 import com.noodlegamer76.shadered.client.renderer.complexpasses.EndBlockRenderPass;
 import com.noodlegamer76.shadered.client.renderer.complexpasses.EndSkySkyblockRenderPass;
 import com.noodlegamer76.shadered.client.renderer.complexpasses.SkyblockRenderPass;
 import com.noodlegamer76.shadered.client.util.*;
+import com.noodlegamer76.shadered.client.util.skyblock.SkyblockBatchData;
+import com.noodlegamer76.shadered.client.util.skyblock.SkyboxTranslation;
 import com.noodlegamer76.shadered.event.RegisterShaders;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GameRenderer;
@@ -26,6 +28,8 @@ public class SkyblockRenderer {
     public static final ResourceLocation MILKY = new ResourceLocation(ShaderedMod.MODID, "textures/noise/milky.png");
     public static final ResourceLocation SWIRL = new ResourceLocation(ShaderedMod.MODID, "textures/noise/swirl.png");
 
+    public static final ResourceLocation PIXEL = new ResourceLocation(ShaderedMod.MODID, "textures/environment/pixel.png");
+
     public static SkyblockBatchData spaceData = new SkyblockBatchData();
     public static SkyblockBatchData stormyData = new SkyblockBatchData();
     public static SkyblockBatchData oceanData = new SkyblockBatchData();
@@ -40,36 +44,40 @@ public class SkyblockRenderer {
         SkyblockRenderPass spaceRenderPass = new SkyblockRenderPass(NEBULA, spaceData,
                 new SkyboxTranslation(), skyboxRotationSpeed, GameRenderer::getPositionTexColorShader
         );
+        renderer.add(RenderStage.AFTER_BLOCK_ENTITIES, spaceRenderPass);
 
         SkyblockRenderPass stormyRenderPass = new SkyblockRenderPass(STORMY, stormyData,
                 new SkyboxTranslation()
         );
+        renderer.add(RenderStage.AFTER_BLOCK_ENTITIES, stormyRenderPass);
 
         SkyblockRenderPass oceanRenderPass = new SkyblockRenderPass(OCEAN, oceanData,
                 new SkyboxTranslation()
                         .setAllFlip(SkyboxTranslation.SkyboxFlip.NONE)
                         .setAllRot(SkyboxTranslation.SkyboxRotation.ROTATE_90_CCW)
         );
+        renderer.add(RenderStage.AFTER_BLOCK_ENTITIES, oceanRenderPass);
 
         SkyblockRenderPass eclipseRenderPass = new SkyblockRenderPass(ECLIPSE, eclipseData,
                 new SkyboxTranslation(), skyboxRotationSpeed, () -> RegisterShaders.skyboxWarp
         );
-
-        EndSkySkyblockRenderPass endSkyRenderPass = new EndSkySkyblockRenderPass(endData);
-        EndBlockRenderPass endBlockRenderPass = new EndBlockRenderPass(endSkyData);
-
-        renderer.add(RenderStage.AFTER_BLOCK_ENTITIES, spaceRenderPass);
-        renderer.add(RenderStage.AFTER_BLOCK_ENTITIES, stormyRenderPass);
-        renderer.add(RenderStage.AFTER_BLOCK_ENTITIES, oceanRenderPass);
         renderer.add(RenderStage.AFTER_BLOCK_ENTITIES, eclipseRenderPass);
+
+        EndSkySkyblockRenderPass endSkyRenderPass = new EndSkySkyblockRenderPass(endSkyData);
         renderer.add(RenderStage.AFTER_BLOCK_ENTITIES, endSkyRenderPass);
+
+        EndBlockRenderPass endBlockRenderPass = new EndBlockRenderPass(endData);
         renderer.add(RenderStage.AFTER_BLOCK_ENTITIES, endBlockRenderPass);
+
 
     }
 
     public static void preRender() {
-        int noise = getTextureId(GRAINY2);
-        RegisterShaders.skyboxWarp.setSampler("Noise", noise);
+        int grainy2 = getTextureId(GRAINY2);
+        RegisterShaders.skyboxWarp.setSampler("Noise", grainy2);
+
+        int pixel = getTextureId(PIXEL);
+        RegisterShaders.skyblockScreen.setSampler("Pixel", pixel);
     }
 
     public static int getTextureId(ResourceLocation resourceLocation) {

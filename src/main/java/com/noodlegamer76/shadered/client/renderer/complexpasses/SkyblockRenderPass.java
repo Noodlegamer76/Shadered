@@ -6,15 +6,16 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
 import com.noodlegamer76.shadered.client.renderer.ComplexPassRenderer;
 import com.noodlegamer76.shadered.client.util.*;
-import com.noodlegamer76.shadered.event.RegisterShaders;
+import com.noodlegamer76.shadered.client.util.skyblock.SkyBoxRenderer;
+import com.noodlegamer76.shadered.client.util.skyblock.SkyblockBatchData;
+import com.noodlegamer76.shadered.client.util.skyblock.SkyblockPass;
+import com.noodlegamer76.shadered.client.util.skyblock.SkyboxTranslation;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.renderer.ShaderInstance;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.phys.Vec3;
 import org.joml.Quaternionf;
 import org.joml.Vector3f;
 
-import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 public class SkyblockRenderPass implements RenderableComplexPass {
@@ -77,10 +78,12 @@ public class SkyblockRenderPass implements RenderableComplexPass {
 
         renderer.getRenderBuffer().bindWrite(true);
 
-        ShaderInstance shader = RegisterShaders.skyblock;
-        shader.setSampler("Skybox", skyboxTarget.getColorTextureId());
+        for (SkyblockPass pass : SkyblockPass.values()) {
+            ShaderInstance shader = pass.shader.get();
+            shader.setSampler("Skybox", skyboxTarget.getColorTextureId());
 
-        RenderCube.renderSkyBlocks(batchData, shader);
+            RenderCube.renderSkyBlocks(batchData.get(pass), shader);
+        }
 
         batchData.clear();
     }

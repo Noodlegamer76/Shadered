@@ -1,4 +1,4 @@
-package com.noodlegamer76.shadered.client.util;
+package com.noodlegamer76.shadered.client.util.skyblock;
 
 public class SkyboxTranslation {
     //Configured to typical skybox

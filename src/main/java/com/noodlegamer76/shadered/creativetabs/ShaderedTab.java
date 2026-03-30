@@ -18,6 +18,12 @@ public class ShaderedTab {
             event.accept(InitItems.ECLIPSE_BLOCK);
             event.accept(InitItems.SPACE_COMPRESSOR);
             event.accept(InitItems.CONFIGURATOR);
+            event.accept(InitItems.SKYBLOCK_FILTER_NORMAL);
+            event.accept(InitItems.SKYBLOCK_FILTER_INVERTED);
+            event.accept(InitItems.SKYBLOCK_FILTER_GRAYSCALE);
+            event.accept(InitItems.SKYBLOCK_FILTER_POSTERIZE);
+            event.accept(InitItems.SKYBLOCK_FILTER_CHROMATIC_ABERRATION);
+            event.accept(InitItems.SKYBLOCK_FILTER_SCREEN);
         }
     }
 }

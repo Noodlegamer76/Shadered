@@ -22,6 +22,12 @@ public class ModItemModelProvider extends ItemModelProvider {
     protected void registerModels() {
         evenSimplerBlockItem(InitBlocks.LIGHT_BLOCK);
         simpleItem(InitItems.CONFIGURATOR);
+        simpleItem(InitItems.SKYBLOCK_FILTER_NORMAL);
+        simpleItem(InitItems.SKYBLOCK_FILTER_INVERTED);
+        simpleItem(InitItems.SKYBLOCK_FILTER_GRAYSCALE);
+        simpleItem(InitItems.SKYBLOCK_FILTER_POSTERIZE);
+        simpleItem(InitItems.SKYBLOCK_FILTER_CHROMATIC_ABERRATION);
+        simpleItem(InitItems.SKYBLOCK_FILTER_SCREEN);
     }
 
     private ItemModelBuilder saplingItem(RegistryObject<Block> item) {

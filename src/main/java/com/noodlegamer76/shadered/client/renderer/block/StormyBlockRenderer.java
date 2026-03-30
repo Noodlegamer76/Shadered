@@ -2,9 +2,9 @@ package com.noodlegamer76.shadered.client.renderer.block;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.noodlegamer76.shadered.client.renderer.SkyblockRenderer;
+import com.noodlegamer76.shadered.client.util.skyblock.SkyblockPass;
 import com.noodlegamer76.shadered.entity.block.RenderTester;
 import com.noodlegamer76.shadered.entity.block.StormyBlockEntity;
-import com.noodlegamer76.shadered.event.RenderEventsForFbos;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
@@ -17,7 +17,7 @@ public class StormyBlockRenderer<T extends RenderTester>  implements BlockEntity
 
     @Override
     public void render(StormyBlockEntity pBlockEntity, float pPartialTick, PoseStack pPoseStack, MultiBufferSource pBuffer, int pPackedLight, int pPackedOverlay) {
-        SkyblockRenderer.stormyData.add(pBlockEntity.getBlockPos(), pPoseStack.last().pose());
+        SkyblockRenderer.stormyData.add(pBlockEntity.getPass(), pBlockEntity.getBlockPos(), pPoseStack.last().pose());
     }
 
     @Override

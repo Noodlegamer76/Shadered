@@ -5,7 +5,9 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.noodlegamer76.shadered.client.renderer.ComplexPassRenderer;
 import com.noodlegamer76.shadered.client.util.*;
-import com.noodlegamer76.shadered.event.RegisterShaders;
+import com.noodlegamer76.shadered.client.util.skyblock.SkyBoxRenderer;
+import com.noodlegamer76.shadered.client.util.skyblock.SkyblockBatchData;
+import com.noodlegamer76.shadered.client.util.skyblock.SkyblockPass;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.renderer.ShaderInstance;
 
@@ -32,10 +34,12 @@ public class EndSkySkyblockRenderPass implements RenderableComplexPass {
 
         renderer.getRenderBuffer().bindWrite(true);
 
-        ShaderInstance shader = RegisterShaders.skyblock;
-        shader.setSampler("Skybox", skyboxTarget.getColorTextureId());
+        for (SkyblockPass pass : SkyblockPass.values()) {
+            ShaderInstance shader = pass.shader.get();
+            shader.setSampler("Skybox", skyboxTarget.getColorTextureId());
 
-        RenderCube.renderSkyBlocks(batchData, shader);
+            RenderCube.renderSkyBlocks(batchData.get(pass), shader);
+        }
 
         batchData.clear();
     }

@@ -4,11 +4,11 @@
         "srcrgb": "one",
         "dstrgb": "zero"
     },
-    "vertex": "shadered:invert",
-    "fragment": "shadered:invert",
-    "attributes": [ ],
+    "vertex": "position_tex",
+    "fragment": "shadered:skyblock_invert",
+    "attributes": [],
     "samplers": [
-        { "name": "Color" }
+      { "name": "Skybox" }
     ],
     "uniforms": [
         { "name": "ModelViewMat", "type": "matrix4x4", "count": 16, "values": [ 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0 ] },

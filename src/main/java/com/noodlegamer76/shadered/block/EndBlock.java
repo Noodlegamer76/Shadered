@@ -11,7 +11,7 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Nullable;
 
-public class EndBlock extends Block implements EntityBlock {
+public class EndBlock extends Skyblock implements EntityBlock {
     public EndBlock(Properties pProperties) {
         super(pProperties);
     }
@@ -19,15 +19,5 @@ public class EndBlock extends Block implements EntityBlock {
     @Override
     public @Nullable BlockEntity newBlockEntity(BlockPos pPos, BlockState pState) {
         return new EndBlockEntity(pPos, pState);
-    }
-
-    @Override
-    public boolean skipRendering(BlockState pState, BlockState pAdjacentBlockState, Direction pDirection) {
-        return true;
-    }
-
-    @Override
-    public boolean addRunningEffects(BlockState state, Level level, BlockPos pos, Entity entity) {
-        return true;
     }
 }

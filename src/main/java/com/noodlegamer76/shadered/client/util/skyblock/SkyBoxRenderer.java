@@ -1,4 +1,4 @@
-package com.noodlegamer76.shadered.client.util;
+package com.noodlegamer76.shadered.client.util.skyblock;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.*;
@@ -6,10 +6,11 @@ import com.mojang.math.Axis;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.renderer.ShaderInstance;
+import net.minecraft.client.renderer.blockentity.TheEndPortalRenderer;
 import net.minecraft.resources.ResourceLocation;
 import org.joml.Matrix4f;
 
-import static com.noodlegamer76.shadered.client.util.SkyboxTranslation.*;
+import static com.noodlegamer76.shadered.client.util.skyblock.SkyboxTranslation.*;
 
 import static net.minecraft.client.renderer.blockentity.TheEndPortalRenderer.END_SKY_LOCATION;
 
@@ -171,6 +172,58 @@ public class SkyBoxRenderer {
         RenderSystem.depthMask(false);
         RenderSystem.setShader(GameRenderer::getPositionTexColorShader);
         RenderSystem.setShaderTexture(0, END_SKY_LOCATION);
+        Tesselator tesselator = Tesselator.getInstance();
+        BufferBuilder bufferbuilder = tesselator.getBuilder();
+
+        for(int i = 0; i < 6; ++i) {
+            poseStack.pushPose();
+            if (i == 1) {
+                poseStack.mulPose(Axis.XP.rotationDegrees(90.0F));
+            }
+
+            if (i == 2) {
+                poseStack.mulPose(Axis.XP.rotationDegrees(-90.0F));
+            }
+
+            if (i == 3) {
+                poseStack.mulPose(Axis.XP.rotationDegrees(180.0F));
+            }
+
+            if (i == 4) {
+                poseStack.mulPose(Axis.ZP.rotationDegrees(90.0F));
+            }
+
+            if (i == 5) {
+                poseStack.mulPose(Axis.ZP.rotationDegrees(-90.0F));
+            }
+
+            Matrix4f matrix4f = poseStack.last().pose();
+            bufferbuilder.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX_COLOR);
+            float far = Minecraft.getInstance().gameRenderer.getRenderDistance();
+            bufferbuilder.vertex(matrix4f, -far, -far, -far).uv(0.0F, 0.0F).color(40, 40, 40, 255).endVertex();
+            bufferbuilder.vertex(matrix4f, -far, -far, far).uv(0.0F, 16.0F).color(40, 40, 40, 255).endVertex();
+            bufferbuilder.vertex(matrix4f, far, -far, far).uv(16.0F, 16.0F).color(40, 40, 40, 255).endVertex();
+            bufferbuilder.vertex(matrix4f, far, -far, -far).uv(16.0F, 0.0F).color(40, 40, 40, 255).endVertex();
+            tesselator.end();
+            poseStack.popPose();
+        }
+
+        RenderSystem.depthMask(true);
+        RenderSystem.disableBlend();
+    }
+
+    public static void renderEndPortalSky(PoseStack poseStack) {
+        RenderSystem.enableBlend();
+        RenderSystem.depthMask(false);
+        RenderSystem.setShader(GameRenderer::getPositionTexColorShader);
+
+        RenderSystem.setShader(GameRenderer::getRendertypeEndPortalShader);
+        ResourceLocation endSky = TheEndPortalRenderer.END_SKY_LOCATION;
+        ResourceLocation endPortal = TheEndPortalRenderer.END_PORTAL_LOCATION;
+
+        RenderSystem.setShaderTexture(0, endSky);
+        RenderSystem.setShaderTexture(1, endPortal);
+
         Tesselator tesselator = Tesselator.getInstance();
         BufferBuilder bufferbuilder = tesselator.getBuilder();
 
