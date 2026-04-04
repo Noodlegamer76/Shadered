@@ -9,5 +9,12 @@
   "block.shadered.end_block": "End Block",
   "block.shadered.end_sky_block": "End Sky Block",
   "block.shadered.eclipse_block": "Eclipse Block",
-  "block.shadered.skyblock_painting": "Skyblock 3D Painting"
+  "block.shadered.skyblock_painting": "Skyblock 3D Painting",
+
+  "item.shadered.skyblock_filter_normal": "Skyblock Filter: Normal",
+  "item.shadered.skyblock_filter_inverted": "Skyblock Filter: Inverted",
+  "item.shadered.skyblock_filter_grayscale": "Skyblock Filter: Grayscale",
+  "item.shadered.skyblock_filter_chromatic_aberration": "Skyblock Filter: Chromatic Aberration",
+  "item.shadered.skyblock_filter_posterize": "Skyblock Filter: Posterize",
+  "item.shadered.skyblock_filter_screen": "Skyblock Filter: Screen"
 }

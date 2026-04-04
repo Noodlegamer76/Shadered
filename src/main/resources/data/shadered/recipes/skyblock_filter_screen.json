@@ -1,0 +1,15 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "item": "minecraft:nether_star"
+    },
+    {
+      "item": "shadered:skyblock_filter_chromatic_aberration"
+    }
+  ],
+  "result": {
+    "item": "shadered:skyblock_filter_screen",
+    "count": 1
+  }
+}

@@ -1,0 +1,23 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "aea",
+    "eoe",
+    "aea"
+  ],
+  "key": {
+    "e": {
+      "item": "minecraft:amethyst_block"
+    },
+    "o": {
+      "item": "shadered:skyblock_filter_normal"
+    },
+    "a": {
+      "item": "minecraft:amethyst_shard"
+    }
+  },
+  "result": {
+    "item": "shadered:skyblock_filter_chromatic_aberration",
+    "count": 1
+  }
+}

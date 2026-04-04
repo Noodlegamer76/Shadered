@@ -21,7 +21,6 @@ public class ModItemModelProvider extends ItemModelProvider {
     @Override
     protected void registerModels() {
         evenSimplerBlockItem(InitBlocks.LIGHT_BLOCK);
-        simpleItem(InitItems.CONFIGURATOR);
         simpleItem(InitItems.SKYBLOCK_FILTER_NORMAL);
         simpleItem(InitItems.SKYBLOCK_FILTER_INVERTED);
         simpleItem(InitItems.SKYBLOCK_FILTER_GRAYSCALE);
