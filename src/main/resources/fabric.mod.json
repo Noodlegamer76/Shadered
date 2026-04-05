@@ -1,0 +1,34 @@
+{
+	"schemaVersion": 1,
+	"id": "shadered",
+	"version": "${version}",
+	"name": "Shadered",
+	"description": "Adds custom shader-based decorational blocks",
+	"authors": [
+		"Noodlegamer76"
+	],
+	"contact": {
+		"homepage": "https://github.com/Noodlegamer76/Shadered",
+		"sources": "https://github.com/Noodlegamer76/Shadered"
+	},
+	"license": "CC0-1.0",
+	"icon": "assets/shadered/icon.png",
+	"environment": "*",
+	"entrypoints": {
+		"main": [
+			"com.noodlegamer76.Shadered"
+		],
+		"fabric-datagen": [
+			"com.noodlegamer76.ShaderedDataGenerator"
+		]
+	},
+	"mixins": [
+		"shadered.mixins.json"
+	],
+	"depends": {
+		"fabricloader": ">=0.18.6",
+		"minecraft": "~26.1.1",
+		"java": ">=25",
+		"fabric-api": "*"
+	}
+}

@@ -1,0 +1,20 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    " e ",
+    "eoe",
+    " e "
+  ],
+  "key": {
+    "e": {
+      "item": "minecraft:glass"
+    },
+    "o": {
+      "item": "minecraft:water_bucket"
+    }
+  },
+  "result": {
+    "item": "shadered:ocean_block",
+    "count": 6
+  }
+}

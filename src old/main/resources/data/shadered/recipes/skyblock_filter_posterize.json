@@ -1,0 +1,23 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "aea",
+    "eoe",
+    "aea"
+  ],
+  "key": {
+    "e": {
+      "item": "minecraft:painting"
+    },
+    "o": {
+      "item": "shadered:skyblock_filter_normal"
+    },
+    "a": {
+      "item": "minecraft:map"
+    }
+  },
+  "result": {
+    "item": "shadered:skyblock_filter_posterize",
+    "count": 1
+  }
+}

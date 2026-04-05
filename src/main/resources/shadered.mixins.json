@@ -1,11 +1,13 @@
 {
-  "required": true,
-  "package": "com.noodlegamer76.shadered.mixin",
-  "compatibilityLevel": "JAVA_8",
-  "refmap": "shadered.refmap.json",
-  "mixins": [
-  ],
-  "client": [
-  ],
-  "minVersion": "0.8"
+	"required": true,
+	"package": "com.noodlegamer76.mixin",
+	"compatibilityLevel": "JAVA_25",
+	"mixins": [
+	],
+	"injectors": {
+		"defaultRequire": 1
+	},
+	"overwrites": {
+		"requireAnnotations": true
+	}
 }
