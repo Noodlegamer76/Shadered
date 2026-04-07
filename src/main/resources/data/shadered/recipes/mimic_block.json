@@ -1,0 +1,20 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    " e ",
+    "eoe",
+    " e "
+  ],
+  "key": {
+    "e": {
+      "item": "minecraft:white_stained_glass"
+    },
+    "o": {
+      "item": "minecraft:white_wool"
+    }
+  },
+  "result": {
+    "item": "shadered:mimic_block",
+    "count": 6
+  }
+}

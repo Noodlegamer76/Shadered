@@ -23,7 +23,11 @@ public abstract class SkyblockEntity extends BlockEntity {
     @Override
     public void load(CompoundTag tag) {
         super.load(tag);
-        pass = SkyblockPass.values()[tag.getInt("pass")];
+        int pass = tag.getInt("pass");
+        if (pass <= 0 || pass >= SkyblockPass.values().length) {
+            pass = 0;
+        }
+        this.pass = SkyblockPass.values()[pass];
     }
 
     @Override

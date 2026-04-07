@@ -16,6 +16,8 @@ public class ShaderedTab {
             event.accept(InitItems.END_BLOCK);
             event.accept(InitItems.END_SKY_BLOCK);
             event.accept(InitItems.ECLIPSE_BLOCK);
+            event.accept(InitItems.FOREST_BLOCK);
+            event.accept(InitItems.MIMIC_BLOCK);
             event.accept(InitItems.SPACE_COMPRESSOR);
             event.accept(InitItems.CONFIGURATOR);
             event.accept(InitItems.SKYBLOCK_FILTER_NORMAL);
@@ -24,6 +26,8 @@ public class ShaderedTab {
             event.accept(InitItems.SKYBLOCK_FILTER_POSTERIZE);
             event.accept(InitItems.SKYBLOCK_FILTER_CHROMATIC_ABERRATION);
             event.accept(InitItems.SKYBLOCK_FILTER_SCREEN);
+            event.accept(InitItems.SKYBLOCK_FILTER_BLUEPRINT);
+            event.accept(InitItems.SKYBLOCK_FILTER_GAMEBOY);
         }
     }
 }

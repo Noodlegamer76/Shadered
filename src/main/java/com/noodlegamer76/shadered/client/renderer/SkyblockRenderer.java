@@ -4,6 +4,7 @@ import com.eliotlash.mclib.math.functions.limit.Min;
 import com.noodlegamer76.shadered.ShaderedMod;
 import com.noodlegamer76.shadered.client.renderer.complexpasses.EndBlockRenderPass;
 import com.noodlegamer76.shadered.client.renderer.complexpasses.EndSkySkyblockRenderPass;
+import com.noodlegamer76.shadered.client.renderer.complexpasses.MimicSkyblockRenderPass;
 import com.noodlegamer76.shadered.client.renderer.complexpasses.SkyblockRenderPass;
 import com.noodlegamer76.shadered.client.util.*;
 import com.noodlegamer76.shadered.client.util.skyblock.SkyblockBatchData;
@@ -21,6 +22,8 @@ public class SkyblockRenderer {
     public static final ResourceLocation STORMY = new ResourceLocation(ShaderedMod.MODID, "textures/environment/stormy");
     public static final ResourceLocation OCEAN = new ResourceLocation(ShaderedMod.MODID, "textures/environment/ocean");
     public static final ResourceLocation ECLIPSE = new ResourceLocation(ShaderedMod.MODID, "textures/environment/eclipse");
+    public static final ResourceLocation LIGHT = new ResourceLocation(ShaderedMod.MODID, "textures/environment/light");
+    public static final ResourceLocation FOREST = new ResourceLocation(ShaderedMod.MODID, "textures/environment/forest");
 
     public static final ResourceLocation GRAINY = new ResourceLocation(ShaderedMod.MODID, "textures/noise/grainy.png");
     public static final ResourceLocation GRAINY2 = new ResourceLocation(ShaderedMod.MODID, "textures/noise/grainy2.png");
@@ -36,6 +39,9 @@ public class SkyblockRenderer {
     public static SkyblockBatchData endData = new SkyblockBatchData();
     public static SkyblockBatchData endSkyData = new SkyblockBatchData();
     public static SkyblockBatchData eclipseData = new SkyblockBatchData();
+    public static SkyblockBatchData forestData = new SkyblockBatchData();
+    public static SkyblockBatchData lightData = new SkyblockBatchData();
+    public static SkyblockBatchData mimicData = new SkyblockBatchData();
 
     public static void setup() {
         ComplexPassRenderer renderer = ComplexPassRenderer.getInstance();
@@ -69,7 +75,22 @@ public class SkyblockRenderer {
         EndBlockRenderPass endBlockRenderPass = new EndBlockRenderPass(endData);
         renderer.add(RenderStage.AFTER_BLOCK_ENTITIES, endBlockRenderPass);
 
+        SkyblockRenderPass forestRenderPass = new SkyblockRenderPass(FOREST, forestData,
+                new SkyboxTranslation()
+                        .setAllFlip(SkyboxTranslation.SkyboxFlip.NONE)
+                        .setAllRot(SkyboxTranslation.SkyboxRotation.ROTATE_90_CCW)
+        );
+        renderer.add(RenderStage.AFTER_BLOCK_ENTITIES, forestRenderPass);
 
+        SkyblockRenderPass lightRenderPass = new SkyblockRenderPass(LIGHT, lightData,
+                new SkyboxTranslation()
+        );
+        renderer.add(RenderStage.AFTER_BLOCK_ENTITIES, lightRenderPass);
+
+        MimicSkyblockRenderPass mimicSkyblockRenderPass = new MimicSkyblockRenderPass(
+                mimicData
+        );
+        renderer.add(RenderStage.AFTER_BLOCK_ENTITIES, mimicSkyblockRenderPass);
     }
 
     public static void preRender() {

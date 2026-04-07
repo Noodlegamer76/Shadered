@@ -2,20 +2,28 @@ package com.noodlegamer76.shadered.client.util.skyblock;
 
 import com.noodlegamer76.shadered.event.RegisterShaders;
 import net.minecraft.client.renderer.ShaderInstance;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
 import java.util.function.Supplier;
 
 public enum SkyblockPass {
-    NORMAL(() -> RegisterShaders.skyblock),
-    INVERTED(() -> RegisterShaders.skyblockInvert),
-    POSTERIZE(() -> RegisterShaders.skyblockPosterize),
-    GRAYSCALE(() -> RegisterShaders.skyblockGrayscale),
-    CHROMATIC_ABERRATION(() -> RegisterShaders.skyblockChromaticAberration),
-    SCREEN(() -> RegisterShaders.skyblockScreen);
+    NORMAL("skyblock"),
+    INVERTED("skyblock_invert"),
+    POSTERIZE("skyblock_posterize"),
+    GRAYSCALE("skyblock_grayscale"),
+    CHROMATIC_ABERRATION("skyblock_chromatic_aberration"),
+    SCREEN("skyblock_screen"),
+    BLUEPRINT("skyblock_blueprint"),
+    GAMEBOY("skyblock_gameboy");
 
-    public final Supplier<ShaderInstance> shader;
+    public final String shaderName;
 
-    SkyblockPass(Supplier<ShaderInstance> shader) {
-        this.shader = shader;
+    SkyblockPass(String shaderName) {
+        this.shaderName = shaderName;
+    }
+
+    public ShaderInstance getShader() {
+        return RegisterShaders.get(shaderName);
     }
 }

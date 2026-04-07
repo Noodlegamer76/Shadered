@@ -67,6 +67,10 @@ public class ComplexPassRenderer {
             renderBuffer.resize(window.getWidth(), window.getHeight(), Minecraft.ON_OSX);
             writeBuffer.resize(window.getWidth(), window.getHeight(), Minecraft.ON_OSX);
         }
+        else {
+            renderBuffer.clear(Minecraft.ON_OSX);
+            writeBuffer.clear(Minecraft.ON_OSX);
+        }
 
         renderToRenderTarget();
     }

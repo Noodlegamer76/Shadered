@@ -44,6 +44,12 @@ public class InitItems {
     public static final RegistryObject<Item> ECLIPSE_BLOCK = ITEMS.register("eclipse_block",
             () -> new BlockItem(InitBlocks.ECLIPSE_BLOCK.get(), new Item.Properties()));
 
+    public static final RegistryObject<Item> FOREST_BLOCK = ITEMS.register("forest_block",
+            () -> new BlockItem(InitBlocks.FOREST_BLOCK.get(), new Item.Properties()));
+
+    public static final RegistryObject<Item> MIMIC_BLOCK = ITEMS.register("mimic_block",
+            () -> new BlockItem(InitBlocks.MIMIC_BLOCK.get(), new Item.Properties()));
+
     public static final RegistryObject<Item> SPACE_COMPRESSOR = ITEMS.register("space_compressor",
             () -> new BlockItem(InitBlocks.SPACE_COMPRESSOR.get(), new Item.Properties()));
 
@@ -67,4 +73,11 @@ public class InitItems {
 
     public static final RegistryObject<Item> SKYBLOCK_FILTER_SCREEN = ITEMS.register("skyblock_filter_screen",
             () -> new SkyblockFilter(new Item.Properties(), SkyblockPass.SCREEN));
+
+    public static final RegistryObject<Item> SKYBLOCK_FILTER_BLUEPRINT = ITEMS.register("skyblock_filter_blueprint",
+            () -> new SkyblockFilter(new Item.Properties(), SkyblockPass.BLUEPRINT));
+
+    public static final RegistryObject<Item> SKYBLOCK_FILTER_GAMEBOY = ITEMS.register("skyblock_filter_gameboy",
+            () -> new SkyblockFilter(new Item.Properties(), SkyblockPass.GAMEBOY));
+
 }

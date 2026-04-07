@@ -35,7 +35,7 @@ public class EndSkySkyblockRenderPass implements RenderableComplexPass {
         renderer.getRenderBuffer().bindWrite(true);
 
         for (SkyblockPass pass : SkyblockPass.values()) {
-            ShaderInstance shader = pass.shader.get();
+            ShaderInstance shader = pass.getShader();
             shader.setSampler("Skybox", skyboxTarget.getColorTextureId());
 
             RenderCube.renderSkyBlocks(batchData.get(pass), shader);

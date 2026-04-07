@@ -28,7 +28,7 @@ public class InitBlocks {
             () -> new Block(BlockBehaviour.Properties.copy(Blocks.STONE).mapColor(DyeColor.BLACK)));
 
     public static final RegistryObject<Block> LIGHT_BLOCK = BLOCKS.register("light_block",
-            () -> new Block(BlockBehaviour.Properties.copy(Blocks.STONE).mapColor(DyeColor.WHITE).emissiveRendering((state, getter, pos) -> true)));
+            () -> new LightBlock(BlockBehaviour.Properties.copy(Blocks.STONE).mapColor(DyeColor.WHITE)));
 
     public static final RegistryObject<Block> END_BLOCK = BLOCKS.register("end_block",
             () -> new EndBlock(BlockBehaviour.Properties.copy(Blocks.STONE).mapColor(DyeColor.BLACK).lightLevel((state) -> 15)));
@@ -38,6 +38,12 @@ public class InitBlocks {
 
     public static final RegistryObject<Block> ECLIPSE_BLOCK = BLOCKS.register("eclipse_block",
             () -> new EclipseBlock(BlockBehaviour.Properties.copy(Blocks.STONE).mapColor(DyeColor.RED).lightLevel((state) -> 5)));
+
+    public static final RegistryObject<Block> FOREST_BLOCK = BLOCKS.register("forest_block",
+            () -> new ForestBlock(BlockBehaviour.Properties.copy(Blocks.STONE).mapColor(DyeColor.GREEN).lightLevel((state) -> 15)));
+
+    public static final RegistryObject<Block> MIMIC_BLOCK = BLOCKS.register("mimic_block",
+            () -> new MimicBlock(BlockBehaviour.Properties.copy(Blocks.STONE).mapColor(DyeColor.WHITE).lightLevel((state) -> 15)));
 
     public static final RegistryObject<Block> SPACE_COMPRESSOR = BLOCKS.register("space_compressor",
             () -> new SpaceCompressorBlock(BlockBehaviour.Properties.copy(Blocks.STONE).mapColor(DyeColor.WHITE)));

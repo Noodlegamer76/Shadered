@@ -20,13 +20,14 @@ public class ModItemModelProvider extends ItemModelProvider {
 
     @Override
     protected void registerModels() {
-        evenSimplerBlockItem(InitBlocks.LIGHT_BLOCK);
         simpleItem(InitItems.SKYBLOCK_FILTER_NORMAL);
         simpleItem(InitItems.SKYBLOCK_FILTER_INVERTED);
         simpleItem(InitItems.SKYBLOCK_FILTER_GRAYSCALE);
         simpleItem(InitItems.SKYBLOCK_FILTER_POSTERIZE);
         simpleItem(InitItems.SKYBLOCK_FILTER_CHROMATIC_ABERRATION);
         simpleItem(InitItems.SKYBLOCK_FILTER_SCREEN);
+        simpleItem(InitItems.SKYBLOCK_FILTER_BLUEPRINT);
+        simpleItem(InitItems.SKYBLOCK_FILTER_GAMEBOY);
     }
 
     private ItemModelBuilder saplingItem(RegistryObject<Block> item) {

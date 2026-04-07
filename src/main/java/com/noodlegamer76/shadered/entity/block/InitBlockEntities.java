@@ -34,6 +34,15 @@ public class InitBlockEntities {
     public static final RegistryObject<BlockEntityType<EclipseBlockEntity>> ECLIPSE_BLOCK = BLOCK_ENTITIES.register("eclipse_block",
             () -> BlockEntityType.Builder.of(EclipseBlockEntity::new, InitBlocks.ECLIPSE_BLOCK.get()).build(null));
 
+    public static final RegistryObject<BlockEntityType<ForestBlockEntity>> FOREST_BLOCK = BLOCK_ENTITIES.register("forest_block",
+            () -> BlockEntityType.Builder.of(ForestBlockEntity::new, InitBlocks.FOREST_BLOCK.get()).build(null));
+
+    public static final RegistryObject<BlockEntityType<MimicBlockEntity>> MIMIC_BLOCK = BLOCK_ENTITIES.register("mimic_block",
+            () -> BlockEntityType.Builder.of(MimicBlockEntity::new, InitBlocks.MIMIC_BLOCK.get()).build(null));
+
+    public static final RegistryObject<BlockEntityType<LightBlockEntity>> LIGHT_BLOCK = BLOCK_ENTITIES.register("light_block",
+            () -> BlockEntityType.Builder.of(LightBlockEntity::new, InitBlocks.LIGHT_BLOCK.get()).build(null));
+
     public static final RegistryObject<BlockEntityType<SpaceCompressorBlockEntity>> SPACE_COMPRESSOR = BLOCK_ENTITIES.register("space_compressor",
             () -> BlockEntityType.Builder.of(SpaceCompressorBlockEntity::new, InitBlocks.SPACE_COMPRESSOR.get()).build(null));
 }
