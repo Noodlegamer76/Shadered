@@ -20,5 +20,10 @@
   "item.shadered.skyblock_filter_posterize": "Skyblock Filter: Posterize",
   "item.shadered.skyblock_filter_screen": "Skyblock Filter: Screen",
   "item.shadered.skyblock_filter_blueprint": "Skyblock Filter: Blueprint",
-  "item.shadered.skyblock_filter_gameboy": "Skyblock Filter: Gameboy"
+  "item.shadered.skyblock_filter_gameboy": "Skyblock Filter: Gameboy",
+
+  "gui.shadered.sky_emitter.title": "Sky Emitter",
+  "gui.shadered.sky_emitter.min_distance": "Min Distance: ",
+  "gui.shadered.sky_emitter.max_distance": "Max Distance: ",
+  "gui.shadered.sky_emitter.max_alpha": "Max Alpha: "
 }

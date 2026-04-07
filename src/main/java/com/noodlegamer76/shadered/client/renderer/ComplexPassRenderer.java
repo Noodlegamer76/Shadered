@@ -132,7 +132,30 @@ public class ComplexPassRenderer {
 
     private void renderToMainTarget() {
         RenderTarget mainTarget = Minecraft.getInstance().getMainRenderTarget();
-        GlUtils.copyColorFrom(mainTarget, renderBuffer);
+
+        Matrix4f orthagraphic = new Matrix4f().ortho(0, 1, 0, 1, -1, 1);
+        RenderSystem.backupProjectionMatrix();
+        RenderSystem.setProjectionMatrix(orthagraphic, VertexSorting.ORTHOGRAPHIC_Z);
+        mainTarget.bindWrite(true);
+
+        RenderSystem.setShader(GameRenderer::getPositionTexShader);
+        RenderSystem.setShaderTexture(0, renderBuffer.getColorTextureId());
+
+        Tesselator tesselator = Tesselator.getInstance();
+        BufferBuilder bufferBuilder = tesselator.getBuilder();
+
+        bufferBuilder.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
+
+        bufferBuilder.vertex(0, 0, 0).uv(0, 0).endVertex();
+        bufferBuilder.vertex(1, 0, 0).uv(1, 0).endVertex();
+        bufferBuilder.vertex(1, 1, 0).uv(1, 1).endVertex();
+        bufferBuilder.vertex(0, 1, 0).uv(0, 1).endVertex();
+
+        tesselator.end();
+
+        RenderSystem.restoreProjectionMatrix();
+
+
         mainTarget.copyDepthFrom(renderBuffer);
     }
 

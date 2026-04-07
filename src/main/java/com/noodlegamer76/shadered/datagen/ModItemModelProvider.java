@@ -20,6 +20,7 @@ public class ModItemModelProvider extends ItemModelProvider {
 
     @Override
     protected void registerModels() {
+        evenSimplerBlockItem(InitBlocks.SKY_EMITTER);
         simpleItem(InitItems.SKYBLOCK_FILTER_NORMAL);
         simpleItem(InitItems.SKYBLOCK_FILTER_INVERTED);
         simpleItem(InitItems.SKYBLOCK_FILTER_GRAYSCALE);
@@ -47,7 +48,7 @@ public class ModItemModelProvider extends ItemModelProvider {
 
     public void fenceItem(RegistryObject<Block> block, RegistryObject<Block> baseBlock) {
         this.withExistingParent(ForgeRegistries.BLOCKS.getKey(block.get()).getPath(), mcLoc("block/fence_inventory"))
-                .texture("texture",  new ResourceLocation(ShaderedMod.MODID, "block/" + ForgeRegistries.BLOCKS.getKey(baseBlock.get()).getPath()));
+                .texture("texture",  new ResourceLocation(ShaderedMod.MODID, "block/" + ForgeRegistries.BLOCKS.getKey(baseBlock.get(    )).getPath()));
     }
 
     public void buttonItem(RegistryObject<Block> block, RegistryObject<Block> baseBlock) {

@@ -57,11 +57,11 @@ public class RenderCubeAroundPlayer {
             }
             float far = Minecraft.getInstance().gameRenderer.getRenderDistance();
             Matrix4f matrix4f = poseStack.last().pose();
-            bufferbuilder.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION);
-            bufferbuilder.vertex(matrix4f, -far, -far, -far).endVertex();
-            bufferbuilder.vertex(matrix4f, -far, -far, far).endVertex();
-            bufferbuilder.vertex(matrix4f, far, -far, far).endVertex();
-            bufferbuilder.vertex(matrix4f, far, -far, -far).endVertex();
+            bufferbuilder.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
+            bufferbuilder.vertex(matrix4f, -far, -far, -far).uv(0, 0).endVertex();
+            bufferbuilder.vertex(matrix4f, -far, -far,  far).uv(0, 1).endVertex();
+            bufferbuilder.vertex(matrix4f,  far, -far,  far).uv(1, 1).endVertex();
+            bufferbuilder.vertex(matrix4f,  far, -far, -far).uv(1, 0).endVertex();
             tesselator.end();
             poseStack.popPose();
         }

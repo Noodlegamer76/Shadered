@@ -3,6 +3,7 @@ package com.noodlegamer76.shadered.entity.block;
 import com.noodlegamer76.shadered.ShaderedMod;
 import com.noodlegamer76.shadered.block.EclipseBlock;
 import com.noodlegamer76.shadered.block.InitBlocks;
+import com.noodlegamer76.shadered.block.SkyEmitterBlock;
 import com.noodlegamer76.shadered.block.StormyBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -42,6 +43,9 @@ public class InitBlockEntities {
 
     public static final RegistryObject<BlockEntityType<LightBlockEntity>> LIGHT_BLOCK = BLOCK_ENTITIES.register("light_block",
             () -> BlockEntityType.Builder.of(LightBlockEntity::new, InitBlocks.LIGHT_BLOCK.get()).build(null));
+
+    public static final RegistryObject<BlockEntityType<SkyEmitterEntity>> SKY_EMITTER = BLOCK_ENTITIES.register("sky_emitter",
+            () -> BlockEntityType.Builder.of(SkyEmitterEntity::new, InitBlocks.SKY_EMITTER.get()).build(null));
 
     public static final RegistryObject<BlockEntityType<SpaceCompressorBlockEntity>> SPACE_COMPRESSOR = BLOCK_ENTITIES.register("space_compressor",
             () -> BlockEntityType.Builder.of(SpaceCompressorBlockEntity::new, InitBlocks.SPACE_COMPRESSOR.get()).build(null));

@@ -16,7 +16,7 @@ public class EclipseBlockEntityRenderer implements BlockEntityRenderer<EclipseBl
 
     @Override
     public void render(EclipseBlockEntity pBlockEntity, float pPartialTick, PoseStack pPoseStack, MultiBufferSource pBuffer, int pPackedLight, int pPackedOverlay) {
-        SkyblockRenderer.eclipseData.add(pBlockEntity.getPass(), pBlockEntity.getBlockPos(), pPoseStack.last().pose());
+        SkyblockRenderer.eclipseData.add(pBlockEntity.getPass(), pBlockEntity.getBlockPos(), pPoseStack.last().pose(), false, 1.0F);
     }
 
     @Override

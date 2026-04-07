@@ -96,6 +96,7 @@ public class ShaderedMod
             event.registerBlockEntityRenderer(InitBlockEntities.LIGHT_BLOCK.get(), LightBlockRenderer::new);
             event.registerBlockEntityRenderer(InitBlockEntities.FOREST_BLOCK.get(), ForestBlockRenderer::new);
             event.registerBlockEntityRenderer(InitBlockEntities.MIMIC_BLOCK.get(), MimicBlockRenderer::new);
+            event.registerBlockEntityRenderer(InitBlockEntities.SKY_EMITTER.get(), SkyEmitterRenderer::new);
             event.registerBlockEntityRenderer(InitBlockEntities.SPACE_COMPRESSOR.get(), SpaceCompressorBlockRenderer::new);
         }
     }

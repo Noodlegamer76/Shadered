@@ -15,6 +15,7 @@ import net.minecraft.client.renderer.ShaderInstance;
 import net.minecraft.resources.ResourceLocation;
 import org.joml.Quaternionf;
 import org.joml.Vector3f;
+import org.w3c.dom.Text;
 
 import java.util.function.Supplier;
 
@@ -53,6 +54,7 @@ public class SkyblockRenderPass implements RenderableComplexPass {
     @Override
     public void render(RenderStage stage, PoseStack poseStack, int renderTick, float partialTick) {
         ComplexPassRenderer renderer = ComplexPassRenderer.getInstance();
+        TextureTarget readTarget = renderer.getRenderBuffer();
         TextureTarget skyboxTarget = renderer.getWriteBuffer();
 
         skyboxTarget.bindWrite(true);
@@ -81,8 +83,9 @@ public class SkyblockRenderPass implements RenderableComplexPass {
         for (SkyblockPass pass : SkyblockPass.values()) {
             ShaderInstance shader = pass.getShader();
             shader.setSampler("Skybox", skyboxTarget.getColorTextureId());
+            shader.setSampler("PassDepth", readTarget.getDepthTextureId());
 
-            RenderCube.renderSkyBlocks(batchData.get(pass), shader);
+            RenderCube.renderSkyBlocks(batchData.get(pass), false, shader);
         }
 
         batchData.clear();

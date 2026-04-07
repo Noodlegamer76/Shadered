@@ -24,6 +24,7 @@ public class RegisterShaders {
     public static ShaderInstance skyblockScreen;
     public static ShaderInstance skyblockBlueprint;
     public static ShaderInstance skyblockGameboy;
+    public static ShaderInstance skyblockBackground;
 
     private static final Map<String, ShaderInstance> SHADERS = new HashMap<>();
 
@@ -105,8 +106,6 @@ public class RegisterShaders {
                     SHADERS.put("skyblock_blueprint", e);
                 });
 
-
-
         event.registerShader(new ShaderInstance(event.getResourceProvider(),
                         new ResourceLocation(ShaderedMod.MODID, "skyblock_gameboy"),
                         DefaultVertexFormat.POSITION_TEX),
@@ -114,6 +113,15 @@ public class RegisterShaders {
                     skyblockGameboy = e;
                     SHADERS.put("skyblock_gameboy", e);
                 });
+
+        event.registerShader(new ShaderInstance(event.getResourceProvider(),
+                        new ResourceLocation(ShaderedMod.MODID, "skyblock_background"),
+                        DefaultVertexFormat.POSITION_TEX),
+                (e) -> {
+                    skyblockBackground = e;
+                    SHADERS.put("skyblock_background", e);
+                });
+
     }
 
     public static ShaderInstance getCompressor() {

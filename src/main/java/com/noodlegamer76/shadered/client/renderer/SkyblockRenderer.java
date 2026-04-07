@@ -1,6 +1,5 @@
 package com.noodlegamer76.shadered.client.renderer;
 
-import com.eliotlash.mclib.math.functions.limit.Min;
 import com.noodlegamer76.shadered.ShaderedMod;
 import com.noodlegamer76.shadered.client.renderer.complexpasses.EndBlockRenderPass;
 import com.noodlegamer76.shadered.client.renderer.complexpasses.EndSkySkyblockRenderPass;
@@ -99,6 +98,8 @@ public class SkyblockRenderer {
 
         int pixel = getTextureId(PIXEL);
         RegisterShaders.skyblockScreen.setSampler("Pixel", pixel);
+
+        RegisterShaders.skyblockBackground.setSampler("MainDepth", Minecraft.getInstance().getMainRenderTarget().getDepthTextureId());
     }
 
     public static int getTextureId(ResourceLocation resourceLocation) {

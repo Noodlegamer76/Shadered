@@ -29,9 +29,13 @@ public class ModBlockTagGenerator extends BlockTagsProvider  {
                 .add(InitBlocks.LIGHT_BLOCK.get())
                 .add(InitBlocks.FOREST_BLOCK.get())
                 .add(InitBlocks.MIMIC_BLOCK.get())
+                .add(InitBlocks.SKY_EMITTER.get())
                 .add(InitBlocks.END_BLOCK.get())
                 .add(InitBlocks.END_SKY_BLOCK.get())
                 .add(InitBlocks.ECLIPSE_BLOCK.get())
                 .add(InitBlocks.SPACE_COMPRESSOR.get());
+
+        tag(BlockTags.NEEDS_DIAMOND_TOOL)
+                .add(InitBlocks.SKY_EMITTER.get());
     }
 }

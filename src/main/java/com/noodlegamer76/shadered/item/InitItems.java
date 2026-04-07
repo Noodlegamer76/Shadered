@@ -50,6 +50,9 @@ public class InitItems {
     public static final RegistryObject<Item> MIMIC_BLOCK = ITEMS.register("mimic_block",
             () -> new BlockItem(InitBlocks.MIMIC_BLOCK.get(), new Item.Properties()));
 
+    public static final RegistryObject<Item> SKY_EMITTER = ITEMS.register("sky_emitter",
+            () -> new BlockItem(InitBlocks.SKY_EMITTER.get(), new Item.Properties()));
+
     public static final RegistryObject<Item> SPACE_COMPRESSOR = ITEMS.register("space_compressor",
             () -> new BlockItem(InitBlocks.SPACE_COMPRESSOR.get(), new Item.Properties()));
 

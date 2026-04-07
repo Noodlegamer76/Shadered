@@ -17,7 +17,7 @@ public class SpaceBlockRenderer<T extends RenderTester> implements BlockEntityRe
 
     @Override
     public void render(SpaceBlockEntity pBlockEntity, float pPartialTick, PoseStack pPoseStack, MultiBufferSource pBuffer, int pPackedLight, int pPackedOverlay) {
-        SkyblockRenderer.spaceData.add(pBlockEntity.getPass(), pBlockEntity.getBlockPos(), pPoseStack.last().pose());
+        SkyblockRenderer.spaceData.add(pBlockEntity.getPass(), pBlockEntity.getBlockPos(), pPoseStack.last().pose(), false, 1.0F);
     }
 
     @Override

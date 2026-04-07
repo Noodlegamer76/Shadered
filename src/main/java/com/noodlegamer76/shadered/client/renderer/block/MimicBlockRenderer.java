@@ -17,7 +17,7 @@ public class MimicBlockRenderer<T extends RenderTester> implements BlockEntityRe
 
     @Override
     public void render(MimicBlockEntity pBlockEntity, float pPartialTick, PoseStack pPoseStack, MultiBufferSource pBuffer, int pPackedLight, int pPackedOverlay) {
-        SkyblockRenderer.mimicData.add(pBlockEntity.getPass(), pBlockEntity.getBlockPos(), pPoseStack.last().pose());
+        SkyblockRenderer.mimicData.add(pBlockEntity.getPass(), pBlockEntity.getBlockPos(), pPoseStack.last().pose(), false, 1.0F);
     }
 
     @Override

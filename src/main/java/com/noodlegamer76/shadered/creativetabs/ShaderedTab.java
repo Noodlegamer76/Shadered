@@ -28,6 +28,7 @@ public class ShaderedTab {
             event.accept(InitItems.SKYBLOCK_FILTER_SCREEN);
             event.accept(InitItems.SKYBLOCK_FILTER_BLUEPRINT);
             event.accept(InitItems.SKYBLOCK_FILTER_GAMEBOY);
+            event.accept(InitItems.SKY_EMITTER);
         }
     }
 }

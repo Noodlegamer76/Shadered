@@ -15,7 +15,6 @@ import com.noodlegamer76.shadered.client.util.skyblock.SkyblockBatchData;
 import com.noodlegamer76.shadered.client.util.skyblock.SkyblockPass;
 import com.noodlegamer76.shadered.client.util.skyblock.SkyboxTranslation;
 import com.noodlegamer76.shadered.event.RegisterShaders;
-import com.noodlegamer76.shadered.mixin.LevelRendererAccessor;
 import net.minecraft.client.Camera;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.*;
@@ -59,7 +58,6 @@ public class MimicSkyblockRenderPass implements RenderableComplexPass {
         float f = mc.gameRenderer.getRenderDistance();
         LevelRenderer levelRenderer = mc.levelRenderer;
         GameRenderer gameRenderer = mc.gameRenderer;
-        LevelRendererAccessor levelRendererAccessor = (LevelRendererAccessor) levelRenderer;
         LightTexture lightTexture = gameRenderer.lightTexture();
 
 
@@ -95,7 +93,7 @@ public class MimicSkyblockRenderPass implements RenderableComplexPass {
             ShaderInstance shader = pass.getShader();
             shader.setSampler("Skybox", skyboxTarget.getColorTextureId());
 
-            RenderCube.renderSkyBlocks(batchData.get(pass), shader);
+            RenderCube.renderSkyBlocks(batchData.get(pass), false, shader);
         }
 
         batchData.clear();

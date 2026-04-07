@@ -45,6 +45,9 @@ public class InitBlocks {
     public static final RegistryObject<Block> MIMIC_BLOCK = BLOCKS.register("mimic_block",
             () -> new MimicBlock(BlockBehaviour.Properties.copy(Blocks.STONE).mapColor(DyeColor.WHITE).lightLevel((state) -> 15)));
 
+    public static final RegistryObject<Block> SKY_EMITTER = BLOCKS.register("sky_emitter",
+            () -> new SkyEmitterBlock(BlockBehaviour.Properties.copy(Blocks.STONE).mapColor(DyeColor.WHITE)));
+
     public static final RegistryObject<Block> SPACE_COMPRESSOR = BLOCKS.register("space_compressor",
             () -> new SpaceCompressorBlock(BlockBehaviour.Properties.copy(Blocks.STONE).mapColor(DyeColor.WHITE)));
 }

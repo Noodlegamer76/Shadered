@@ -268,7 +268,7 @@ public class SkyBoxRenderer {
             PoseStack poseStack,
             ResourceLocation folder,
             ShaderInstance shaderInstance,
-            int r, int g, int b, int a,
+            int r, int g, int b, int a, boolean invert,
             SkyboxTranslation translation) {
         renderBlockSkybox(poseStack,
                 translation,

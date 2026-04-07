@@ -20,14 +20,19 @@ import org.joml.Matrix4f;
 import org.joml.Vector3f;
 
 public class RenderCube {
-    public static void renderSkyBlocks(SkyblockBatchData.PassData data, @Nullable ShaderInstance shader) {
+    public static void renderSkyBlocks(SkyblockBatchData.PassData data, boolean inverted, @Nullable ShaderInstance shader) {
         if (data == null) return;
         Tesselator tesselator = Tesselator.getInstance();
         BufferBuilder bufferbuilder = tesselator.getBuilder();
-        bufferbuilder.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
+        bufferbuilder.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX_COLOR);
 
-        RenderSystem.depthMask(true);
-        RenderSystem.enableDepthTest();
+        if (inverted) {
+            RenderSystem.disableDepthTest();
+        }
+        else {
+            RenderSystem.depthMask(true);
+            RenderSystem.enableDepthTest();
+        }
 
         RenderSystem.setShader(() -> shader);
 
@@ -37,6 +42,12 @@ public class RenderCube {
             BlockPos pos = data.getPositions().get(i);
             for (int j = 0; j < 6; j++) {
                 if (shouldCull(pos, j)) {
+                    continue;
+                }
+
+                float alpha = data.getAlphas().get(i);
+                boolean invert = data.getInverts().get(i);
+                if (invert && !inverted || !invert && inverted) {
                     continue;
                 }
 
@@ -64,21 +75,32 @@ public class RenderCube {
                         break;
                 }
 
-                poseStack.translate(0, -0.5, 0);
+                if (!invert) {
+                    poseStack.translate(0, -0.5, 0);
+                }
+                else {
+                    poseStack.translate(0, 0.5, 0);
+                }
                 poseStack.scale(0.5f, 0.5f, 0.5f);
 
                 Matrix4f matrix4f = poseStack.last().pose();
 
-                bufferbuilder.vertex(matrix4f, -1, 0, -1).uv(0f, 0f).endVertex();
-                bufferbuilder.vertex(matrix4f, 1, 0, -1).uv(1f, 0f).endVertex();
-                bufferbuilder.vertex(matrix4f, 1, 0, 1).uv(1f, 1f).endVertex();
-                bufferbuilder.vertex(matrix4f, -1, 0, 1).uv(0f, 1f).endVertex();
+                bufferbuilder.vertex(matrix4f, -1, 0, -1).uv(0f, 0f).color(255, 255, 255, (int) (alpha * 255)).endVertex();
+                bufferbuilder.vertex(matrix4f, 1, 0, -1).uv(1f, 0f).color(255, 255, 255, (int) (alpha * 255)).endVertex();
+                bufferbuilder.vertex(matrix4f, 1, 0, 1).uv(1f, 1f).color(255, 255, 255, (int) (alpha * 255)).endVertex();
+                bufferbuilder.vertex(matrix4f, -1, 0, 1).uv(0f, 1f).color(255, 255, 255, (int) (alpha * 255)).endVertex();
 
                 poseStack.popPose();
             }
         }
 
         tesselator.end();
+
+        if (!inverted) {
+            renderSkyBlocks(data, true, shader);
+        }
+
+        RenderSystem.enableDepthTest();
     }
 
     public static void renderEndPortalCubes(SkyblockBatchData.PassData data) {

@@ -15,7 +15,8 @@ public enum SkyblockPass {
     CHROMATIC_ABERRATION("skyblock_chromatic_aberration"),
     SCREEN("skyblock_screen"),
     BLUEPRINT("skyblock_blueprint"),
-    GAMEBOY("skyblock_gameboy");
+    GAMEBOY("skyblock_gameboy"),
+    BACKGROUND("skyblock_background");
 
     public final String shaderName;
 
