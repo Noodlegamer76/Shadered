@@ -9,7 +9,7 @@ public class SkyBlockRenderInfo {
 
     public SkyBlockRenderInfo(BlockPos pos, Matrix4f pose) {
         this.pos = pos;
-        this.pose = pose;
+        this.pose = new Matrix4f(pose); 
     }
 
     public BlockPos getPos() {
