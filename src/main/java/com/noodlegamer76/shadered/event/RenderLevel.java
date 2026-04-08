@@ -48,41 +48,35 @@ public class RenderLevel {
                 RenderTargets.PS1.resize(width, height, false);
             }
 
-            if (!RenderTargets.spaceRenderInfos.isEmpty()) {
-                RenderTargets.SPACE.bindWrite(true);
-                SkyBoxRenderer.renderBlockSkybox(event.getPoseStack(), NEBULA);
-                RenderTargets.SPACE.unbindWrite();
-            }
+            RenderTargets.SPACE.clear(false);
+            RenderTargets.SPACE.bindWrite(true);
+            SkyBoxRenderer.renderBlockSkybox(event.getPoseStack(), NEBULA);
+            RenderTargets.SPACE.unbindWrite();
 
-            if (!RenderTargets.oceanRenderInfos.isEmpty()) {
-                RenderTargets.OCEAN.bindWrite(true);
-                SkyBoxRenderer.renderBlockSkybox(event.getPoseStack(), OCEAN);
-                RenderTargets.OCEAN.unbindWrite();
-            }
+            RenderTargets.OCEAN.clear(false);
+            RenderTargets.OCEAN.bindWrite(true);
+            SkyBoxRenderer.renderBlockSkybox(event.getPoseStack(), OCEAN);
+            RenderTargets.OCEAN.unbindWrite();
 
-            if (!RenderTargets.stormyRenderInfos.isEmpty()) {
-                RenderTargets.STORMY.bindWrite(true);
-                SkyBoxRenderer.renderBlockSkybox(event.getPoseStack(), STORMY);
-                RenderTargets.STORMY.unbindWrite();
-            }
+            RenderTargets.STORMY.clear(false);
+            RenderTargets.STORMY.bindWrite(true);
+            SkyBoxRenderer.renderBlockSkybox(event.getPoseStack(), STORMY);
+            RenderTargets.STORMY.unbindWrite();
 
-            if (!RenderTargets.endSkyRenderInfos.isEmpty()) {
-                RenderTargets.END_SKY.bindWrite(true);
-                SkyBoxRenderer.renderEndSky(event.getPoseStack());
-                RenderTargets.END_SKY.unbindWrite();
-            }
+            RenderTargets.END_SKY.clear(false);
+            RenderTargets.END_SKY.bindWrite(true);
+            SkyBoxRenderer.renderEndSky(event.getPoseStack());
+            RenderTargets.END_SKY.unbindWrite();
 
-            if (!RenderTargets.eclipseInfos.isEmpty()) {
-                RenderTargets.ECLIPSE.bindWrite(true);
-                SkyBoxRenderer.renderBlockSkybox(event.getPoseStack(), ECLIPSE);
-                RenderTargets.ECLIPSE.unbindWrite();
-            }
+            RenderTargets.ECLIPSE.clear(false);
+            RenderTargets.ECLIPSE.bindWrite(true);
+            SkyBoxRenderer.renderBlockSkybox(event.getPoseStack(), ECLIPSE);
+            RenderTargets.ECLIPSE.unbindWrite();
 
-            if (!RenderTargets.ps1Infos.isEmpty()) {
-                RenderTargets.PS1.bindWrite(true);
-                SkyBoxRenderer.renderBlockSkybox(event.getPoseStack(), PS1);
-                RenderTargets.PS1.unbindWrite();
-            }
+            RenderTargets.PS1.clear(false);
+            RenderTargets.PS1.bindWrite(true);
+            SkyBoxRenderer.renderBlockSkybox(event.getPoseStack(), PS1);
+            RenderTargets.PS1.unbindWrite();
 
             Minecraft.getInstance().getMainRenderTarget().bindWrite(true);
 
