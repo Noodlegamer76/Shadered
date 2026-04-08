@@ -30,6 +30,14 @@ public class SkyblockBatchData {
         return passes.get(pass);
     }
 
+    public boolean isEmpty(SkyblockPass pass) {
+        return passes.get(pass).getPositions().isEmpty();
+    }
+
+    public boolean isEmpty() {
+        return passes.isEmpty();
+    }
+
     public static class PassData {
         private final List<BlockPos> positions = new ArrayList<>();
         private final List<Matrix4f> pose = new ArrayList<>();

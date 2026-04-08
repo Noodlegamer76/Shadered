@@ -6,10 +6,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexSorting;
 import com.mojang.math.Axis;
 import com.noodlegamer76.shadered.client.renderer.ComplexPassRenderer;
-import com.noodlegamer76.shadered.client.util.PassType;
-import com.noodlegamer76.shadered.client.util.RenderCube;
-import com.noodlegamer76.shadered.client.util.RenderStage;
-import com.noodlegamer76.shadered.client.util.RenderableComplexPass;
+import com.noodlegamer76.shadered.client.util.*;
 import com.noodlegamer76.shadered.client.util.skyblock.SkyBoxRenderer;
 import com.noodlegamer76.shadered.client.util.skyblock.SkyblockBatchData;
 import com.noodlegamer76.shadered.client.util.skyblock.SkyblockPass;
@@ -25,6 +22,7 @@ import org.joml.Matrix4f;
 import org.joml.Quaternionf;
 import org.joml.Vector3f;
 
+import java.awt.*;
 import java.util.function.Supplier;
 
 public class MimicSkyblockRenderPass implements RenderableComplexPass {
@@ -41,35 +39,40 @@ public class MimicSkyblockRenderPass implements RenderableComplexPass {
 
     @Override
     public void render(RenderStage stage, PoseStack poseStack, int renderTick, float partialTick) {
+        if (batchData.isEmpty()) return;
         ComplexPassRenderer renderer = ComplexPassRenderer.getInstance();
         TextureTarget skyboxTarget = renderer.getWriteBuffer();
+
+        Minecraft mc = Minecraft.getInstance();
+
+        if (mc.level == null) return;
 
         poseStack = new PoseStack();
 
         skyboxTarget.bindWrite(true);
         poseStack.pushPose();
 
-        Minecraft mc = Minecraft.getInstance();
-
-        if (mc.level == null) return;
-
         Camera camera = mc.gameRenderer.getMainCamera();
         Vec3 cameraPos = camera.getPosition();
         float f = mc.gameRenderer.getRenderDistance();
         LevelRenderer levelRenderer = mc.levelRenderer;
         GameRenderer gameRenderer = mc.gameRenderer;
-        LightTexture lightTexture = gameRenderer.lightTexture();
-
 
         poseStack.mulPose(Axis.XP.rotationDegrees(camera.getXRot()));
         poseStack.mulPose(Axis.YP.rotationDegrees(camera.getYRot() + 180.0F));
 
         FogRenderer.setupColor(camera, partialTick, mc.level, mc.options.getEffectiveRenderDistance(), gameRenderer.getDarkenWorldAmount(partialTick));
-        FogRenderer.levelFogColor();
+
+        float[] fogColor = RenderSystem.getShaderFogColor();
+        RenderSystem.clearColor(fogColor[0], fogColor[1], fogColor[2], 1.0F);
         RenderSystem.clear(16640, Minecraft.ON_OSX);
 
         boolean flag1 = mc.level.effects().isFoggyAt(Mth.floor(cameraPos.x), Mth.floor(cameraPos.y)) ||
                 mc.gui.getBossOverlay().shouldCreateWorldFog();
+
+        RenderSystem.disableDepthTest();
+        RenderSystem.depthMask(false);
+        RenderSystem.enableBlend();
 
         FogRenderer.setupFog(camera, FogRenderer.FogMode.FOG_SKY, f, flag1, partialTick);
 
@@ -77,14 +80,8 @@ public class MimicSkyblockRenderPass implements RenderableComplexPass {
         levelRenderer.renderSky(poseStack, RenderSystem.getProjectionMatrix(), partialTick, camera, flag1,
                 () -> FogRenderer.setupFog(camera, FogRenderer.FogMode.FOG_SKY, f, flag1, partialTick));
 
-        //poseStack.mulPose(cameraRotation);
-
         RenderSystem.setShader(GameRenderer::getPositionTexColorNormalShader);
         levelRenderer.renderClouds(poseStack, RenderSystem.getProjectionMatrix(), partialTick, cameraPos.x, cameraPos.y, cameraPos.z);
-
-        //RenderSystem.depthMask(false);
-        //levelRendererAccessor.noodleEngine$renderSnowAndRain(lightTexture, partialTick, cameraPos.x, cameraPos.y, cameraPos.z);
-        //RenderSystem.depthMask(true);
 
         poseStack.popPose();
         renderer.getRenderBuffer().bindWrite(true);
@@ -97,5 +94,7 @@ public class MimicSkyblockRenderPass implements RenderableComplexPass {
         }
 
         batchData.clear();
+        RenderSystem.depthMask(true);
+        RenderSystem.enableDepthTest();
     }
 }

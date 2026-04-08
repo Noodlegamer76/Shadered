@@ -25,6 +25,7 @@ public class RegisterShaders {
     public static ShaderInstance skyblockBlueprint;
     public static ShaderInstance skyblockGameboy;
     public static ShaderInstance skyblockBackground;
+    public static ShaderInstance glass;
 
     private static final Map<String, ShaderInstance> SHADERS = new HashMap<>();
 
@@ -122,6 +123,14 @@ public class RegisterShaders {
                     SHADERS.put("skyblock_background", e);
                 });
 
+        event.registerShader(new ShaderInstance(event.getResourceProvider(),
+                        new ResourceLocation(ShaderedMod.MODID, "glass"),
+                        DefaultVertexFormat.POSITION_TEX),
+                (e) -> {
+                    glass = e;
+                    SHADERS.put("glass", e);
+                });
+
     }
 
     public static ShaderInstance getCompressor() {
@@ -162,5 +171,13 @@ public class RegisterShaders {
 
     public static ShaderInstance getSkyblockGameboy() {
         return skyblockGameboy;
+    }
+
+    public static ShaderInstance getSkyblockBackground() {
+        return skyblockBackground;
+    }
+
+    public static ShaderInstance getGlass() {
+        return glass;
     }
 }

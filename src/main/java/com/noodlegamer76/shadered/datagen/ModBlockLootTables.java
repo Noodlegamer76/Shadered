@@ -27,6 +27,7 @@ public class ModBlockLootTables extends BlockLootSubProvider {
         dropSelf(InitBlocks.SKY_EMITTER.get());
         dropSelf(InitBlocks.END_BLOCK.get());
         dropSelf(InitBlocks.END_SKY_BLOCK.get());
+        dropSelf(InitBlocks.WINDOW.get());
         dropSelf(InitBlocks.ECLIPSE_BLOCK.get());
         dropSelf(InitBlocks.SPACE_COMPRESSOR.get());
     }

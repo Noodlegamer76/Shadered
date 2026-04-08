@@ -47,6 +47,9 @@ public class InitBlockEntities {
     public static final RegistryObject<BlockEntityType<SkyEmitterEntity>> SKY_EMITTER = BLOCK_ENTITIES.register("sky_emitter",
             () -> BlockEntityType.Builder.of(SkyEmitterEntity::new, InitBlocks.SKY_EMITTER.get()).build(null));
 
+    public static final RegistryObject<BlockEntityType<WindowEntity>> WINDOW = BLOCK_ENTITIES.register("window",
+            () -> BlockEntityType.Builder.of(WindowEntity::new, InitBlocks.WINDOW.get()).build(null));
+
     public static final RegistryObject<BlockEntityType<SpaceCompressorBlockEntity>> SPACE_COMPRESSOR = BLOCK_ENTITIES.register("space_compressor",
             () -> BlockEntityType.Builder.of(SpaceCompressorBlockEntity::new, InitBlocks.SPACE_COMPRESSOR.get()).build(null));
 }

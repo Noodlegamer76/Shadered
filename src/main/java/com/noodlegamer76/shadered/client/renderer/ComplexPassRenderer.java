@@ -14,6 +14,7 @@ import org.joml.Matrix4f;
 import org.lwjgl.opengl.GL15;
 import org.lwjgl.opengl.GL30;
 import org.lwjgl.opengl.GL42;
+import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -38,9 +39,11 @@ public class ComplexPassRenderer {
     private final Map<RenderStage, List<RenderableComplexPass>> complexPasses = new HashMap<>();
     private TextureTarget renderBuffer;
     private TextureTarget writeBuffer;
+    private TextureTarget extraBuffer;
     private boolean initialized;
     private int previousWidth;
     private int previousHeight;
+    private boolean rendering = false;
 
     public void add(RenderStage stage, RenderableComplexPass effect) {
         complexPasses.computeIfAbsent(stage, s -> new ArrayList<>()).add(effect);
@@ -57,6 +60,7 @@ public class ComplexPassRenderer {
 
         renderBuffer = new TextureTarget(previousWidth, previousHeight, true, Minecraft.ON_OSX);
         writeBuffer = new TextureTarget(previousWidth, previousHeight, true, Minecraft.ON_OSX);
+        extraBuffer = new TextureTarget(previousWidth, previousHeight, true, Minecraft.ON_OSX);
 
         initialized = true;
     }
@@ -66,11 +70,17 @@ public class ComplexPassRenderer {
             Window window = Minecraft.getInstance().getWindow();
             renderBuffer.resize(window.getWidth(), window.getHeight(), Minecraft.ON_OSX);
             writeBuffer.resize(window.getWidth(), window.getHeight(), Minecraft.ON_OSX);
+            extraBuffer.resize(window.getWidth(), window.getHeight(), Minecraft.ON_OSX);
         }
         else {
             renderBuffer.clear(Minecraft.ON_OSX);
             writeBuffer.clear(Minecraft.ON_OSX);
+            extraBuffer.clear(Minecraft.ON_OSX);
         }
+
+        renderBuffer.setClearColor(1.0f, 1.0f, 1.0f, 1.0f);
+        writeBuffer.setClearColor(1.0f, 1.0f, 1.0f, 1.0f);
+        extraBuffer.setClearColor(1.0f, 1.0f, 1.0f, 1.0f);
 
         renderToRenderTarget();
     }
@@ -79,6 +89,8 @@ public class ComplexPassRenderer {
         if (!initialized) {
             init();
         }
+        if (rendering) return;
+        rendering = true;
 
         preRender();
 
@@ -113,6 +125,7 @@ public class ComplexPassRenderer {
         writeBuffer = scratch;
 
         postRender();
+        rendering = false;
     }
 
     private void postRender() {
@@ -181,5 +194,9 @@ public class ComplexPassRenderer {
 
     public boolean shouldResize() {
         return previousWidth != Minecraft.getInstance().getWindow().getWidth() || previousHeight != Minecraft.getInstance().getWindow().getHeight();
+    }
+
+    public TextureTarget getExtraBuffer() {
+        return extraBuffer;
     }
 }

@@ -47,6 +47,9 @@ public class InitItems {
     public static final RegistryObject<Item> FOREST_BLOCK = ITEMS.register("forest_block",
             () -> new BlockItem(InitBlocks.FOREST_BLOCK.get(), new Item.Properties()));
 
+    public static final RegistryObject<Item> WINDOW = ITEMS.register("window",
+            () -> new BlockItem(InitBlocks.WINDOW.get(), new Item.Properties()));
+
     public static final RegistryObject<Item> MIMIC_BLOCK = ITEMS.register("mimic_block",
             () -> new BlockItem(InitBlocks.MIMIC_BLOCK.get(), new Item.Properties()));
 

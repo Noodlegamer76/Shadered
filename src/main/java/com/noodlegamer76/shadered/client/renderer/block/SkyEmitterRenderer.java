@@ -1,5 +1,6 @@
 package com.noodlegamer76.shadered.client.renderer.block;
 
+import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
 import com.noodlegamer76.shadered.client.renderer.SkyblockRenderer;
@@ -46,6 +47,9 @@ public class SkyEmitterRenderer implements BlockEntityRenderer<SkyEmitterEntity>
 
         pos = pos.atY(4000 + pos.getY());
 
+        RenderSystem.disableDepthTest();
+        RenderSystem.depthMask(false);
+
         if (type == SkyEmitterType.ECLIPSE) {
             renderSkyblockSkybox(pos, poseStack, SkyblockRenderer.eclipseData, alpha, renderTime);
         }
@@ -68,6 +72,8 @@ public class SkyEmitterRenderer implements BlockEntityRenderer<SkyEmitterEntity>
             renderSkyblockSkybox(pos, poseStack, SkyblockRenderer.oceanData, alpha, renderTime);
         }
 
+        RenderSystem.depthMask(true);
+        RenderSystem.enableDepthTest();
     }
 
     @Override

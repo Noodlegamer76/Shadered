@@ -18,7 +18,7 @@ public class GlUtils {
         GlStateManager._glBindFramebuffer(36009, to.frameBufferId);
         GlStateManager._glBlitFrameBuffer(
                 0, 0, from.width, from.height,
-                0, 0, from.width, from.height,
+                0, 0, to.width, to.height,
                 16384,
                 9728
         );

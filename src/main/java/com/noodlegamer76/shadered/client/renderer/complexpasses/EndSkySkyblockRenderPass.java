@@ -25,6 +25,7 @@ public class EndSkySkyblockRenderPass implements RenderableComplexPass {
 
     @Override
     public void render(RenderStage stage, PoseStack poseStack, int renderTick, float partialTick) {
+        if (batchData.isEmpty()) return;
         ComplexPassRenderer renderer = ComplexPassRenderer.getInstance();
         TextureTarget skyboxTarget = renderer.getWriteBuffer();
 

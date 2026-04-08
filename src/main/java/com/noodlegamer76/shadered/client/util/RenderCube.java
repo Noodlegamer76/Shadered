@@ -13,7 +13,6 @@ import net.minecraft.client.renderer.blockentity.TheEndPortalRenderer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.level.DataPackConfig;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Matrix4f;
@@ -101,6 +100,7 @@ public class RenderCube {
         }
 
         RenderSystem.enableDepthTest();
+        RenderSystem.depthMask(true);
     }
 
     public static void renderEndPortalCubes(SkyblockBatchData.PassData data) {
@@ -242,6 +242,95 @@ public class RenderCube {
                 poseStack.popPose();
             }
         }
+    }
+
+    public static void renderSizedBox(BlockPos[] positions, float partialTicks, PoseStack poseStack) {
+        Tesselator tesselator = Tesselator.getInstance();
+        BufferBuilder bufferbuilder = tesselator.getBuilder();
+        bufferbuilder.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
+
+        float offset = 0.0005f;
+
+        RenderSystem.depthMask(true);
+        RenderSystem.enableDepthTest();
+
+        BlockPos compressorPos = positions[0];
+        BlockPos p1 = positions[1];
+        BlockPos p2 = positions[2];
+
+        int minX = Math.min(p1.getX(), p2.getX());
+        int minY = Math.min(p1.getY(), p2.getY());
+        int minZ = Math.min(p1.getZ(), p2.getZ());
+        int maxX = Math.max(p1.getX(), p2.getX());
+        int maxY = Math.max(p1.getY(), p2.getY());
+        int maxZ = Math.max(p1.getZ(), p2.getZ());
+
+        float sizeX = (maxX - minX) + 1f;
+        float sizeY = (maxY - minY) + 1f;
+        float sizeZ = (maxZ - minZ) + 1f;
+
+        poseStack.pushPose();
+        poseStack.translate(-compressorPos.getX(), -compressorPos.getY(), -compressorPos.getZ());
+        poseStack.translate(minX, minY, minZ);
+
+        poseStack.scale(sizeX, sizeY, sizeZ);
+
+        for (int j = 0; j < 6; j++) {
+            poseStack.pushPose();
+            poseStack.translate(0.5, 0.5, 0.5);
+
+            switch (j) {
+                case 0 -> { /* down */ }
+                case 1 -> poseStack.mulPose(Axis.XP.rotationDegrees(90));
+                case 2 -> poseStack.mulPose(Axis.XP.rotationDegrees(180));
+                case 3 -> poseStack.mulPose(Axis.XP.rotationDegrees(-90));
+                case 4 -> poseStack.mulPose(Axis.ZP.rotationDegrees(-90));
+                case 5 -> poseStack.mulPose(Axis.ZN.rotationDegrees(-90));
+            }
+
+            poseStack.translate(0, 0.5, 0);
+            poseStack.scale(0.5f, 0.5f, 0.5f);
+
+            Matrix4f matrix4f = poseStack.last().pose();
+
+            Vector3f normal = switch (j) {
+                case 0 -> new Vector3f(0, 1, 0);
+                case 1 -> new Vector3f(-1, 0, 0);
+                case 2 -> new Vector3f(0, -1, 0);
+                case 3 -> new Vector3f(1, 0, 0);
+                case 4 -> new Vector3f(0, 0, 1);
+                case 5 -> new Vector3f(0, 0, -1);
+                default -> new Vector3f(0, -1, 0);
+            };
+
+            float[][] vertices = {
+                    { 1f - offset, offset, -1f + offset},
+                    {-1f + offset, offset, -1f + offset},
+                    {-1f + offset, offset,  1f - offset},
+                    { 1f - offset, offset,  1f - offset}
+            };
+
+            float[][] uvs = {
+                    {1f, 0f},
+                    {0f, 0f},
+                    {0f, 1f},
+                    {1f, 1f}
+            };
+
+            for (int k = 0; k < 4; k++) {
+                float[] v = vertices[k];
+                float[] uv = uvs[k];
+                bufferbuilder
+                        .vertex(matrix4f, v[0], v[1], v[2])
+                        .uv(uv[0], uv[1])
+                        .endVertex();
+            }
+
+            poseStack.popPose();
+        }
+
+        poseStack.popPose();
+        tesselator.end();
     }
 
     public static void renderSpaceCompressorBox(BlockPos[] positions, float partialTicks, RenderType renderType, PoseStack poseStack) {

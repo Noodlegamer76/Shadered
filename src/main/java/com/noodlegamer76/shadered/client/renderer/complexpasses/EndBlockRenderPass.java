@@ -33,6 +33,7 @@ public class EndBlockRenderPass implements RenderableComplexPass {
     //TODO: Make this work with shaders
     @Override
     public void render(RenderStage stage, PoseStack poseStack, int renderTick, float partialTick) {
+        if (batchData.isEmpty()) return;
         ComplexPassRenderer renderer = ComplexPassRenderer.getInstance();
         TextureTarget skyboxTarget = renderer.getWriteBuffer();
 

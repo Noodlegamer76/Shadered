@@ -1,11 +1,9 @@
 package com.noodlegamer76.shadered.client.renderer;
 
 import com.noodlegamer76.shadered.ShaderedMod;
-import com.noodlegamer76.shadered.client.renderer.complexpasses.EndBlockRenderPass;
-import com.noodlegamer76.shadered.client.renderer.complexpasses.EndSkySkyblockRenderPass;
-import com.noodlegamer76.shadered.client.renderer.complexpasses.MimicSkyblockRenderPass;
-import com.noodlegamer76.shadered.client.renderer.complexpasses.SkyblockRenderPass;
-import com.noodlegamer76.shadered.client.util.*;
+import com.noodlegamer76.shadered.client.renderer.complexpasses.*;
+import com.noodlegamer76.shadered.client.util.RenderStage;
+import com.noodlegamer76.shadered.client.util.glass.GlassChannel;
 import com.noodlegamer76.shadered.client.util.skyblock.SkyblockBatchData;
 import com.noodlegamer76.shadered.client.util.skyblock.SkyboxTranslation;
 import com.noodlegamer76.shadered.event.RegisterShaders;
@@ -13,6 +11,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.renderer.texture.AbstractTexture;
 import net.minecraft.client.renderer.texture.TextureManager;
+import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
 import org.joml.Vector3f;
 
@@ -41,6 +40,10 @@ public class SkyblockRenderer {
     public static SkyblockBatchData forestData = new SkyblockBatchData();
     public static SkyblockBatchData lightData = new SkyblockBatchData();
     public static SkyblockBatchData mimicData = new SkyblockBatchData();
+
+    public static SkyblockBatchData glassData = new SkyblockBatchData();
+    public static GlassRenderer glassRenderer = new GlassRenderer(glassData);
+    public static GlassChannel channel = new GlassChannel(new BlockPos(0, 128, 0));
 
     public static void setup() {
         ComplexPassRenderer renderer = ComplexPassRenderer.getInstance();
@@ -90,6 +93,10 @@ public class SkyblockRenderer {
                 mimicData
         );
         renderer.add(RenderStage.AFTER_BLOCK_ENTITIES, mimicSkyblockRenderPass);
+
+
+        renderer.add(RenderStage.AFTER_LEVEL, glassRenderer);
+        glassRenderer.addGlassChannel(channel);
     }
 
     public static void preRender() {
