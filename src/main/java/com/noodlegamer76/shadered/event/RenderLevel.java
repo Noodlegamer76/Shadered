@@ -29,13 +29,6 @@ public class RenderLevel {
             width = Minecraft.getInstance().getWindow().getWidth();
             height = Minecraft.getInstance().getWindow().getHeight();
 
-            RenderTargets.SPACE.clear(false);
-            RenderTargets.OCEAN.clear(false);
-            RenderTargets.STORMY.clear(false);
-            RenderTargets.END_SKY.clear(false);
-            RenderTargets.ECLIPSE.clear(false);
-            RenderTargets.PS1.clear(false);
-
             if (prevWidth != width || prevHeight != height) {
                 prevWidth = width;
                 prevHeight = height;
@@ -48,35 +41,55 @@ public class RenderLevel {
                 RenderTargets.PS1.resize(width, height, false);
             }
 
-            RenderTargets.SPACE.clear(false);
-            RenderTargets.SPACE.bindWrite(true);
-            SkyBoxRenderer.renderBlockSkybox(event.getPoseStack(), NEBULA);
-            RenderTargets.SPACE.unbindWrite();
+            if (!RenderTargets.spaceRenderInfos.isEmpty()) {
+                RenderTargets.SPACE.clear(false);
+                RenderTargets.SPACE.bindWrite(true);
+                SkyBoxRenderer.renderBlockSkybox(event.getPoseStack(), NEBULA);
+                RenderTargets.SPACE.unbindWrite();
+            }
+            RenderTargets.spaceRenderInfos.clear();
 
-            RenderTargets.OCEAN.clear(false);
-            RenderTargets.OCEAN.bindWrite(true);
-            SkyBoxRenderer.renderBlockSkybox(event.getPoseStack(), OCEAN);
-            RenderTargets.OCEAN.unbindWrite();
+            if (!RenderTargets.oceanRenderInfos.isEmpty()) {
+                RenderTargets.OCEAN.clear(false);
+                RenderTargets.OCEAN.bindWrite(true);
+                SkyBoxRenderer.renderBlockSkybox(event.getPoseStack(), OCEAN);
+                RenderTargets.OCEAN.unbindWrite();
+            }
+            RenderTargets.oceanRenderInfos.clear();
 
-            RenderTargets.STORMY.clear(false);
-            RenderTargets.STORMY.bindWrite(true);
-            SkyBoxRenderer.renderBlockSkybox(event.getPoseStack(), STORMY);
-            RenderTargets.STORMY.unbindWrite();
+            if (!RenderTargets.stormyRenderInfos.isEmpty()) {
+                RenderTargets.STORMY.clear(false);
+                RenderTargets.STORMY.bindWrite(true);
+                SkyBoxRenderer.renderBlockSkybox(event.getPoseStack(), STORMY);
+                RenderTargets.STORMY.unbindWrite();
+            }
+            RenderTargets.stormyRenderInfos.clear();
 
-            RenderTargets.END_SKY.clear(false);
-            RenderTargets.END_SKY.bindWrite(true);
-            SkyBoxRenderer.renderEndSky(event.getPoseStack());
-            RenderTargets.END_SKY.unbindWrite();
+            if (!RenderTargets.endSkyRenderInfos.isEmpty()) {
+                RenderTargets.END_SKY.clear(false);
+                RenderTargets.END_SKY.bindWrite(true);
+                SkyBoxRenderer.renderEndSky(event.getPoseStack());
+                RenderTargets.END_SKY.unbindWrite();
+            }
+            RenderTargets.endSkyRenderInfos.clear();
 
-            RenderTargets.ECLIPSE.clear(false);
-            RenderTargets.ECLIPSE.bindWrite(true);
-            SkyBoxRenderer.renderBlockSkybox(event.getPoseStack(), ECLIPSE);
-            RenderTargets.ECLIPSE.unbindWrite();
+            if (!RenderTargets.eclipseInfos.isEmpty()) {
+                RenderTargets.ECLIPSE.clear(false);
+                RenderTargets.ECLIPSE.bindWrite(true);
+                SkyBoxRenderer.renderBlockSkybox(event.getPoseStack(), ECLIPSE);
+                RenderTargets.ECLIPSE.unbindWrite();
+            }
+            RenderTargets.eclipseInfos.clear();
 
-            RenderTargets.PS1.clear(false);
-            RenderTargets.PS1.bindWrite(true);
-            SkyBoxRenderer.renderBlockSkybox(event.getPoseStack(), PS1);
-            RenderTargets.PS1.unbindWrite();
+            if (!RenderTargets.ps1Infos.isEmpty()) {
+                RenderTargets.PS1.clear(false);
+                RenderTargets.PS1.bindWrite(true);
+                SkyBoxRenderer.renderBlockSkybox(event.getPoseStack(), PS1);
+                RenderTargets.PS1.unbindWrite();
+            }
+            RenderTargets.ps1Infos.clear();
+
+            RenderTargets.endRenderInfos.clear();
 
             Minecraft.getInstance().getMainRenderTarget().bindWrite(true);
 

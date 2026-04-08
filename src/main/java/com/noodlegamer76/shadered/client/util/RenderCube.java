@@ -81,8 +81,6 @@ public class RenderCube {
         if (data != null) {
             BufferUploader.drawWithShader(data);
         }
-
-        info.clear();
     }
 
     public static void renderCubeWithRenderType(ArrayList<SkyBlockRenderInfo> info, RenderType renderType) {
@@ -138,8 +136,6 @@ public class RenderCube {
                 REUSABLE_POSESTACK.popPose();
             }
         }
-
-        info.clear();
     }
 
     private static boolean shouldCull(BlockPos pos, int faceIndex) {
