@@ -16,16 +16,20 @@ import org.joml.Matrix4f;
 import java.util.ArrayList;
 
 public class RenderCube {
+    private static final PoseStack REUSABLE_POSESTACK = new PoseStack();
 
     public static void renderSkyBlocks(ArrayList<SkyBlockRenderInfo> info, ShaderInstance shader) {
-        BufferBuilder bufferBuilder = Tesselator.getInstance().begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION);
+        if (info.isEmpty()) {
+            return;
+        }
+
+        BufferBuilder bufferBuilder = Tesselator.getInstance().begin(VertexFormat.Mode.QUADS,
+                DefaultVertexFormat.POSITION);
         Minecraft.getInstance().gameRenderer.getMainCamera();
 
         RenderSystem.depthMask(true);
         RenderSystem.enableDepthTest();
         RenderSystem.setShader(() -> shader);
-
-        PoseStack poseStack = new PoseStack();
 
         for (int i = 0; i < info.size(); i++) {
             BlockPos pos = info.get(i).getPos();
@@ -34,42 +38,41 @@ public class RenderCube {
                     continue;
                 }
 
-                poseStack.pushPose();
-                poseStack.mulPose(info.get(i).getPose());
-
-                poseStack.translate(0.5, 0.5, 0.5);
+                REUSABLE_POSESTACK.pushPose();
+                REUSABLE_POSESTACK.last().pose().set(info.get(i).getPose());
+                REUSABLE_POSESTACK.translate(0.5, 0.5, 0.5);
 
                 switch (j) {
                     case 0:
                         break;
                     case 1:
-                        poseStack.mulPose(Axis.XP.rotationDegrees(90));
+                        REUSABLE_POSESTACK.mulPose(Axis.XP.rotationDegrees(90));
                         break;
                     case 2:
-                        poseStack.mulPose(Axis.XP.rotationDegrees(180));
+                        REUSABLE_POSESTACK.mulPose(Axis.XP.rotationDegrees(180));
                         break;
                     case 3:
-                        poseStack.mulPose(Axis.XP.rotationDegrees(-90));
+                        REUSABLE_POSESTACK.mulPose(Axis.XP.rotationDegrees(-90));
                         break;
                     case 4:
-                        poseStack.mulPose(Axis.ZP.rotationDegrees(-90));
+                        REUSABLE_POSESTACK.mulPose(Axis.ZP.rotationDegrees(-90));
                         break;
                     case 5:
-                        poseStack.mulPose(Axis.ZN.rotationDegrees(-90));
+                        REUSABLE_POSESTACK.mulPose(Axis.ZN.rotationDegrees(-90));
                         break;
                 }
 
-                poseStack.translate(0, -0.5, 0);
-                poseStack.scale(0.5f, 0.5f, 0.5f);
+                REUSABLE_POSESTACK.translate(0, -0.5, 0);
+                REUSABLE_POSESTACK.scale(0.5f, 0.5f, 0.5f);
 
-                Matrix4f matrix4f = poseStack.last().pose();
+                Matrix4f matrix4f = REUSABLE_POSESTACK.last().pose();
 
                 bufferBuilder.addVertex(matrix4f, -1, 0, -1);
                 bufferBuilder.addVertex(matrix4f, 1, 0, -1);
                 bufferBuilder.addVertex(matrix4f, 1, 0, 1);
                 bufferBuilder.addVertex(matrix4f, -1, 0, 1);
 
-                poseStack.popPose();
+                REUSABLE_POSESTACK.popPose();
             }
         }
 
@@ -83,11 +86,14 @@ public class RenderCube {
     }
 
     public static void renderCubeWithRenderType(ArrayList<SkyBlockRenderInfo> info, RenderType renderType) {
+        if (info.isEmpty()) {
+            return;
+        }
+
         VertexConsumer vertexConsumer = Minecraft.getInstance().renderBuffers().bufferSource().getBuffer(renderType);
 
         RenderSystem.depthMask(true);
         RenderSystem.enableDepthTest();
-        PoseStack poseStack = new PoseStack();
         for (int i = 0; i < info.size(); i++) {
             BlockPos pos = info.get(i).pos;
             for (int j = 0; j < 6; j++) {
@@ -95,42 +101,41 @@ public class RenderCube {
                     continue;
                 }
 
-                poseStack.pushPose();
-
-                poseStack.mulPose(info.get(i).pose);
-                poseStack.translate(0.5, 0.5, 0.5);
+                REUSABLE_POSESTACK.pushPose();
+                REUSABLE_POSESTACK.last().pose().set(info.get(i).pose);
+                REUSABLE_POSESTACK.translate(0.5, 0.5, 0.5);
 
                 switch (j) {
                     case 0:
                         break;
                     case 1:
-                        poseStack.mulPose(Axis.XP.rotationDegrees(90));
+                        REUSABLE_POSESTACK.mulPose(Axis.XP.rotationDegrees(90));
                         break;
                     case 2:
-                        poseStack.mulPose(Axis.XP.rotationDegrees(180));
+                        REUSABLE_POSESTACK.mulPose(Axis.XP.rotationDegrees(180));
                         break;
                     case 3:
-                        poseStack.mulPose(Axis.XP.rotationDegrees(-90));
+                        REUSABLE_POSESTACK.mulPose(Axis.XP.rotationDegrees(-90));
                         break;
                     case 4:
-                        poseStack.mulPose(Axis.ZP.rotationDegrees(-90));
+                        REUSABLE_POSESTACK.mulPose(Axis.ZP.rotationDegrees(-90));
                         break;
                     case 5:
-                        poseStack.mulPose(Axis.ZN.rotationDegrees(-90));
+                        REUSABLE_POSESTACK.mulPose(Axis.ZN.rotationDegrees(-90));
                         break;
                 }
 
-                poseStack.translate(0, -0.5, 0);
-                poseStack.scale(0.5f, 0.5f, 0.5f);
+                REUSABLE_POSESTACK.translate(0, -0.5, 0);
+                REUSABLE_POSESTACK.scale(0.5f, 0.5f, 0.5f);
 
-                Matrix4f matrix4f = poseStack.last().pose();
+                Matrix4f matrix4f = REUSABLE_POSESTACK.last().pose();
 
                 vertexConsumer.addVertex(matrix4f, -1, 0, -1);
                 vertexConsumer.addVertex(matrix4f, 1, 0, -1);
                 vertexConsumer.addVertex(matrix4f, 1, 0, 1);
                 vertexConsumer.addVertex(matrix4f, -1, 0, 1);
 
-                poseStack.popPose();
+                REUSABLE_POSESTACK.popPose();
             }
         }
 
