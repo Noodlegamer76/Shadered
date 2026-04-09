@@ -7,14 +7,14 @@
   ],
   "key": {
     "e": {
-      "item": "minecraft:white_stained_glass"
+      "item": "shadered:mimic_block"
     },
     "o": {
-      "item": "minecraft:white_wool"
+      "item": "minecraft:oak_leaves"
     }
   },
   "result": {
-    "item": "shadered:mimic_block",
+    "item": "shadered:forest_block",
     "count": 8
   }
 }

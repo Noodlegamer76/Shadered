@@ -4,6 +4,7 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.*;
 import com.mojang.math.Axis;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.GameRenderer;
 import org.joml.Matrix4f;
 
 import java.awt.*;
@@ -70,57 +71,76 @@ public class RenderCubeAroundPlayer {
 
     public static void renderCubeWithShader(PoseStack poseStack, Color color) {
         Tesselator tesselator = Tesselator.getInstance();
-        BufferBuilder bufferbuilder = tesselator.getBuilder();
+        BufferBuilder buffer = tesselator.getBuilder();
+
+        RenderSystem.setShader(GameRenderer::getPositionColorShader);
+
+        RenderSystem.getModelViewStack().pushPose();
+        RenderSystem.getModelViewStack().mulPoseMatrix(poseStack.last().pose());
+        RenderSystem.applyModelViewMatrix();
 
         RenderSystem.disableDepthTest();
-        RenderSystem.depthMask(false);
         RenderSystem.disableCull();
+        RenderSystem.depthMask(false);
 
         poseStack.pushPose();
+        poseStack.scale(1, 1, 1);
 
-        poseStack.scale(100.0f, 100.0f, 100.0f);
+        Matrix4f matrix = poseStack.last().pose();
 
-        bufferbuilder.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_COLOR);
+        buffer.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_COLOR);
 
-        for (int i = 0; i < 6; ++i) {
-            poseStack.pushPose();
+        int r = color.getRed();
+        int g = color.getGreen();
+        int b = color.getBlue();
+        int a = color.getAlpha();
 
-            switch (i) {
-                case 0: // top
-                    break;
-                case 1:
-                    poseStack.mulPose(Axis.XP.rotationDegrees(90));
-                    break;
-                case 2:
-                    poseStack.mulPose(Axis.XP.rotationDegrees(180));
-                    break;
-                case 3:
-                    poseStack.mulPose(Axis.XP.rotationDegrees(-90));
-                    break;
-                case 4:
-                    poseStack.mulPose(Axis.ZP.rotationDegrees(-90));
-                    break;
-                case 5:
-                    poseStack.mulPose(Axis.ZN.rotationDegrees(-90));
-                    break;
-            }
+        // Top face
+        buffer.vertex(matrix, -1, 1, -1).color(r, g, b, a).endVertex();
+        buffer.vertex(matrix,  1, 1, -1).color(r, g, b, a).endVertex();
+        buffer.vertex(matrix,  1, 1,  1).color(r, g, b, a).endVertex();
+        buffer.vertex(matrix, -1, 1,  1).color(r, g, b, a).endVertex();
 
-            Matrix4f matrix4f = poseStack.last().pose();
+        // Bottom face
+        buffer.vertex(matrix, -1, -1,  1).color(r, g, b, a).endVertex();
+        buffer.vertex(matrix,  1, -1,  1).color(r, g, b, a).endVertex();
+        buffer.vertex(matrix,  1, -1, -1).color(r, g, b, a).endVertex();
+        buffer.vertex(matrix, -1, -1, -1).color(r, g, b, a).endVertex();
 
-            bufferbuilder.vertex(matrix4f, -1, 0, -1).color(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha()).endVertex();
-            bufferbuilder.vertex(matrix4f,  1, 0, -1).color(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha()).endVertex();
-            bufferbuilder.vertex(matrix4f,  1, 0,  1).color(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha()).endVertex();
-            bufferbuilder.vertex(matrix4f, -1, 0,  1).color(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha()).endVertex();
+        // Remaining four faces
+        // Front
+        buffer.vertex(matrix, -1, -1, 1).color(r, g, b, a).endVertex();
+        buffer.vertex(matrix,  1, -1, 1).color(r, g, b, a).endVertex();
+        buffer.vertex(matrix,  1,  1, 1).color(r, g, b, a).endVertex();
+        buffer.vertex(matrix, -1,  1, 1).color(r, g, b, a).endVertex();
 
-            poseStack.popPose();
-        }
+        // Back
+        buffer.vertex(matrix,  1, -1, -1).color(r, g, b, a).endVertex();
+        buffer.vertex(matrix, -1, -1, -1).color(r, g, b, a).endVertex();
+        buffer.vertex(matrix, -1,  1, -1).color(r, g, b, a).endVertex();
+        buffer.vertex(matrix,  1,  1, -1).color(r, g, b, a).endVertex();
+
+        // Left
+        buffer.vertex(matrix, -1, -1, -1).color(r, g, b, a).endVertex();
+        buffer.vertex(matrix, -1, -1,  1).color(r, g, b, a).endVertex();
+        buffer.vertex(matrix, -1,  1,  1).color(r, g, b, a).endVertex();
+        buffer.vertex(matrix, -1,  1, -1).color(r, g, b, a).endVertex();
+
+        // Right
+        buffer.vertex(matrix, 1, -1,  1).color(r, g, b, a).endVertex();
+        buffer.vertex(matrix, 1, -1, -1).color(r, g, b, a).endVertex();
+        buffer.vertex(matrix, 1,  1, -1).color(r, g, b, a).endVertex();
+        buffer.vertex(matrix, 1,  1,  1).color(r, g, b, a).endVertex();
 
         tesselator.end();
 
         poseStack.popPose();
 
+        RenderSystem.getModelViewStack().popPose();
+        RenderSystem.applyModelViewMatrix();
+
         RenderSystem.enableCull();
-        RenderSystem.depthMask(true);
         RenderSystem.enableDepthTest();
+        RenderSystem.depthMask(true);
     }
 }
