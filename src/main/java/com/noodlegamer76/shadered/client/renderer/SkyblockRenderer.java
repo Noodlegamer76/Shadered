@@ -22,6 +22,7 @@ public class SkyblockRenderer {
     public static final ResourceLocation ECLIPSE = new ResourceLocation(ShaderedMod.MODID, "textures/environment/eclipse");
     public static final ResourceLocation LIGHT = new ResourceLocation(ShaderedMod.MODID, "textures/environment/light");
     public static final ResourceLocation FOREST = new ResourceLocation(ShaderedMod.MODID, "textures/environment/forest");
+    public static final ResourceLocation IRIDIA = new ResourceLocation(ShaderedMod.MODID, "textures/environment/iridia");
 
     public static final ResourceLocation GRAINY = new ResourceLocation(ShaderedMod.MODID, "textures/noise/grainy.png");
     public static final ResourceLocation GRAINY2 = new ResourceLocation(ShaderedMod.MODID, "textures/noise/grainy2.png");
@@ -37,6 +38,7 @@ public class SkyblockRenderer {
     public static SkyblockBatchData endData = new SkyblockBatchData();
     public static SkyblockBatchData endSkyData = new SkyblockBatchData();
     public static SkyblockBatchData eclipseData = new SkyblockBatchData();
+    public static SkyblockBatchData iridiaData = new SkyblockBatchData();
     public static SkyblockBatchData forestData = new SkyblockBatchData();
     public static SkyblockBatchData lightData = new SkyblockBatchData();
     public static SkyblockBatchData mimicData = new SkyblockBatchData();
@@ -70,6 +72,12 @@ public class SkyblockRenderer {
                 new SkyboxTranslation(), skyboxRotationSpeed, () -> RegisterShaders.skyboxWarp
         );
         renderer.add(RenderStage.AFTER_BLOCK_ENTITIES, eclipseRenderPass);
+
+        SkyblockRenderPass iridiaRenderPass = new SkyblockRenderPass(IRIDIA, iridiaData,
+                new SkyboxTranslation()
+                        .setTopBottomRot(SkyboxTranslation.SkyboxRotation.ROTATE_90_CW)
+        );
+        renderer.add(RenderStage.AFTER_BLOCK_ENTITIES, iridiaRenderPass);
 
         EndSkySkyblockRenderPass endSkyRenderPass = new EndSkySkyblockRenderPass(endSkyData);
         renderer.add(RenderStage.AFTER_BLOCK_ENTITIES, endSkyRenderPass);

@@ -10,4 +10,5 @@ public enum SkyEmitterType {
     LIGHT,
     MIMIC,
     OCEAN,
+    IRIDIA,
 }

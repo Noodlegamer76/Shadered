@@ -1,5 +1,6 @@
 package com.noodlegamer76.shadered.item;
 
+import com.noodlegamer76.shadered.client.renderer.ComplexPassRenderer;
 import com.noodlegamer76.shadered.client.renderer.SkyblockRenderer;
 import com.noodlegamer76.shadered.client.util.glass.GlassChannel;
 import net.minecraft.core.BlockPos;
@@ -19,9 +20,8 @@ public class TestItem extends Item {
     @Override
     public InteractionResultHolder<ItemStack> use(Level pLevel, Player pPlayer, InteractionHand pUsedHand) {
         if (pLevel.isClientSide) {
-            SkyblockRenderer.glassRenderer.getGlassChannels().clear();
-            GlassChannel channel = new GlassChannel(new BlockPos(-50, 50, 0).subtract(pPlayer.blockPosition()));
-            SkyblockRenderer.glassRenderer.addGlassChannel(channel);
+            ComplexPassRenderer.getInstance().clear();
+            SkyblockRenderer.setup();
         }
         return super.use(pLevel, pPlayer, pUsedHand);
     }

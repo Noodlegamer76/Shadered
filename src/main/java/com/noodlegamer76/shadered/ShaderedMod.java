@@ -37,9 +37,6 @@ public class ShaderedMod
     {
         IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
 
-        // Register the commonSetup method for modloading
-        modEventBus.addListener(this::commonSetup);
-
         InitBlocks.BLOCKS.register(modEventBus);
         InitItems.ITEMS.register(modEventBus);
         InitBlockEntities.BLOCK_ENTITIES.register(modEventBus);
@@ -53,27 +50,6 @@ public class ShaderedMod
         // Register our mod's ForgeConfigSpec so that Forge can create and load the config file for us
         ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, Config.SPEC);
 
-    }
-
-    private void commonSetup(final FMLCommonSetupEvent event)
-    {
-        // Some common setup code
-        LOGGER.info("HELLO FROM COMMON SETUP");
-
-        if (Config.logDirtBlock)
-            LOGGER.info("DIRT BLOCK >> {}", ForgeRegistries.BLOCKS.getKey(Blocks.DIRT));
-
-        LOGGER.info(Config.magicNumberIntroduction + Config.magicNumber);
-
-        Config.items.forEach((item) -> LOGGER.info("ITEM >> {}", item.toString()));
-    }
-
-    // You can use SubscribeEvent and let the Event Bus discover methods to call
-    @SubscribeEvent
-    public void onServerStarting(ServerStartingEvent event)
-    {
-        // Do something when the server starts
-        LOGGER.info("HELLO from server starting");
     }
 
     // You can use EventBusSubscriber to automatically register all static methods in the class annotated with @SubscribeEvent
@@ -99,6 +75,7 @@ public class ShaderedMod
             event.registerBlockEntityRenderer(InitBlockEntities.SKY_EMITTER.get(), SkyEmitterRenderer::new);
             event.registerBlockEntityRenderer(InitBlockEntities.WINDOW.get(), WindowRenderer::new);
             event.registerBlockEntityRenderer(InitBlockEntities.SPACE_COMPRESSOR.get(), SpaceCompressorBlockRenderer::new);
+            event.registerBlockEntityRenderer(InitBlockEntities.IRIDIA_BLOCK.get(), IridiaBlockRenderer::new);
         }
     }
 }

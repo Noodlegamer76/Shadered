@@ -15,6 +15,7 @@ public class ShaderedTab {
             event.accept(InitItems.DARKNESS_BLOCK);
             event.accept(InitItems.END_BLOCK);
             event.accept(InitItems.END_SKY_BLOCK);
+            event.accept(InitItems.IRIDIA_BLOCK);
             event.accept(InitItems.ECLIPSE_BLOCK);
             event.accept(InitItems.FOREST_BLOCK);
             event.accept(InitItems.MIMIC_BLOCK);

@@ -38,6 +38,9 @@ public class InitItems {
     public static final RegistryObject<Item> END_BLOCK = ITEMS.register("end_block",
             () -> new BlockItem(InitBlocks.END_BLOCK.get(), new Item.Properties()));
 
+    public static final RegistryObject<Item> IRIDIA_BLOCK = ITEMS.register("iridia_block",
+            () -> new BlockItem(InitBlocks.IRIDIA_BLOCK.get(), new Item.Properties()));
+
     public static final RegistryObject<Item> END_SKY_BLOCK = ITEMS.register("end_sky_block",
             () -> new BlockItem(InitBlocks.END_SKY_BLOCK.get(), new Item.Properties()));
 

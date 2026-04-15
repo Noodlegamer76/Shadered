@@ -1,10 +1,7 @@
 package com.noodlegamer76.shadered.entity.block;
 
 import com.noodlegamer76.shadered.ShaderedMod;
-import com.noodlegamer76.shadered.block.EclipseBlock;
-import com.noodlegamer76.shadered.block.InitBlocks;
-import com.noodlegamer76.shadered.block.SkyEmitterBlock;
-import com.noodlegamer76.shadered.block.StormyBlock;
+import com.noodlegamer76.shadered.block.*;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraftforge.registries.DeferredRegister;
@@ -28,6 +25,9 @@ public class InitBlockEntities {
 
     public static final RegistryObject<BlockEntityType<EndBlockEntity>> END_BLOCK = BLOCK_ENTITIES.register("end_block",
             () -> BlockEntityType.Builder.of(EndBlockEntity::new, InitBlocks.END_BLOCK.get()).build(null));
+
+    public static final RegistryObject<BlockEntityType<IridiaBlockEntity>> IRIDIA_BLOCK = BLOCK_ENTITIES.register("iridia_block",
+            () -> BlockEntityType.Builder.of(IridiaBlockEntity::new, InitBlocks.IRIDIA_BLOCK.get()).build(null));
 
     public static final RegistryObject<BlockEntityType<EndSkyBlockEntity>> END_SKY_BLOCK = BLOCK_ENTITIES.register("end_sky_block",
             () -> BlockEntityType.Builder.of(EndSkyBlockEntity::new, InitBlocks.END_SKY_BLOCK.get()).build(null));

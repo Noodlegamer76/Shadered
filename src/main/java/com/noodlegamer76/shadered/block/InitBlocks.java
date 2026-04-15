@@ -28,10 +28,13 @@ public class InitBlocks {
             () -> new Block(BlockBehaviour.Properties.copy(Blocks.STONE).mapColor(DyeColor.BLACK)));
 
     public static final RegistryObject<Block> LIGHT_BLOCK = BLOCKS.register("light_block",
-            () -> new LightBlock(BlockBehaviour.Properties.copy(Blocks.STONE).mapColor(DyeColor.WHITE)));
+            () -> new LightBlock(BlockBehaviour.Properties.copy(Blocks.STONE).mapColor(DyeColor.WHITE).lightLevel((state) -> 15)));
 
     public static final RegistryObject<Block> END_BLOCK = BLOCKS.register("end_block",
             () -> new EndBlock(BlockBehaviour.Properties.copy(Blocks.STONE).mapColor(DyeColor.BLACK).lightLevel((state) -> 15)));
+
+    public static final RegistryObject<Block> IRIDIA_BLOCK = BLOCKS.register("iridia_block",
+            () -> new IridiaBlock(BlockBehaviour.Properties.copy(Blocks.STONE).mapColor(DyeColor.PURPLE)));
 
     public static final RegistryObject<Block> END_SKY_BLOCK = BLOCKS.register("end_sky_block",
             () -> new EndSkyBlock(BlockBehaviour.Properties.copy(Blocks.STONE).mapColor(DyeColor.PURPLE).lightLevel((state) -> 15)));

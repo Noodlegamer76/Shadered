@@ -32,6 +32,7 @@ public class ModBlockTagGenerator extends BlockTagsProvider  {
                 .add(InitBlocks.SKY_EMITTER.get())
                 .add(InitBlocks.WINDOW.get())
                 .add(InitBlocks.END_BLOCK.get())
+                .add(InitBlocks.IRIDIA_BLOCK.get())
                 .add(InitBlocks.END_SKY_BLOCK.get())
                 .add(InitBlocks.ECLIPSE_BLOCK.get())
                 .add(InitBlocks.SPACE_COMPRESSOR.get());

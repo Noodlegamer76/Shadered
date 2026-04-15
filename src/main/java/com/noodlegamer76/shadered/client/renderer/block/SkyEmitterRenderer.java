@@ -71,6 +71,9 @@ public class SkyEmitterRenderer implements BlockEntityRenderer<SkyEmitterEntity>
         else if (type == SkyEmitterType.OCEAN) {
             renderSkyblockSkybox(pos, poseStack, SkyblockRenderer.oceanData, alpha, renderTime);
         }
+        else if (type == SkyEmitterType.IRIDIA) {
+            renderSkyblockSkybox(pos, poseStack, SkyblockRenderer.iridiaData, alpha, renderTime);
+        }
 
         RenderSystem.depthMask(true);
         RenderSystem.enableDepthTest();

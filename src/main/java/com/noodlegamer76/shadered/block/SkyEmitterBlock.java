@@ -61,6 +61,10 @@ public class SkyEmitterBlock extends Block implements EntityBlock {
                 skyEmitterBlock.setType(SkyEmitterType.END);
                 return InteractionResult.SUCCESS;
             }
+            else if (stack.is(InitItems.IRIDIA_BLOCK.get())) {
+                skyEmitterBlock.setType(SkyEmitterType.IRIDIA);
+                return InteractionResult.SUCCESS;
+            }
             else if (stack.is(InitItems.OCEAN_BLOCK.get())) {
                 skyEmitterBlock.setType(SkyEmitterType.OCEAN);
                 return InteractionResult.SUCCESS;
