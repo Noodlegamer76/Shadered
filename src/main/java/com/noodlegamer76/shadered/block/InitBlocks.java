@@ -51,6 +51,9 @@ public class InitBlocks {
     public static final RegistryObject<Block> SKY_EMITTER = BLOCKS.register("sky_emitter",
             () -> new SkyEmitterBlock(BlockBehaviour.Properties.copy(Blocks.STONE).mapColor(DyeColor.WHITE)));
 
+    public static final RegistryObject<Block> MAXWELL = BLOCKS.register("maxwell",
+            () -> new Maxwell(BlockBehaviour.Properties.copy(Blocks.STONE).mapColor(DyeColor.BLACK).noOcclusion()));
+
     public static final RegistryObject<Block> WINDOW = BLOCKS.register("window",
             () -> new WindowBlock(BlockBehaviour.Properties.copy(Blocks.STONE).mapColor(DyeColor.WHITE)));
 

@@ -2,26 +2,40 @@ package com.noodlegamer76.shadered.client.renderer.block;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.vertex.VertexBuffer;
 import com.mojang.math.Axis;
+import com.noodlegamer76.shadered.ShaderedMod;
+import com.noodlegamer76.shadered.client.assimp.AssimpModel;
+import com.noodlegamer76.shadered.client.assimp.McModel;
+import com.noodlegamer76.shadered.client.assimp.anim.Animation;
+import com.noodlegamer76.shadered.client.assimp.anim.Animator;
+import com.noodlegamer76.shadered.client.assimp.load.AssimpModels;
 import com.noodlegamer76.shadered.client.renderer.SkyblockRenderer;
+import com.noodlegamer76.shadered.client.renderer.assimp.AssimpRenderer;
+import com.noodlegamer76.shadered.client.renderer.assimp.RenderableModel;
 import com.noodlegamer76.shadered.client.util.RenderCube;
 import com.noodlegamer76.shadered.client.util.skyblock.SkyblockBatchData;
 import com.noodlegamer76.shadered.client.util.skyblock.SkyblockPass;
 import com.noodlegamer76.shadered.client.util.skyemitter.SkyEmitterType;
 import com.noodlegamer76.shadered.entity.block.SkyEmitterEntity;
+import com.noodlegamer76.shadered.event.RegisterShaders;
 import cpw.mods.modlauncher.api.ITransformationService;
 import net.minecraft.client.Camera;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.core.BlockPos;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.phys.Vec3;
 import org.joml.Matrix4f;
 import org.joml.Quaternionf;
+import org.lwjgl.assimp.AIScene;
 
 public class SkyEmitterRenderer implements BlockEntityRenderer<SkyEmitterEntity> {
+    private RenderableModel renderableModel;
 
     public SkyEmitterRenderer(BlockEntityRendererProvider.Context context) {
     }

@@ -105,6 +105,9 @@ public class SkyblockRenderer {
 
         renderer.add(RenderStage.AFTER_LEVEL, glassRenderer);
         glassRenderer.addGlassChannel(channel);
+
+        AssimpRendererComplexPass assimpRendererComplexPass = new AssimpRendererComplexPass();
+        renderer.add(RenderStage.AFTER_BLOCK_ENTITIES, assimpRendererComplexPass);
     }
 
     public static void preRender() {

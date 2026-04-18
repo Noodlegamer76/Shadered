@@ -1,3 +1,8 @@
+import java.util.zip.ZipEntry
+import java.util.zip.ZipFile
+import java.util.zip.ZipOutputStream
+import org.gradle.internal.os.OperatingSystem
+
 plugins {
     id 'eclipse'
     id 'idea'
@@ -5,6 +10,7 @@ plugins {
     id 'net.minecraftforge.gradle' version '[6.0,6.2)'
     id 'org.parchmentmc.librarian.forgegradle' version '1.+'
     id 'org.spongepowered.mixin' version '0.7.+'
+    id "com.github.johnrengelman.shadow" version "8.1.1"
 }
 
 version = mod_version
@@ -63,6 +69,38 @@ minecraft {
 
 sourceSets.main.resources { srcDir 'src/generated/resources' }
 
+def os = OperatingSystem.current()
+def osArch = System.getProperty("os.arch").toLowerCase()
+
+switch (os) {
+    case OperatingSystem.LINUX:
+        project.ext.lwjglNatives = "natives-linux"
+
+        if (osArch.startsWith("arm") || osArch.startsWith("aarch64")) {
+            project.ext.lwjglNatives +=
+                    (osArch.contains("64") || osArch.startsWith("armv8"))
+                            ? "-arm64"
+                            : "-arm32"
+        } else if (osArch.startsWith("ppc")) {
+            project.ext.lwjglNatives += "-ppc64le"
+        } else if (osArch.startsWith("riscv")) {
+            project.ext.lwjglNatives += "-riscv64"
+        }
+        break
+
+    case OperatingSystem.MAC_OS:
+        project.ext.lwjglNatives = "natives-macos"
+        break
+
+    case OperatingSystem.WINDOWS:
+        project.ext.lwjglNatives = "natives-windows"
+        break
+
+    default:
+        throw new GradleException("Unsupported operating system: ${os}")
+}
+
+println "Using LWJGL natives: ${project.ext.lwjglNatives}"
 repositories {
     maven {
         name = "tterrag maven"
@@ -102,6 +140,26 @@ dependencies {
     runtimeOnly fg.deobf("curse.maven:oculus-581495:6020952")
     runtimeOnly fg.deobf("curse.maven:embeddium-908741:5681725")
     annotationProcessor 'org.spongepowered:mixin:0.8.5:processor'
+
+    def lwjglVersion = "3.3.1"
+
+    minecraftLibrary("org.lwjgl:lwjgl-assimp:${lwjglVersion}") {
+        exclude group: 'org.lwjgl', module: 'lwjgl'
+        exclude group: 'org.lwjgl', module: 'lwjgl-glfw'
+        exclude group: 'org.lwjgl', module: 'lwjgl-opengl'
+        exclude group: 'org.lwjgl', module: 'lwjgl-stb'
+    }
+
+    shadow("org.lwjgl:lwjgl-assimp:${lwjglVersion}") {
+        exclude group: 'org.lwjgl', module: 'lwjgl'
+        exclude group: 'org.lwjgl', module: 'lwjgl-glfw'
+        exclude group: 'org.lwjgl', module: 'lwjgl-opengl'
+        exclude group: 'org.lwjgl', module: 'lwjgl-stb'
+    }
+
+    runtimeOnly "org.lwjgl:lwjgl-assimp:${lwjglVersion}:natives-windows"
+    runtimeOnly "org.lwjgl:lwjgl-assimp:${lwjglVersion}:natives-linux"
+    runtimeOnly "org.lwjgl:lwjgl-assimp:${lwjglVersion}:natives-macos"
 
     //implementation fg.deobf("foundry.veil:Veil-forge-${project.minecraft_version}:${project.veil_version}") { transitive = false }
     //annotationProcessor 'org.spongepowered:mixin:0.8.5:processor'
@@ -153,6 +211,191 @@ publishing {
         }
     }
 }
+
+shadowJar {
+    configurations = [project.configurations.shadow]
+//    classifier 'shadow-dev'
+    dependencies {
+        exclude(dependency('org.lwjgl:lwjgl'))
+        exclude(dependency('org.lwjgl:lwjgl-glfw'))
+        exclude(dependency('org.lwjgl:lwjgl-opengl'))
+    }
+}
+
+task moveFiles {
+    doLast {
+        // Input and output files based on the shadowJar and jar archive file names
+        def inputFile = file("$buildDir/libs/" + shadowJar.archiveFileName.get())
+        def outputFile = file("$buildDir/libs/" + jar.archiveFileName.get())
+
+        // Temporary file for the updated output
+        def tempFile = file("$buildDir/libs/" + "output_temp.zip")
+
+        if (inputFile.exists() && outputFile.exists()) {
+            def sourceZip = new ZipFile(inputFile)
+            def destinationZip = new ZipFile(outputFile)
+            def zipOut = new ZipOutputStream(new FileOutputStream(tempFile))
+
+            // Copy existing contents of the destination ZIP to the temporary file
+            destinationZip.entries().each { entry ->
+                zipOut.putNextEntry(new ZipEntry(entry.getName()))
+                zipOut.write(destinationZip.getInputStream(entry).readAllBytes())
+                zipOut.closeEntry()
+            }
+
+            // Copy new files from the source ZIP that aren't already in the destination ZIP
+            sourceZip.entries().each { entry ->
+                if (destinationZip.getEntry(entry.getName()) == null) {
+                    zipOut.putNextEntry(new ZipEntry(entry.getName()))
+                    zipOut.write(sourceZip.getInputStream(entry).readAllBytes())
+                    zipOut.closeEntry()
+                } else {
+                    println "File already exists in destination ZIP: ${entry.getName()}. Skipping."
+                }
+            }
+
+            // Close all streams
+            zipOut.close()
+            sourceZip.close()
+            destinationZip.close()
+
+            // Replace the original destination file with the new one
+            if (outputFile.exists()) {
+                outputFile.delete() // Delete the old output file if it exists
+            }
+            tempFile.renameTo(outputFile) // Rename temp file to the destination file
+            inputFile.delete() // Delete the source file (inputFile) after moving
+        } else {
+            println "Input or output ZIP file not found."
+        }
+    }
+}
+
+build {
+    dependsOn shadowJar
+    finalizedBy moveFiles
+}
+
+task extractNativesToResources {
+    group = "build"
+    description = "Extract native binaries from Gradle dependencies into resources/natives/... for packaging"
+
+    doLast {
+        configurations.runtimeClasspath.resolvedConfiguration.resolvedArtifacts.each { artifact ->
+            def moduleName = artifact.moduleVersion.id.name
+            def classifier = artifact.classifier
+
+            // Detect LWJGL Assimp and ImGui native artifacts
+            if ((moduleName == "lwjgl-assimp" && classifier?.startsWith("natives")) ||
+                    (moduleName.startsWith("imgui-java-natives"))) {
+
+                println "Extracting natives from: ${artifact.file.name}"
+
+                ZipFile zip = new ZipFile(artifact.file)
+                zip.entries().each { entry ->
+                    if (!entry.isDirectory()) {
+                        def fileName = entry.name.substring(entry.name.lastIndexOf('/') + 1)
+
+                        def subdir = null
+                        if (fileName.endsWith(".dll")) {
+                            subdir = "windows/x86_64"
+                        } else if (fileName.endsWith(".so")) {
+                            subdir = "linux/x86_64"
+                        } else if (fileName.endsWith(".dylib")) {
+                            subdir = fileName.contains("arm") ? "osx/arm64" : "osx/x86_64"
+                        }
+
+                        if (subdir != null) {
+                            def destDir = file("src/main/resources/natives/${subdir}")
+                            destDir.mkdirs()
+
+                            def outFile = new File(destDir, fileName)
+                            outFile.withOutputStream { osStream ->
+                                zip.getInputStream(entry).withStream { it.transferTo(osStream) }
+                            }
+
+                            println "Copied $fileName -> $outFile"
+                        }
+                    }
+                }
+                zip.close()
+            }
+        }
+    }
+}
+
+task bundleAllNativesForDistribution {
+    group = "build"
+    description = "Bundles ONLY LWJGL Assimp natives into resources/natives"
+
+    doLast {
+        def seen = new HashSet<String>()
+
+        println "=== BUNDLING ASSIMP NATIVES ONLY ==="
+
+        configurations.runtimeClasspath.resolvedConfiguration.resolvedArtifacts.each { artifact ->
+
+            def moduleName = artifact.moduleVersion.id.name
+            def group = artifact.moduleVersion.id.group
+            def classifier = artifact.classifier
+
+            if (!(group == "org.lwjgl" && moduleName == "lwjgl-assimp" && classifier?.startsWith("natives"))) {
+                return
+            }
+
+            println "Using Assimp native artifact: ${artifact.file.name}"
+
+            ZipFile zip = new ZipFile(artifact.file)
+
+            zip.entries().each { entry ->
+                if (entry.isDirectory()) return
+
+                def fileName = entry.name.substring(entry.name.lastIndexOf('/') + 1)
+
+                if (!(fileName.endsWith(".dll") ||
+                        fileName.endsWith(".so") ||
+                        fileName.endsWith(".dylib"))) {
+                    return
+                }
+
+                def key = artifact.file.name + ":" + entry.name
+                if (!seen.add(key)) return
+
+                def dir = null
+
+                if (fileName.endsWith(".dll")) {
+                    dir = "windows/x86_64"
+                } else if (fileName.endsWith(".so")) {
+                    dir = "linux/x86_64"
+                } else if (fileName.endsWith(".dylib")) {
+                    dir = fileName.contains("arm")
+                            ? "osx/arm64"
+                            : "osx/x86_64"
+                }
+
+                if (dir == null) return
+
+                def outDir = file("src/main/resources/natives/${dir}")
+                outDir.mkdirs()
+
+                def outFile = new File(outDir, fileName)
+
+                outFile.withOutputStream { os2 ->
+                    zip.getInputStream(entry).withStream { it.transferTo(os2) }
+                }
+
+                println "Bundled ASSIMP ${fileName} -> ${dir}"
+            }
+
+            zip.close()
+        }
+
+        println "=== DONE (ASSIMP ONLY) ==="
+    }
+}
+
+compileJava.dependsOn(extractNativesToResources)
+processResources.dependsOn(extractNativesToResources)
 
 tasks.withType(JavaCompile).configureEach {
     options.encoding = 'UTF-8'

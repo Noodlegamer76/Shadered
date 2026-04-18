@@ -2,6 +2,7 @@ package com.noodlegamer76.shadered.event;
 
 import com.mojang.blaze3d.vertex.DefaultVertexFormat;
 import com.noodlegamer76.shadered.ShaderedMod;
+import com.noodlegamer76.shadered.client.util.ModVertexFormat;
 import net.minecraft.client.renderer.ShaderInstance;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
@@ -26,6 +27,7 @@ public class RegisterShaders {
     public static ShaderInstance skyblockGameboy;
     public static ShaderInstance skyblockBackground;
     public static ShaderInstance glass;
+    public static ShaderInstance pbr;
 
     private static final Map<String, ShaderInstance> SHADERS = new HashMap<>();
 
@@ -131,6 +133,14 @@ public class RegisterShaders {
                     SHADERS.put("glass", e);
                 });
 
+        event.registerShader(new ShaderInstance(event.getResourceProvider(),
+                        new ResourceLocation(ShaderedMod.MODID, "pbr"),
+                        ModVertexFormat.PBR),
+                (e) -> {
+                    pbr = e;
+                    SHADERS.put("pbr", e);
+                });
+
     }
 
     public static ShaderInstance getCompressor() {
@@ -179,5 +189,9 @@ public class RegisterShaders {
 
     public static ShaderInstance getGlass() {
         return glass;
+    }
+
+    public static ShaderInstance getPbr() {
+        return pbr;
     }
 }

@@ -1,0 +1,23 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "#Z#",
+    "ZBZ",
+    "###"
+  ],
+  "key": {
+    "#": {
+      "item": "minecraft:white_wool"
+    },
+    "B": {
+      "item": "minecraft:diamond_block"
+    },
+    "Z": {
+      "item": "minecraft:black_wool"
+    }
+  },
+  "result": {
+    "item": "shadered:maxwell",
+    "count": 1
+  }
+}
