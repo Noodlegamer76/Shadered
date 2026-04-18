@@ -1,4 +1,4 @@
-package com.noodlegamer76.shadered.client.assimp;
+package com.noodlegamer76.shadered.client.renderer.assimp;
 
 import org.joml.Matrix4f;
 import org.lwjgl.BufferUtils;
@@ -6,8 +6,6 @@ import org.lwjgl.opengl.GL15;
 import org.lwjgl.opengl.GL30;
 import org.lwjgl.opengl.GL43;
 
-import java.nio.ByteBuffer;
-import java.nio.ByteOrder;
 import java.nio.FloatBuffer;
 import java.util.List;
 
