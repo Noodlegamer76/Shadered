@@ -15,6 +15,10 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
 import org.joml.Vector3f;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 public class SkyblockRenderer {
     public static final ResourceLocation NEBULA = new ResourceLocation(ShaderedMod.MODID, "textures/environment/nebula");
     public static final ResourceLocation STORMY = new ResourceLocation(ShaderedMod.MODID, "textures/environment/stormy");
@@ -43,64 +47,63 @@ public class SkyblockRenderer {
     public static SkyblockBatchData lightData = new SkyblockBatchData();
     public static SkyblockBatchData mimicData = new SkyblockBatchData();
 
+    public static Map<SkyblockBatchData, Integer> DATA_LIST = new HashMap<>();
+
     public static SkyblockBatchData glassData = new SkyblockBatchData();
     public static GlassRenderer glassRenderer = new GlassRenderer(glassData);
     public static GlassChannel channel = new GlassChannel(new BlockPos(0, 128, 0));
 
+
+    public static final Vector3f skyboxRotationSpeed = new Vector3f(0.007f, 0.01f, 0.004f);
+    public static final SkyboxRenderPass spaceRenderPass = new SkyboxRenderPass(NEBULA, spaceData,
+            new SkyboxTranslation(), skyboxRotationSpeed, GameRenderer::getPositionTexColorShader
+    );
+
+    public static final SkyboxRenderPass stormyRenderPass = new SkyboxRenderPass(STORMY, stormyData,
+            new SkyboxTranslation()
+    );
+    public static final SkyboxRenderPass oceanRenderPass = new SkyboxRenderPass(OCEAN, oceanData,
+            new SkyboxTranslation()
+                    .setAllFlip(SkyboxTranslation.SkyboxFlip.NONE)
+                    .setAllRot(SkyboxTranslation.SkyboxRotation.ROTATE_90_CCW)
+    );
+    public static final SkyboxRenderPass eclipseRenderPass = new SkyboxRenderPass(ECLIPSE, eclipseData,
+            new SkyboxTranslation(), skyboxRotationSpeed, () -> RegisterShaders.skyboxWarp
+    );
+    public static final SkyboxRenderPass iridiaRenderPass = new SkyboxRenderPass(IRIDIA, iridiaData,
+            new SkyboxTranslation()
+                    .setTopBottomRot(SkyboxTranslation.SkyboxRotation.ROTATE_90_CW)
+    );
+    public static final EndSkySkyboxRenderPass endSkyRenderPass = new EndSkySkyboxRenderPass(endSkyData);
+    public static final EndBoxRenderPass endBlockRenderPass = new EndBoxRenderPass(endData);
+    public static final SkyboxRenderPass forestRenderPass = new SkyboxRenderPass(FOREST, forestData,
+            new SkyboxTranslation()
+                    .setAllFlip(SkyboxTranslation.SkyboxFlip.NONE)
+                    .setAllRot(SkyboxTranslation.SkyboxRotation.ROTATE_90_CCW)
+    );
+    public static final SkyboxRenderPass lightRenderPass = new SkyboxRenderPass(LIGHT, lightData,
+            new SkyboxTranslation()
+    );
+    public static final MimicSkyboxRenderPass mimicSkyblockRenderPass = new MimicSkyboxRenderPass(
+            mimicData
+    );
+
     public static void setup() {
         ComplexPassRenderer renderer = ComplexPassRenderer.getInstance();
 
-        Vector3f skyboxRotationSpeed = new Vector3f(0.007f, 0.01f, 0.004f);
-        SkyblockRenderPass spaceRenderPass = new SkyblockRenderPass(NEBULA, spaceData,
-                new SkyboxTranslation(), skyboxRotationSpeed, GameRenderer::getPositionTexColorShader
-        );
-        renderer.add(RenderStage.AFTER_BLOCK_ENTITIES, spaceRenderPass);
+        renderer.add(RenderStage.AFTER_SKY, spaceRenderPass);
+        renderer.add(RenderStage.AFTER_SKY, stormyRenderPass);
+        renderer.add(RenderStage.AFTER_SKY, oceanRenderPass);
+        renderer.add(RenderStage.AFTER_SKY, eclipseRenderPass);
+        renderer.add(RenderStage.AFTER_SKY, iridiaRenderPass);
+        renderer.add(RenderStage.AFTER_SKY, endSkyRenderPass);
+        renderer.add(RenderStage.AFTER_SKY, endBlockRenderPass);
+        renderer.add(RenderStage.AFTER_SKY, forestRenderPass);
+        renderer.add(RenderStage.AFTER_SKY, lightRenderPass);
+        renderer.add(RenderStage.AFTER_SKY, mimicSkyblockRenderPass);
 
-        SkyblockRenderPass stormyRenderPass = new SkyblockRenderPass(STORMY, stormyData,
-                new SkyboxTranslation()
-        );
-        renderer.add(RenderStage.AFTER_BLOCK_ENTITIES, stormyRenderPass);
-
-        SkyblockRenderPass oceanRenderPass = new SkyblockRenderPass(OCEAN, oceanData,
-                new SkyboxTranslation()
-                        .setAllFlip(SkyboxTranslation.SkyboxFlip.NONE)
-                        .setAllRot(SkyboxTranslation.SkyboxRotation.ROTATE_90_CCW)
-        );
-        renderer.add(RenderStage.AFTER_BLOCK_ENTITIES, oceanRenderPass);
-
-        SkyblockRenderPass eclipseRenderPass = new SkyblockRenderPass(ECLIPSE, eclipseData,
-                new SkyboxTranslation(), skyboxRotationSpeed, () -> RegisterShaders.skyboxWarp
-        );
-        renderer.add(RenderStage.AFTER_BLOCK_ENTITIES, eclipseRenderPass);
-
-        SkyblockRenderPass iridiaRenderPass = new SkyblockRenderPass(IRIDIA, iridiaData,
-                new SkyboxTranslation()
-                        .setTopBottomRot(SkyboxTranslation.SkyboxRotation.ROTATE_90_CW)
-        );
-        renderer.add(RenderStage.AFTER_BLOCK_ENTITIES, iridiaRenderPass);
-
-        EndSkySkyblockRenderPass endSkyRenderPass = new EndSkySkyblockRenderPass(endSkyData);
-        renderer.add(RenderStage.AFTER_BLOCK_ENTITIES, endSkyRenderPass);
-
-        EndBlockRenderPass endBlockRenderPass = new EndBlockRenderPass(endData);
-        renderer.add(RenderStage.AFTER_BLOCK_ENTITIES, endBlockRenderPass);
-
-        SkyblockRenderPass forestRenderPass = new SkyblockRenderPass(FOREST, forestData,
-                new SkyboxTranslation()
-                        .setAllFlip(SkyboxTranslation.SkyboxFlip.NONE)
-                        .setAllRot(SkyboxTranslation.SkyboxRotation.ROTATE_90_CCW)
-        );
-        renderer.add(RenderStage.AFTER_BLOCK_ENTITIES, forestRenderPass);
-
-        SkyblockRenderPass lightRenderPass = new SkyblockRenderPass(LIGHT, lightData,
-                new SkyboxTranslation()
-        );
-        renderer.add(RenderStage.AFTER_BLOCK_ENTITIES, lightRenderPass);
-
-        MimicSkyblockRenderPass mimicSkyblockRenderPass = new MimicSkyblockRenderPass(
-                mimicData
-        );
-        renderer.add(RenderStage.AFTER_BLOCK_ENTITIES, mimicSkyblockRenderPass);
+        SkyblockRenderPass skyblockRenderPass = new SkyblockRenderPass(DATA_LIST);
+        renderer.add(RenderStage.AFTER_BLOCK_ENTITIES, skyblockRenderPass);
 
 
         renderer.add(RenderStage.AFTER_LEVEL, glassRenderer);

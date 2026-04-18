@@ -1,49 +1,24 @@
 package com.noodlegamer76.shadered.client.renderer.complexpasses;
 
 import com.mojang.blaze3d.pipeline.TextureTarget;
-import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.math.Axis;
 import com.noodlegamer76.shadered.client.renderer.ComplexPassRenderer;
-import com.noodlegamer76.shadered.client.util.*;
-import com.noodlegamer76.shadered.client.util.skyblock.SkyBoxRenderer;
+import com.noodlegamer76.shadered.client.util.PassType;
+import com.noodlegamer76.shadered.client.util.RenderCube;
+import com.noodlegamer76.shadered.client.util.RenderStage;
+import com.noodlegamer76.shadered.client.util.RenderableComplexPass;
 import com.noodlegamer76.shadered.client.util.skyblock.SkyblockBatchData;
 import com.noodlegamer76.shadered.client.util.skyblock.SkyblockPass;
-import com.noodlegamer76.shadered.client.util.skyblock.SkyboxTranslation;
-import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.renderer.ShaderInstance;
-import net.minecraft.resources.ResourceLocation;
-import org.joml.Quaternionf;
-import org.joml.Vector3f;
-import org.w3c.dom.Text;
 
-import java.util.function.Supplier;
+import java.util.List;
+import java.util.Map;
 
 public class SkyblockRenderPass implements RenderableComplexPass {
-    private final ResourceLocation texturePath;
-    private final SkyblockBatchData batchData;
-    private final SkyboxTranslation translation;
-    private final Vector3f skyboxRotationSpeed;
-    private final Supplier<ShaderInstance> skyboxShader;
+    private final Map<SkyblockBatchData, Integer> batchData;
 
-    public SkyblockRenderPass(ResourceLocation texturePath, SkyblockBatchData batchData, SkyboxTranslation translation, Vector3f skyboxRotationSpeed, Supplier<ShaderInstance> skyboxShader) {
-        this.texturePath = texturePath;
+    public SkyblockRenderPass(Map<SkyblockBatchData, Integer> batchData) {
         this.batchData = batchData;
-        this.translation = translation;
-        this.skyboxRotationSpeed = skyboxRotationSpeed;
-        this.skyboxShader = skyboxShader;
-    }
-
-    public SkyblockRenderPass(ResourceLocation texturePath, SkyblockBatchData batchData, SkyboxTranslation translation) {
-        this(texturePath, batchData, translation, new Vector3f(), GameRenderer::getPositionTexColorShader);
-    }
-
-    public ResourceLocation getTexturePath() {
-        return texturePath;
-    }
-
-    public SkyboxTranslation getTranslation() {
-        return translation;
     }
 
     @Override
@@ -53,42 +28,22 @@ public class SkyblockRenderPass implements RenderableComplexPass {
 
     @Override
     public void render(RenderStage stage, PoseStack poseStack, int renderTick, float partialTick) {
-        if (batchData.isEmpty()) return;
         ComplexPassRenderer renderer = ComplexPassRenderer.getInstance();
         TextureTarget readTarget = renderer.getRenderBuffer();
         TextureTarget skyboxTarget = renderer.getWriteBuffer();
 
-        skyboxTarget.bindWrite(true);
-        poseStack.pushPose();
-        float ticks = (renderTick + partialTick);
+        for (Map.Entry<SkyblockBatchData, Integer> entry : batchData.entrySet()) {
+            SkyblockBatchData data = entry.getKey();
+            if (data.isEmpty()) continue;
+            for (SkyblockPass pass : SkyblockPass.values()) {
+                ShaderInstance shader = pass.getShader();
+                shader.setSampler("Skybox", batchData.get(data));
+                shader.setSampler("PassDepth", readTarget.getDepthTextureId());
 
-        if (skyboxRotationSpeed.lengthSquared() > 0) {
-            Quaternionf rotation = new Quaternionf();
-            rotation.mul(Axis.XP.rotationDegrees(ticks * skyboxRotationSpeed.x));
-            rotation.mul(Axis.YN.rotationDegrees(ticks * skyboxRotationSpeed.y));
-            rotation.mul(Axis.ZP.rotationDegrees(ticks * skyboxRotationSpeed.z));
+                RenderCube.renderSkyBlocks(data.get(pass), false, shader);
+            }
 
-            poseStack.mulPose(rotation);
+            data.clear();
         }
-
-        RenderSystem.setShader(skyboxShader);
-        SkyBoxRenderer.renderBlockSkybox(poseStack, texturePath,
-                skyboxShader.get(),
-                translation
-        );
-
-        poseStack.popPose();
-
-        renderer.getRenderBuffer().bindWrite(true);
-
-        for (SkyblockPass pass : SkyblockPass.values()) {
-            ShaderInstance shader = pass.getShader();
-            shader.setSampler("Skybox", skyboxTarget.getColorTextureId());
-            shader.setSampler("PassDepth", readTarget.getDepthTextureId());
-
-            RenderCube.renderSkyBlocks(batchData.get(pass), false, shader);
-        }
-
-        batchData.clear();
     }
 }

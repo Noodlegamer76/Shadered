@@ -6,9 +6,9 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
 import com.noodlegamer76.shadered.client.renderer.ComplexPassRenderer;
+import com.noodlegamer76.shadered.client.renderer.SkyblockRenderer;
 import com.noodlegamer76.shadered.client.util.*;
 import com.noodlegamer76.shadered.client.util.skyblock.SkyblockBatchData;
-import com.noodlegamer76.shadered.client.util.skyblock.SkyblockPass;
 import net.minecraft.client.Camera;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.*;
@@ -16,12 +16,11 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.phys.Vec3;
 import org.lwjgl.opengl.GL11;
 
-import java.awt.*;
-
-public class MimicSkyblockRenderPass implements RenderableComplexPass {
+public class MimicSkyboxRenderPass implements RenderableComplexPass {
     private final SkyblockBatchData batchData;
+    private TextureTarget skyboxTarget;
 
-    public MimicSkyblockRenderPass(SkyblockBatchData batchData) {
+    public MimicSkyboxRenderPass(SkyblockBatchData batchData) {
         this.batchData = batchData;
     }
 
@@ -32,10 +31,17 @@ public class MimicSkyblockRenderPass implements RenderableComplexPass {
 
     @Override
     public void render(RenderStage stage, PoseStack poseStack, int renderTick, float partialTick) {
-        if (batchData.isEmpty()) return;
 
         ComplexPassRenderer renderer = ComplexPassRenderer.getInstance();
-        TextureTarget skyboxTarget = renderer.getWriteBuffer();
+
+        if (skyboxTarget == null) {
+            skyboxTarget = new TextureTarget(renderer.getPreviousWidth(), renderer.getPreviousHeight(), false, Minecraft.ON_OSX);
+            SkyblockRenderer.DATA_LIST.put(batchData, skyboxTarget.getColorTextureId());
+        }
+        else if (skyboxTarget.width != renderer.getPreviousWidth() || skyboxTarget.height != renderer.getPreviousHeight()) {
+            skyboxTarget.resize(renderer.getPreviousWidth(), renderer.getPreviousHeight(), Minecraft.ON_OSX);
+        }
+
         Minecraft mc = Minecraft.getInstance();
         if (mc.level == null) return;
 
@@ -119,13 +125,6 @@ public class MimicSkyblockRenderPass implements RenderableComplexPass {
 
         renderer.getRenderBuffer().bindWrite(true);
 
-        for (SkyblockPass pass : SkyblockPass.values()) {
-            ShaderInstance shader = pass.getShader();
-            shader.setSampler("Skybox", skyboxTarget.getColorTextureId());
-            RenderCube.renderSkyBlocks(batchData.get(pass), false, shader);
-        }
-
-        batchData.clear();
 
         RenderSystem.enableDepthTest();
         RenderSystem.depthMask(true);
@@ -141,5 +140,9 @@ public class MimicSkyblockRenderPass implements RenderableComplexPass {
                 oldFogColor[1],
                 oldFogColor[2]
         );
+    }
+
+    public TextureTarget getSkyboxTarget() {
+        return skyboxTarget;
     }
 }

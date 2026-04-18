@@ -8,21 +8,15 @@ import com.noodlegamer76.shadered.client.renderer.SkyblockRenderer;
 import com.noodlegamer76.shadered.client.util.*;
 import com.noodlegamer76.shadered.client.util.skyblock.SkyBoxRenderer;
 import com.noodlegamer76.shadered.client.util.skyblock.SkyblockBatchData;
-import com.noodlegamer76.shadered.client.util.skyblock.SkyblockPass;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GameRenderer;
-import net.minecraft.client.renderer.RenderType;
-import net.minecraft.client.renderer.ShaderInstance;
-import net.minecraft.client.renderer.blockentity.TheEndPortalRenderer;
 
-public class EndBlockRenderPass implements RenderableComplexPass {
+public class EndSkySkyboxRenderPass implements RenderableComplexPass {
     private final SkyblockBatchData batchData;
+    private TextureTarget skyboxTarget;
 
-    public EndBlockRenderPass(SkyblockBatchData batchData) {
+    public EndSkySkyboxRenderPass(SkyblockBatchData batchData) {
         this.batchData = batchData;
-    }
-
-    public SkyblockBatchData getBatchData() {
-        return batchData;
     }
 
     @Override
@@ -30,25 +24,26 @@ public class EndBlockRenderPass implements RenderableComplexPass {
         return PassType.GEOMETRY;
     }
 
-    //TODO: Make this work with shaders
     @Override
     public void render(RenderStage stage, PoseStack poseStack, int renderTick, float partialTick) {
-        if (batchData.isEmpty()) return;
         ComplexPassRenderer renderer = ComplexPassRenderer.getInstance();
-        TextureTarget skyboxTarget = renderer.getWriteBuffer();
 
-        skyboxTarget.bindWrite(true);
-        SkyBoxRenderer.renderEndPortalSky(poseStack);
-
-        renderer.getRenderBuffer().bindWrite(true);
-
-        for (SkyblockPass pass : SkyblockPass.values()) {
-            ShaderInstance shader = pass.getShader();
-            shader.setSampler("Skybox", skyboxTarget.getColorTextureId());
-
-            RenderCube.renderSkyBlocks(batchData.get(pass), false, shader);
+        if (skyboxTarget == null) {
+            skyboxTarget = new TextureTarget(renderer.getPreviousWidth(), renderer.getPreviousHeight(), false, Minecraft.ON_OSX);
+            SkyblockRenderer.DATA_LIST.put(batchData, skyboxTarget.getColorTextureId());
+        }
+        else if (skyboxTarget.width != renderer.getPreviousWidth() || skyboxTarget.height != renderer.getPreviousHeight()) {
+            skyboxTarget.resize(renderer.getPreviousWidth(), renderer.getPreviousHeight(), Minecraft.ON_OSX);
         }
 
-        batchData.clear();
+        skyboxTarget.bindWrite(true);
+        RenderSystem.setShader(GameRenderer::getPositionTexColorShader);
+        SkyBoxRenderer.renderEndSky(poseStack);
+
+        renderer.getRenderBuffer().bindWrite(true);
+    }
+
+    public TextureTarget getSkyboxTarget() {
+        return skyboxTarget;
     }
 }
