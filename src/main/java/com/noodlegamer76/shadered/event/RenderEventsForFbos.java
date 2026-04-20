@@ -10,12 +10,15 @@ import com.noodlegamer76.shadered.ShaderedMod;
 import com.noodlegamer76.shadered.client.renderer.ComplexPassRenderer;
 import com.noodlegamer76.shadered.client.renderer.SkyblockRenderer;
 import com.noodlegamer76.shadered.client.util.*;
+import com.noodlegamer76.shadered.client.util.shader.lights.LightUploader;
+import net.minecraft.client.Camera;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.texture.AbstractTexture;
 import net.minecraft.client.renderer.texture.TextureManager;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.RenderLevelStageEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -40,12 +43,14 @@ public class RenderEventsForFbos {
 
         if (stage == RenderLevelStageEvent.Stage.AFTER_SKY) {
             renderer.render(RenderStage.AFTER_SKY, poseStack, renderTick, partialTick);
+            LightUploader.uploadToAll();
         }
         else if (stage == RenderLevelStageEvent.Stage.AFTER_BLOCK_ENTITIES) {
             renderer.render(RenderStage.AFTER_BLOCK_ENTITIES, poseStack, renderTick, partialTick);
         }
         else if (stage == RenderLevelStageEvent.Stage.AFTER_LEVEL) {
             renderer.render(RenderStage.AFTER_LEVEL, poseStack, renderTick, partialTick);
+            LightUploader.clearLights();
         }
     }
 }

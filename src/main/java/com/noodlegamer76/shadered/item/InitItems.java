@@ -59,6 +59,9 @@ public class InitItems {
     public static final RegistryObject<Item> SKY_EMITTER = ITEMS.register("sky_emitter",
             () -> new BlockItem(InitBlocks.SKY_EMITTER.get(), new Item.Properties()));
 
+    public static final RegistryObject<Item> LIGHT_BULB = ITEMS.register("light_bulb",
+            () -> new BlockItem(InitBlocks.LIGHT_BULB.get(), new Item.Properties()));
+
     public static final RegistryObject<Item> MAXWELL = ITEMS.register("maxwell",
             () -> new MaxwellItem(InitBlocks.MAXWELL.get(), new Item.Properties()));
 

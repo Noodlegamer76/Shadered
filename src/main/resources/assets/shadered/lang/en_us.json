@@ -15,6 +15,7 @@
   "block.shadered.iridia_block": "Iridia Block",
   "block.shadered.sky_emitter": "Sky Emitter",
   "block.shadered.maxwell": "Maxwell",
+  "block.shadered.light_bulb": "Light Bulb",
 
   "item.shadered.skyblock_filter_normal": "Skyblock Filter: Normal",
   "item.shadered.skyblock_filter_inverted": "Skyblock Filter: Inverted",
@@ -28,5 +29,10 @@
   "gui.shadered.sky_emitter.title": "Sky Emitter",
   "gui.shadered.sky_emitter.min_distance": "Min Distance: ",
   "gui.shadered.sky_emitter.max_distance": "Max Distance: ",
-  "gui.shadered.sky_emitter.max_alpha": "Max Alpha: "
+  "gui.shadered.sky_emitter.max_alpha": "Max Alpha: ",
+  "gui.shadered.light_emitter.green": "Green: ",
+  "gui.shadered.light_emitter.red": "Red: ",
+  "gui.shadered.light_emitter.blue": "Blue: ",
+  "gui.shadered.light_emitter.radius": "Radius: ",
+  "gui.shadered.light_emitter.title": "Light Bulb"
 }

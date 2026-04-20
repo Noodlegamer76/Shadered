@@ -47,6 +47,9 @@ public class InitBlockEntities {
     public static final RegistryObject<BlockEntityType<SkyEmitterEntity>> SKY_EMITTER = BLOCK_ENTITIES.register("sky_emitter",
             () -> BlockEntityType.Builder.of(SkyEmitterEntity::new, InitBlocks.SKY_EMITTER.get()).build(null));
 
+    public static final RegistryObject<BlockEntityType<LightBulbEntity>> LIGHT_BULB = BLOCK_ENTITIES.register("light_bulb",
+            () -> BlockEntityType.Builder.of(LightBulbEntity::new, InitBlocks.LIGHT_BULB.get()).build(null));
+
     public static final RegistryObject<BlockEntityType<MaxwellEntity>> MAXWELL = BLOCK_ENTITIES.register("maxwell",
             () -> BlockEntityType.Builder.of(MaxwellEntity::new, InitBlocks.MAXWELL.get()).build(null));
 

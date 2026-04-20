@@ -54,6 +54,9 @@ public class InitBlocks {
     public static final RegistryObject<Block> MAXWELL = BLOCKS.register("maxwell",
             () -> new Maxwell(BlockBehaviour.Properties.copy(Blocks.STONE).mapColor(DyeColor.BLACK).noOcclusion()));
 
+    public static final RegistryObject<Block> LIGHT_BULB = BLOCKS.register("light_bulb",
+            () -> new LightBulb(BlockBehaviour.Properties.copy(Blocks.STONE).mapColor(DyeColor.WHITE).noOcclusion()));
+
     public static final RegistryObject<Block> WINDOW = BLOCKS.register("window",
             () -> new WindowBlock(BlockBehaviour.Properties.copy(Blocks.STONE).mapColor(DyeColor.WHITE)));
 

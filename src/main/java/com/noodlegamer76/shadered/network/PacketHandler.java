@@ -23,6 +23,12 @@ public class PacketHandler {
                 .decoder(SkyEmitterPacket::new)
                 .consumerMainThread(SkyEmitterPacket::handle)
                 .add();
+
+        INSTANCE.messageBuilder(LightEmitterPacket.class, 1, NetworkDirection.PLAY_TO_SERVER)
+                .encoder(LightEmitterPacket::encode)
+                .decoder(LightEmitterPacket::new)
+                .consumerMainThread(LightEmitterPacket::handle)
+                .add();
     }
 
     public static void sendToServer(Object msg) {

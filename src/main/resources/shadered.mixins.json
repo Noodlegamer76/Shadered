@@ -4,10 +4,13 @@
   "compatibilityLevel": "JAVA_8",
   "refmap": "shadered.refmap.json",
   "mixins": [
+    "ChunkShaderInterfaceMixin",
+    "ShaderLoaderMixin"
   ],
   "client": [
     "BufferBuilderAccessor",
-    "GameRendererAccessor"
+    "GameRendererAccessor",
+    "ProgramMixin"
   ],
   "minVersion": "0.8"
 }

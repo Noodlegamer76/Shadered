@@ -71,6 +71,7 @@ public class ShaderedMod {
             event.registerBlockEntityRenderer(InitBlockEntities.SPACE_COMPRESSOR.get(), SpaceCompressorBlockRenderer::new);
             event.registerBlockEntityRenderer(InitBlockEntities.IRIDIA_BLOCK.get(), IridiaBlockRenderer::new);
             event.registerBlockEntityRenderer(InitBlockEntities.MAXWELL.get(), MaxwellRenderer::new);
+            event.registerBlockEntityRenderer(InitBlockEntities.LIGHT_BULB.get(), LightBulbRenderer::new);
         }
     }
 }

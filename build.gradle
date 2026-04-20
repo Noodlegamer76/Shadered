@@ -138,7 +138,7 @@ dependencies {
     //runtimeOnly fg.deobf("com.jozufozu.flywheel:flywheel-forge-${minecraft_version}:${flywheel_version}")
 
     runtimeOnly fg.deobf("curse.maven:oculus-581495:6020952")
-    runtimeOnly fg.deobf("curse.maven:embeddium-908741:5681725")
+    implementation fg.deobf("org.embeddedt:embeddium-1.20.1:0.3.31-beta.53+mc1.20.1")
     annotationProcessor 'org.spongepowered:mixin:0.8.5:processor'
 
     def lwjglVersion = "3.3.1"
