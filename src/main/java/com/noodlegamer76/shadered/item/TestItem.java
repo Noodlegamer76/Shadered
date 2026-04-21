@@ -5,6 +5,9 @@ import com.noodlegamer76.shadered.client.renderer.SkyblockRenderer;
 import com.noodlegamer76.shadered.client.util.glass.GlassChannel;
 import com.noodlegamer76.shadered.client.util.shader.lights.Light;
 import com.noodlegamer76.shadered.client.util.shader.lights.LightUploader;
+import com.noodlegamer76.shadered.core.component.components.LightComponent;
+import com.noodlegamer76.shadered.entity.GameObject;
+import com.noodlegamer76.shadered.entity.InitEntities;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
@@ -21,18 +24,19 @@ public class TestItem extends Item {
 
     @Override
     public InteractionResultHolder<ItemStack> use(Level pLevel, Player pPlayer, InteractionHand pUsedHand) {
-        if (pLevel.isClientSide) {
-            LightUploader.clearLights();
-            Light light = new Light(
-                    (float) pPlayer.getX(),
-                    (float) pPlayer.getY(),
-                    (float) pPlayer.getZ(),
-                    (float) -1,
-                    (float) 1,
-                    (float) 1,
-                    10
+        if (!pLevel.isClientSide) {
+            GameObject gameObject = new GameObject(
+                    InitEntities.GAME_OBJECT.get(), pLevel
             );
-            LightUploader.addLight(light);
+
+            LightComponent lightComponent = new LightComponent(gameObject);
+            lightComponent.setColor(1.0f, 0.0f, 1.0f);
+            lightComponent.setRadius(10);
+
+            gameObject.addComponent(lightComponent);
+
+            gameObject.setPos(pPlayer.getX(), pPlayer.getY(), pPlayer.getZ());
+            pLevel.addFreshEntity(gameObject);
         }
         return super.use(pLevel, pPlayer, pUsedHand);
     }

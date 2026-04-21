@@ -1,5 +1,6 @@
 package com.noodlegamer76.shadered.client.util.shader;
 
+import com.noodlegamer76.shadered.ShaderedMod;
 import com.noodlegamer76.shadered.client.util.shader.patches.*;
 
 import java.util.ArrayList;
@@ -128,6 +129,105 @@ public class ShaderPatchRegistry {
                 "particle",
                 new VanillaLightFragPatch()
         );
+
+        ShaderPatchRegistry.register(
+                "rendertype_cutout",
+                new VanillaLightVertexPatch()
+        );
+        ShaderPatchRegistry.register(
+                "rendertype_cutout",
+                new VanillaLightFragPatch()
+        );
+
+        ShaderPatchRegistry.register(
+                "forge:rendertype_entity_unlit_translucent",
+                new VanillaLightVertexPatch()
+        );
+        ShaderPatchRegistry.register(
+                "forge:rendertype_entity_unlit_translucent",
+                new VanillaLightFragPatch()
+        );
+
+        ShaderPatchRegistry.register(
+                "position_tex_color_normal",
+                new VanillaLightVertexPatch()
+        );
+        ShaderPatchRegistry.register(
+                "position_tex_color_normal",
+                new VanillaLightFragPatch()
+        );
+
+        ShaderPatchRegistry.register(
+                "rendertype_armor_cutout_no_cull",
+                new VanillaLightVertexPatch()
+        );
+        ShaderPatchRegistry.register(
+                "rendertype_armor_cutout_no_cull",
+                new VanillaLightFragPatch()
+        );
+
+        ShaderPatchRegistry.register(
+                "rendertype_entity_decal",
+                new VanillaLightVertexPatch()
+        );
+        ShaderPatchRegistry.register(
+                "rendertype_entity_decal",
+                new VanillaLightFragPatch()
+        );
+
+        ShaderPatchRegistry.register(
+                "rendertype_entity_no_outline",
+                new VanillaLightVertexPatch()
+        );
+        ShaderPatchRegistry.register(
+                "rendertype_entity_no_outline",
+                new VanillaLightFragPatch()
+        );
+
+        ShaderPatchRegistry.register(
+                "rendertype_entity_shadow",
+                new VanillaLightVertexPatch()
+        );
+        ShaderPatchRegistry.register(
+                "rendertype_entity_shadow",
+                new VanillaLightFragPatch()
+        );
+
+        ShaderPatchRegistry.register(
+                "rendertype_entity_translucent_emissive",
+                new VanillaLightVertexPatch()
+        );
+        ShaderPatchRegistry.register(
+                "rendertype_entity_translucent_emissive",
+                new VanillaLightFragPatch()
+        );
+
+        ShaderPatchRegistry.register(
+                "rendertype_outline",
+                new VanillaLightVertexPatch()
+        );
+        ShaderPatchRegistry.register(
+                "rendertype_outline",
+                new VanillaLightFragPatch()
+        );
+
+        ShaderPatchRegistry.register(
+                "rendertype_translucent",
+                new VanillaLightVertexPatch()
+        );
+        ShaderPatchRegistry.register(
+                "rendertype_translucent",
+                new VanillaLightFragPatch()
+        );
+
+        ShaderPatchRegistry.register(
+                "rendertype_tripwire",
+                new VanillaLightVertexPatch()
+        );
+        ShaderPatchRegistry.register(
+                "rendertype_tripwire",
+                new VanillaLightFragPatch()
+        );
     }
 
     public static void register(String shaderName, ShaderPatch patch) {
@@ -136,12 +236,11 @@ public class ShaderPatchRegistry {
 
     public static String apply(String name, String source, ShaderContext ctx) {
         var patches = PATCHES.get(name);
-        System.out.println(name);
         if (patches != null) {
             for (var patch : patches) {
                 source = patch.apply(source, ctx);
             }
-            System.out.println(source);
+            ShaderedMod.LOGGER.info("Applied shader patch to: " + name);
         }
         return source;
     }

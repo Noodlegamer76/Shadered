@@ -29,6 +29,11 @@ public class PacketHandler {
                 .decoder(LightEmitterPacket::new)
                 .consumerMainThread(LightEmitterPacket::handle)
                 .add();
+        INSTANCE.messageBuilder(ComponentPacket.class, 2, NetworkDirection.PLAY_TO_CLIENT)
+                .encoder(ComponentPacket::encode)
+                .decoder(ComponentPacket::new)
+                .consumerMainThread(ComponentPacket::handle)
+                .add();
     }
 
     public static void sendToServer(Object msg) {

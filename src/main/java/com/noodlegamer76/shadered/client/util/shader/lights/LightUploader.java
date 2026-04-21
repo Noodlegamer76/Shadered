@@ -1,11 +1,16 @@
 package com.noodlegamer76.shadered.client.util.shader.lights;
 
 import com.mojang.blaze3d.systems.RenderSystem;
+import com.noodlegamer76.shadered.event.RegisterShaders;
+import me.jellysquid.mods.sodium.client.render.SodiumWorldRenderer;
 import net.minecraft.client.Camera;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.renderer.ShaderInstance;
 import net.minecraft.world.phys.Vec3;
+import net.minecraftforge.client.ForgeHooksClient;
+import net.minecraftforge.client.ForgeRenderTypes;
+import net.minecraftforge.common.ForgeHooks;
 import org.lwjgl.opengl.GL20;
 
 import java.util.ArrayList;
@@ -47,7 +52,19 @@ public class LightUploader {
                 GameRenderer.getRendertypeEntitySmoothCutoutShader(),
                 GameRenderer.getRendertypeEntityTranslucentCullShader(),
                 GameRenderer.getRendertypeItemEntityTranslucentCullShader(),
-                GameRenderer.getRendertypeEntityCutoutNoCullZOffsetShader()
+                GameRenderer.getRendertypeEntityCutoutNoCullZOffsetShader(),
+                GameRenderer.getRendertypeCutoutShader(),
+                ForgeHooksClient.ClientEvents.getEntityTranslucentUnlitShader(),
+                GameRenderer.getPositionTexColorNormalShader(),
+                GameRenderer.getRendertypeArmorCutoutNoCullShader(),
+                GameRenderer.getRendertypeEntityDecalShader(),
+                GameRenderer.getRendertypeEntityNoOutlineShader(),
+                GameRenderer.getRendertypeEntityShadowShader(),
+                GameRenderer.getRendertypeEntityTranslucentEmissiveShader(),
+                GameRenderer.getRendertypeOutlineShader(),
+                GameRenderer.getRendertypeTranslucentShader(),
+                GameRenderer.getRendertypeTripwireShader(),
+                RegisterShaders.getPbr()
         );
 
         Camera camera = Minecraft.getInstance().gameRenderer.getMainCamera();
@@ -135,7 +152,5 @@ public class LightUploader {
             int radiusLoc = GL20.glGetUniformLocation(program, "u_LightRadius[" + i + "]");
             if (radiusLoc != -1) GL20.glUniform1f(radiusLoc, light.radius);
         }
-
-        clearLights();
     }
 }

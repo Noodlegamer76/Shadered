@@ -12,6 +12,7 @@ in vec4 BoneWeights;
 uniform mat4 ModelMat;
 uniform mat4 ViewMat;
 uniform mat4 ProjMat;
+uniform mat4 ModelViewMat;
 uniform int Offset;
 
 layout(std430, binding = 0) buffer Bones {
@@ -24,6 +25,7 @@ out vec4 vertexColor;
 out vec3 vWorldPos;
 out vec3 vNormal;
 out vec4 vTangent;
+out vec3 v_WorldPos;
 
 mat4 getSkinMatrix() {
     if (Offset < 0) {
@@ -66,4 +68,5 @@ void main() {
     vNormal = normalize(mat3(ModelMat) * skinnedNormal);
 
     vTangent = vec4(normalize(mat3(ModelMat) * skinnedTangent.xyz), skinnedTangent.w);
+    v_WorldPos = (ModelViewMat * vec4(Position, 1.0)).xyz;
 }

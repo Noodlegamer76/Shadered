@@ -1,12 +1,17 @@
 package com.noodlegamer76.shadered.creativetabs;
 
+import com.noodlegamer76.shadered.ShaderedMod;
 import com.noodlegamer76.shadered.item.InitItems;
+import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.event.BuildCreativeModeTabContentsEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.common.Mod;
 
+@Mod.EventBusSubscriber(modid = ShaderedMod.MODID, bus = Mod.EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
 public class ShaderedTab {
+
     @SubscribeEvent
-    public void buildContents(BuildCreativeModeTabContentsEvent event) {
+    public static void buildContents(BuildCreativeModeTabContentsEvent event) {
         if (event.getTabKey() == InitCreativeTabs.shaderedTab.getKey()) {
             event.accept(InitItems.SPACE_BLOCK);
             event.accept(InitItems.OCEAN_BLOCK);
