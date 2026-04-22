@@ -2,6 +2,7 @@ package com.noodlegamer76.shadered.core.component;
 
 import com.noodlegamer76.shadered.ShaderedMod;
 import com.noodlegamer76.shadered.core.component.components.LightComponent;
+import com.noodlegamer76.shadered.core.component.components.MeshComponent;
 import com.noodlegamer76.shadered.entity.GameObject;
 import com.noodlegamer76.shadered.event.ShaderedRegistries;
 import net.minecraft.resources.ResourceLocation;
@@ -13,6 +14,9 @@ public class InitComponents {
 
    public static final RegistryObject<ComponentType<?>> LIGHT = COMPONENT_TYPES.register("light",
            () -> new ComponentType<>(LightComponent::new));
+
+    public static final RegistryObject<ComponentType<?>> MESH = COMPONENT_TYPES.register("mesh",
+            () -> new ComponentType<>(MeshComponent::new));
 
     @FunctionalInterface
     public interface ComponentSupplier<T extends Component> {

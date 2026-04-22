@@ -9,7 +9,7 @@ import java.util.List;
 
 public class RenderableModel {
     private final List<AssimpModel> model = new ArrayList<>();
-    public Matrix4f modelMatrix = new Matrix4f();
+    public Matrix4f modelMatrix;
     public Animator animator;
 
     public void add(AssimpModel model) {
