@@ -2,6 +2,7 @@ package com.noodlegamer76.shadered;
 
 import org.slf4j.Logger;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.*;
@@ -24,13 +25,18 @@ public final class NativeLibraryLoader {
     public static void loadNatives() {
         try {
             if (tempDir == null) {
-                tempDir = Files.createTempDirectory("shadered_natives");
-                tempDir.toFile().deleteOnExit();
+                tempDir = Paths.get(System.getProperty("user.dir"), ".shadered_natives");
+                Files.createDirectories(tempDir);
             }
 
             String platformPath = getPlatformPath();
 
-            // Load required libraries
+            String currentPath = org.lwjgl.system.Configuration.LIBRARY_PATH.get();
+            String newPath = tempDir.toAbsolutePath().toString() +
+                    ((currentPath == null || currentPath.isEmpty()) ? "" : File.pathSeparator + currentPath);
+
+            org.lwjgl.system.Configuration.LIBRARY_PATH.set(newPath);
+
             loadLibrary(platformPath, getLibraryName("assimp"));
 
         } catch (IOException e) {
@@ -58,9 +64,12 @@ public final class NativeLibraryLoader {
 
             Path extractedPath = tempDir.resolve(libraryName);
             Files.copy(inputStream, extractedPath, StandardCopyOption.REPLACE_EXISTING);
+
+            extractedPath.toFile().setReadable(true, false);
+            extractedPath.toFile().setExecutable(true, false);
             extractedPath.toFile().deleteOnExit();
 
-            System.load(extractedPath.toAbsolutePath().toString());
+            org.lwjgl.system.Library.loadSystem("org.lwjgl.assimp", extractedPath.toAbsolutePath().toString());
 
             LOADED_LIBRARIES.add(libraryName);
             LOGGER.info("Loaded native library: {}", resourcePath);
@@ -86,6 +95,9 @@ public final class NativeLibraryLoader {
                     ? "osx/arm64"
                     : "osx/x86_64";
         } else if (os.contains("linux")) {
+            if (arch.contains("arm") || arch.contains("aarch64")) {
+                return is64Bit ? "linux/arm64" : "linux/arm32";
+            }
             return is64Bit ? "linux/x86_64" : "linux/x86";
         }
 
