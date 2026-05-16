@@ -12,19 +12,19 @@ import java.util.Map;
 public class Animator {
     private final Node root;
     private final Map<String, Integer> boneMap;
-
     private final Matrix4f[] boneOffsets;
     private final Matrix4f[] finalMatrices;
-
     private final Matrix4f globalInverse = new Matrix4f().identity();
-
     private final List<ActiveAnimation> activeAnimations = new ArrayList<>();
+
+    public List<ActiveAnimation> getActiveAnimations() {
+        return List.copyOf(activeAnimations);
+    }
 
     public Animator(Node root, Map<String, Integer> boneMap, Matrix4f[] boneOffsets, int maxBones) {
         this.root = root;
         this.boneMap = boneMap;
         this.boneOffsets = boneOffsets;
-
         this.finalMatrices = new Matrix4f[maxBones];
 
         for (int i = 0; i < maxBones; i++) {
@@ -36,13 +36,13 @@ public class Animator {
         }
     }
 
-    public Animator(McModel model, int maxBones) {
+    public Animator(McModel model) {
         Rig rig = model.getRig();
+        int maxBones = rig.boneMap.size();
 
         this.root = rig.root;
         this.boneMap = rig.boneMap;
         this.boneOffsets = rig.boneOffsets;
-
         this.finalMatrices = new Matrix4f[maxBones];
 
         for (int i = 0; i < maxBones; i++) {
@@ -69,55 +69,89 @@ public class Animator {
             }
         }
 
-        calculate(root, new Matrix4f().identity());
+        if (root != null) {
+            calculate(root, new Matrix4f().identity());
+        }
     }
 
     private void calculate(Node node, Matrix4f parent) {
-        Vector3f blendedPos = new Vector3f();
-        Quaternionf blendedRot = new Quaternionf(0, 0, 0, 0);
-        Vector3f blendedScale = new Vector3f();
+        Vector3f basePos = new Vector3f();
+        Quaternionf baseRot = new Quaternionf().identity();
+        Vector3f baseScale = new Vector3f(1f, 1f, 1f);
 
-        float totalWeight = 0f;
+        if (node.transform != null) {
+            node.transform.getTranslation(basePos);
+            node.transform.getUnnormalizedRotation(baseRot);
+            node.transform.getScale(baseScale);
+        }
+
+        Vector3f blendedPos = new Vector3f();
+        Vector3f blendedScale = new Vector3f();
+        Quaternionf blendedRot = new Quaternionf();
+        Quaternionf rotReference = null;
+
+        float posWeight = 0f;
+        float scaleWeight = 0f;
+        float rotWeight = 0f;
 
         for (ActiveAnimation a : activeAnimations) {
-            BoneTrack track = a.animation.tracks.get(node.name);
-            if (track == null) continue;
+            if (a.weight <= 0f) {
+                continue;
+            }
 
-            Vector3f pos = interpolatePosition(track, a.time);
-            Quaternionf rot = interpolateRotation(track, a.time);
-            Vector3f scl = interpolateScale(track, a.time);
+            BoneTrack track = a.animation.tracks.get(node.name);
+            if (track == null) {
+                continue;
+            }
 
             float w = a.weight;
 
-            blendedPos.add(new Vector3f(pos).mul(w));
-            blendedScale.add(new Vector3f(scl).mul(w));
+            if (!track.positions.isEmpty()) {
+                Vector3f pos = interpolatePosition(track, a.time);
+                blendedPos.x += pos.x * w;
+                blendedPos.y += pos.y * w;
+                blendedPos.z += pos.z * w;
+                posWeight += w;
+            }
 
-            Quaternionf temp = new Quaternionf(rot).mul(w);
-            blendedRot.add(temp);
+            if (!track.rotations.isEmpty()) {
+                Quaternionf rot = interpolateRotation(track, a.time);
 
-            totalWeight += w;
+                if (rotReference == null) {
+                    rotReference = new Quaternionf(rot);
+                } else if (rotReference.x * rot.x + rotReference.y * rot.y + rotReference.z * rot.z + rotReference.w * rot.w < 0f) {
+                    rot.x = -rot.x;
+                    rot.y = -rot.y;
+                    rot.z = -rot.z;
+                    rot.w = -rot.w;
+                }
+
+                blendedRot.x += rot.x * w;
+                blendedRot.y += rot.y * w;
+                blendedRot.z += rot.z * w;
+                blendedRot.w += rot.w * w;
+                rotWeight += w;
+            }
+
+            if (!track.scales.isEmpty()) {
+                Vector3f scl = interpolateScale(track, a.time);
+                blendedScale.x += scl.x * w;
+                blendedScale.y += scl.y * w;
+                blendedScale.z += scl.z * w;
+                scaleWeight += w;
+            }
         }
 
-        Matrix4f local = new Matrix4f();
+        Vector3f finalPos = posWeight > 0f ? blendedPos.div(posWeight) : basePos;
+        Quaternionf finalRot = rotWeight > 0f ? blendedRot.normalize() : baseRot;
+        Vector3f finalScale = scaleWeight > 0f ? blendedScale.div(scaleWeight) : baseScale;
 
-        if (totalWeight > 0f) {
-            blendedPos.div(totalWeight);
-            blendedScale.div(totalWeight);
-            blendedRot.normalize();
-
-            local.translationRotateScale(blendedPos, blendedRot, blendedScale);
-        } else {
-            local.set(node.transform);
-        }
-
+        Matrix4f local = new Matrix4f().translationRotateScale(finalPos, finalRot, finalScale);
         Matrix4f global = new Matrix4f(parent).mul(local);
 
         Integer index = boneMap.get(node.name);
-        if (index != null && index < finalMatrices.length && index < boneOffsets.length) {
-            finalMatrices[index]
-                    .set(globalInverse)
-                    .mul(global)
-                    .mul(boneOffsets[index]);
+        if (index != null && index >= 0 && index < finalMatrices.length && index < boneOffsets.length) {
+            finalMatrices[index].set(globalInverse).mul(global).mul(boneOffsets[index]);
         }
 
         for (Node child : node.children) {
@@ -131,8 +165,6 @@ public class Animator {
         }
 
         int i = findPositionKey(track, time);
-        track.posIndex = i;
-
         BoneTrack.KeyPosition a = track.positions.get(i);
         BoneTrack.KeyPosition b = track.positions.get(Math.min(i + 1, track.positions.size() - 1));
 
@@ -148,8 +180,6 @@ public class Animator {
         }
 
         int i = findRotationKey(track, time);
-        track.rotIndex = i;
-
         BoneTrack.KeyRotation a = track.rotations.get(i);
         BoneTrack.KeyRotation b = track.rotations.get(Math.min(i + 1, track.rotations.size() - 1));
 
@@ -165,8 +195,6 @@ public class Animator {
         }
 
         int i = findScaleKey(track, time);
-        track.scaleIndex = i;
-
         BoneTrack.KeyScale a = track.scales.get(i);
         BoneTrack.KeyScale b = track.scales.get(Math.min(i + 1, track.scales.size() - 1));
 
@@ -178,14 +206,26 @@ public class Animator {
 
     private int findPositionKey(BoneTrack track, float time) {
         List<BoneTrack.KeyPosition> keys = track.positions;
-        if (keys.size() < 2) return 0;
 
-        if (time < keys.get(track.posIndex).time) {
-            track.posIndex = 0;
+        if (keys.size() < 2) {
+            return 0;
         }
 
-        for (int i = track.posIndex; i < keys.size() - 1; i++) {
-            if (time < keys.get(i + 1).time) return i;
+        int low = 0;
+        int high = keys.size() - 2;
+
+        while (low <= high) {
+            int mid = (low + high) >>> 1;
+            float nextTime = keys.get(mid + 1).time;
+
+            if (time < nextTime) {
+                if (mid == 0 || time >= keys.get(mid).time) {
+                    return mid;
+                }
+                high = mid - 1;
+            } else {
+                low = mid + 1;
+            }
         }
 
         return keys.size() - 2;
@@ -194,16 +234,25 @@ public class Animator {
     private int findRotationKey(BoneTrack track, float time) {
         List<BoneTrack.KeyRotation> keys = track.rotations;
 
-        if (keys.size() < 2) return 0;
-
-        if (time < keys.get(track.rotIndex).time) {
-            track.rotIndex = 0;
+        if (keys.size() < 2) {
+            return 0;
         }
 
-        int start = Math.max(0, Math.min(track.rotIndex, keys.size() - 2));
+        int low = 0;
+        int high = keys.size() - 2;
 
-        for (int i = start; i < keys.size() - 1; i++) {
-            if (time < keys.get(i + 1).time) return i;
+        while (low <= high) {
+            int mid = (low + high) >>> 1;
+            float nextTime = keys.get(mid + 1).time;
+
+            if (time < nextTime) {
+                if (mid == 0 || time >= keys.get(mid).time) {
+                    return mid;
+                }
+                high = mid - 1;
+            } else {
+                low = mid + 1;
+            }
         }
 
         return keys.size() - 2;
@@ -212,16 +261,25 @@ public class Animator {
     private int findScaleKey(BoneTrack track, float time) {
         List<BoneTrack.KeyScale> keys = track.scales;
 
-        if (keys.size() < 2) return 0;
-
-        if (time < keys.get(track.scaleIndex).time) {
-            track.scaleIndex = 0;
+        if (keys.size() < 2) {
+            return 0;
         }
 
-        int start = Math.max(0, Math.min(track.scaleIndex, keys.size() - 2));
+        int low = 0;
+        int high = keys.size() - 2;
 
-        for (int i = start; i < keys.size() - 1; i++) {
-            if (time < keys.get(i + 1).time) return i;
+        while (low <= high) {
+            int mid = (low + high) >>> 1;
+            float nextTime = keys.get(mid + 1).time;
+
+            if (time < nextTime) {
+                if (mid == 0 || time >= keys.get(mid).time) {
+                    return mid;
+                }
+                high = mid - 1;
+            } else {
+                low = mid + 1;
+            }
         }
 
         return keys.size() - 2;
@@ -231,8 +289,8 @@ public class Animator {
         return finalMatrices;
     }
 
-    private static class ActiveAnimation {
-        Animation animation;
+    public static class ActiveAnimation {
+        public final Animation animation;
         float time;
         float weight;
 
@@ -240,6 +298,14 @@ public class Animator {
             this.animation = animation;
             this.weight = weight;
             this.time = 0f;
+        }
+
+        public void setTime(float time) {
+            this.time = time;
+        }
+
+        public void setWeight(float weight) {
+            this.weight = weight;
         }
     }
 }
