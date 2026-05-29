@@ -1,0 +1,20 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "eee",
+    "eoe",
+    "eee"
+  ],
+  "key": {
+    "e": {
+      "item": "shadered:mimic_block"
+    },
+    "o": {
+      "item": "minecraft:oak_leaves"
+    }
+  },
+  "result": {
+    "item": "shadered:forest_block",
+    "count": 8
+  }
+}

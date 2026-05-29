@@ -1,0 +1,213 @@
+package com.noodlegamer76.shadered.client.renderer;
+
+import com.mojang.blaze3d.pipeline.RenderTarget;
+import com.mojang.blaze3d.pipeline.TextureTarget;
+import com.mojang.blaze3d.platform.GlStateManager;
+import com.mojang.blaze3d.platform.Window;
+import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.blaze3d.vertex.*;
+import com.noodlegamer76.shadered.client.util.*;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.GameRenderer;
+import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.ShaderInstance;
+import org.joml.Matrix4f;
+import org.lwjgl.opengl.GL15;
+import org.lwjgl.opengl.GL30;
+import org.lwjgl.opengl.GL42;
+import org.w3c.dom.Text;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+
+/**
+ * The reason for this class is to allow for rendering geometry with custom Core Shaders into a different FrameBuffer.
+ * This allows the geometry to show up when using Shader Packs with Iris/Oculus.
+ */
+public class ComplexPassRenderer {
+    private static final ComplexPassRenderer INSTANCE = new ComplexPassRenderer();
+
+    public static ComplexPassRenderer getInstance() {
+        return INSTANCE;
+    }
+
+    private ComplexPassRenderer() {
+    }
+
+    private final Map<RenderStage, List<RenderableComplexPass>> complexPasses = new HashMap<>();
+    private TextureTarget renderBuffer;
+    private TextureTarget writeBuffer;
+    private TextureTarget extraBuffer;
+    private boolean initialized;
+    private int previousWidth;
+    private int previousHeight;
+    private boolean rendering = false;
+
+    public void add(RenderStage stage, RenderableComplexPass effect) {
+        complexPasses.computeIfAbsent(stage, s -> new ArrayList<>()).add(effect);
+    }
+
+    public Map<RenderStage, List<RenderableComplexPass>> getComplexPass() {
+        return new HashMap<>(complexPasses);
+    }
+
+    public void init() {
+        Window window = Minecraft.getInstance().getWindow();
+        previousWidth = window.getWidth();
+        previousHeight = window.getHeight();
+
+        renderBuffer = new TextureTarget(previousWidth, previousHeight, true, Minecraft.ON_OSX);
+        writeBuffer = new TextureTarget(previousWidth, previousHeight, true, Minecraft.ON_OSX);
+        extraBuffer = new TextureTarget(previousWidth, previousHeight, true, Minecraft.ON_OSX);
+
+        initialized = true;
+    }
+
+    private void preRender() {
+        if (shouldResize()) {
+            Window window = Minecraft.getInstance().getWindow();
+            renderBuffer.resize(window.getWidth(), window.getHeight(), Minecraft.ON_OSX);
+            writeBuffer.resize(window.getWidth(), window.getHeight(), Minecraft.ON_OSX);
+            extraBuffer.resize(window.getWidth(), window.getHeight(), Minecraft.ON_OSX);
+        }
+        else {
+            renderBuffer.clear(Minecraft.ON_OSX);
+            writeBuffer.clear(Minecraft.ON_OSX);
+            extraBuffer.clear(Minecraft.ON_OSX);
+        }
+
+        renderBuffer.setClearColor(1.0f, 1.0f, 1.0f, 1.0f);
+        writeBuffer.setClearColor(1.0f, 1.0f, 1.0f, 1.0f);
+        extraBuffer.setClearColor(1.0f, 1.0f, 1.0f, 1.0f);
+
+        renderToRenderTarget();
+    }
+
+    public void render(RenderStage stage, PoseStack poseStack, int renderTick, float partialTick) {
+        if (!initialized) {
+            init();
+        }
+        if (rendering) return;
+        rendering = true;
+
+        preRender();
+
+        TextureTarget current = renderBuffer;
+        TextureTarget scratch = writeBuffer;
+
+        List<RenderableComplexPass> passes = complexPasses.getOrDefault(stage, List.of());
+
+        current.bindWrite(true);
+
+        for (RenderableComplexPass pass : passes) {
+            if (pass.getType() == PassType.GEOMETRY) {
+                pass.render(stage, poseStack, renderTick, partialTick);
+            }
+        }
+
+        for (RenderableComplexPass pass : passes) {
+            if (pass.getType() == PassType.FILTER) {
+                scratch.bindWrite(true);
+
+                current.bindRead();
+
+                pass.render(stage, poseStack, renderTick, partialTick);
+
+                TextureTarget tmp = current;
+                current = scratch;
+                scratch = tmp;
+            }
+        }
+
+        renderBuffer = current;
+        writeBuffer = scratch;
+
+        postRender();
+        rendering = false;
+    }
+
+    private void postRender() {
+        Window window = Minecraft.getInstance().getWindow();
+        previousWidth = window.getWidth();
+        previousHeight = window.getHeight();
+        renderToMainTarget();
+
+        Minecraft.getInstance().getMainRenderTarget().bindWrite(true);
+    }
+
+    private void renderToRenderTarget() {
+        RenderTarget mainTarget = Minecraft.getInstance().getMainRenderTarget();
+        GlUtils.copyColorFrom(renderBuffer, mainTarget);
+        renderBuffer.copyDepthFrom(mainTarget);
+    }
+
+    private void renderToMainTarget() {
+        RenderTarget mainTarget = Minecraft.getInstance().getMainRenderTarget();
+
+        Matrix4f orthagraphic = new Matrix4f().ortho(0, 1, 0, 1, -1, 1);
+        RenderSystem.backupProjectionMatrix();
+        Matrix4f modelViewBackup = new Matrix4f(RenderSystem.getModelViewMatrix());
+        RenderSystem.getModelViewMatrix().set(new Matrix4f());
+
+        RenderSystem.setProjectionMatrix(orthagraphic, VertexSorting.ORTHOGRAPHIC_Z);
+        mainTarget.bindWrite(true);
+
+        ShaderInstance shaderInstance = GameRenderer.getPositionTexShader();
+
+        RenderSystem.setShader(GameRenderer::getPositionTexShader);
+        RenderSystem.setShaderTexture(0, renderBuffer.getColorTextureId());
+
+
+        Tesselator tesselator = Tesselator.getInstance();
+
+        BufferBuilder bufferBuilder = tesselator.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
+
+        bufferBuilder.addVertex(0, 0, 0).setUv(0, 0);
+        bufferBuilder.addVertex(1, 0, 0).setUv(1, 0);
+        bufferBuilder.addVertex(1, 1, 0).setUv(1, 1);
+        bufferBuilder.addVertex(0, 1, 0).setUv(0, 1);
+
+        MeshData meshData = bufferBuilder.build();
+
+        if (meshData != null) {
+            BufferUploader.drawWithShader(meshData);
+        }
+
+        RenderSystem.restoreProjectionMatrix();
+        RenderSystem.getModelViewMatrix().set(modelViewBackup);
+
+
+        mainTarget.copyDepthFrom(renderBuffer);
+    }
+
+    public TextureTarget getRenderBuffer() {
+        return renderBuffer;
+    }
+
+    public TextureTarget getWriteBuffer() {
+        return writeBuffer;
+    }
+
+    public void clear() {
+        complexPasses.clear();
+    }
+
+    public int getPreviousWidth() {
+        return previousWidth;
+    }
+
+    public int getPreviousHeight() {
+        return previousHeight;
+    }
+
+    public boolean shouldResize() {
+        return previousWidth != Minecraft.getInstance().getWindow().getWidth() || previousHeight != Minecraft.getInstance().getWindow().getHeight();
+    }
+
+    public TextureTarget getExtraBuffer() {
+        return extraBuffer;
+    }
+}

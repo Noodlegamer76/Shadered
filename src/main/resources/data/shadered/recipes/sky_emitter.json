@@ -1,0 +1,23 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "eoe",
+    "ene",
+    "ene"
+  ],
+  "key": {
+    "e": {
+      "item": "minecraft:ancient_debris"
+    },
+    "o": {
+      "item": "minecraft:amethyst_shard"
+    },
+    "n": {
+      "item": "minecraft:netherrack"
+    }
+  },
+  "result": {
+    "item": "shadered:sky_emitter",
+    "count": 1
+  }
+}

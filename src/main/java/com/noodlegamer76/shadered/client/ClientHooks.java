@@ -1,0 +1,14 @@
+package com.noodlegamer76.shadered.client;
+
+import com.noodlegamer76.shadered.entity.block.SkyEmitterEntity;
+import com.noodlegamer76.shadered.gui.SkyEmitterScreen;
+import net.minecraft.client.Minecraft;
+
+public final class ClientHooks {
+    private ClientHooks() {
+    }
+
+    public static void openSkyEmitterScreen(SkyEmitterEntity skyEmitter) {
+        Minecraft.getInstance().setScreen(new SkyEmitterScreen(skyEmitter));
+    }
+}

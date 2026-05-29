@@ -1,8 +1,14 @@
+import java.util.zip.ZipEntry
+import java.util.zip.ZipFile
+import java.util.zip.ZipOutputStream
+import org.gradle.internal.os.OperatingSystem
+
 plugins {
     id 'java-library'
     id 'maven-publish'
     id 'net.neoforged.moddev' version '2.0.82'
     id 'idea'
+    id "com.github.johnrengelman.shadow" version "8.1.1"
 }
 
 tasks.named('wrapper', Wrapper).configure {
@@ -24,7 +30,6 @@ repositories {
 base {
     archivesName = mod_id
 }
-
 // Mojang ships Java 21 to end users starting in 1.20.5, so mods should target Java 21.
 java.toolchain.languageVersion = JavaLanguageVersion.of(21)
 
@@ -112,6 +117,32 @@ configurations {
 }
 
 dependencies {
+    def lwjglVersion = "3.3.3"
+
+    implementation("org.lwjgl:lwjgl-assimp:${lwjglVersion}") {
+        exclude group: 'org.lwjgl', module: 'lwjgl'
+        exclude group: 'org.lwjgl', module: 'lwjgl-glfw'
+        exclude group: 'org.lwjgl', module: 'lwjgl-opengl'
+        exclude group: 'org.lwjgl', module: 'lwjgl-stb'
+    }
+
+    additionalRuntimeClasspath("org.lwjgl:lwjgl-assimp:${lwjglVersion}") {
+        exclude group: 'org.lwjgl', module: 'lwjgl'
+        exclude group: 'org.lwjgl', module: 'lwjgl-glfw'
+        exclude group: 'org.lwjgl', module: 'lwjgl-opengl'
+        exclude group: 'org.lwjgl', module: 'lwjgl-stb'
+    }
+
+    shadow("org.lwjgl:lwjgl-assimp:${lwjglVersion}") {
+        exclude group: 'org.lwjgl', module: 'lwjgl'
+        exclude group: 'org.lwjgl', module: 'lwjgl-glfw'
+        exclude group: 'org.lwjgl', module: 'lwjgl-opengl'
+        exclude group: 'org.lwjgl', module: 'lwjgl-stb'
+    }
+
+    runtimeOnly "org.lwjgl:lwjgl-assimp:${lwjglVersion}:natives-windows"
+    runtimeOnly "org.lwjgl:lwjgl-assimp:${lwjglVersion}:natives-linux"
+    runtimeOnly "org.lwjgl:lwjgl-assimp:${lwjglVersion}:natives-macos"
     // Example optional mod dependency with JEI
     // The JEI API is declared for compile time use, while the full JEI artifact is used at runtime
     // compileOnly "mezz.jei:jei-${mc_version}-common-api:${jei_version}"
@@ -186,4 +217,141 @@ idea {
         downloadSources = true
         downloadJavadoc = true
     }
+}
+task moveFiles {
+    doLast {
+        // Input and output files based on the shadowJar and jar archive file names
+        def inputFile = file("$buildDir/libs/" + shadowJar.archiveFileName.get())
+        def outputFile = file("$buildDir/libs/" + jar.archiveFileName.get())
+
+        // Temporary file for the updated output
+        def tempFile = file("$buildDir/libs/" + "output_temp.zip")
+
+        if (inputFile.exists() && outputFile.exists()) {
+            def sourceZip = new ZipFile(inputFile)
+            def destinationZip = new ZipFile(outputFile)
+            def zipOut = new ZipOutputStream(new FileOutputStream(tempFile))
+
+            // Copy existing contents of the destination ZIP to the temporary file
+            destinationZip.entries().each { entry ->
+                zipOut.putNextEntry(new ZipEntry(entry.getName()))
+                zipOut.write(destinationZip.getInputStream(entry).readAllBytes())
+                zipOut.closeEntry()
+            }
+
+            // Copy new files from the source ZIP that aren't already in the destination ZIP
+            sourceZip.entries().each { entry ->
+                if (destinationZip.getEntry(entry.getName()) == null) {
+                    zipOut.putNextEntry(new ZipEntry(entry.getName()))
+                    zipOut.write(sourceZip.getInputStream(entry).readAllBytes())
+                    zipOut.closeEntry()
+                } else {
+                    println "File already exists in destination ZIP: ${entry.getName()}. Skipping."
+                }
+            }
+
+            // Close all streams
+            zipOut.close()
+            sourceZip.close()
+            destinationZip.close()
+
+            // Replace the original destination file with the new one
+            if (outputFile.exists()) {
+                outputFile.delete() // Delete the old output file if it exists
+            }
+            tempFile.renameTo(outputFile) // Rename temp file to the destination file
+            inputFile.delete() // Delete the source file (inputFile) after moving
+        } else {
+            println "Input or output ZIP file not found."
+        }
+    }
+}
+
+build {
+    dependsOn shadowJar
+    finalizedBy moveFiles
+}
+
+tasks.register("bundleAllNativesForDistribution") {
+    group = "build"
+    description = "Bundles ONLY LWJGL Assimp natives into resources/natives"
+
+    // Use a loose filter that filters safely based on the string name,
+    // avoiding internal Gradle component class casting issues.
+    def nativeJars = configurations.runtimeClasspath.incoming.artifactView {
+        componentFilter { component ->
+            def idStr = component.displayName.toString()
+            return idStr.contains("org.lwjgl") && idStr.contains("lwjgl-assimp")
+        }
+    }.files
+
+    inputs.files(nativeJars).withPropertyName("nativeJars")
+
+    def outputRoot = layout.projectDirectory.dir("src/main/resources/natives")
+    outputs.dir(outputRoot).withPropertyName("outputDirectory")
+
+    doLast {
+        def seen = new HashSet<String>()
+
+        nativeJars.each { file ->
+            // Double check that we are pulling the right native jar files
+            if (!file.name.contains("lwjgl-assimp") || !file.name.contains("natives")) return
+
+            println "Using Assimp native artifact file: ${file.name}"
+            def zip = new ZipFile(file)
+
+            zip.entries().each { entry ->
+                if (entry.isDirectory()) return
+
+                def fileName = entry.name.substring(entry.name.lastIndexOf('/') + 1)
+
+                if (!(fileName.endsWith(".dll")
+                        || fileName.endsWith(".so")
+                        || fileName.endsWith(".dylib"))) {
+                    return
+                }
+
+                def key = file.name + ":" + entry.name
+                if (!seen.add(key)) return
+
+                def dir = null
+
+                if (fileName.endsWith(".dll")) {
+                    dir = "windows/x86_64"
+                } else if (fileName.endsWith(".so")) {
+                    dir = "linux/x86_64"
+                } else if (fileName.endsWith(".dylib")) {
+                    dir = fileName.contains("arm")
+                            ? "osx/arm64"
+                            : "osx/x86_64"
+                }
+
+                if (dir == null) return
+
+                def outDir = outputRoot.dir(dir).asFile
+                outDir.mkdirs()
+
+                def outFile = new File(outDir, fileName)
+
+                outFile.withOutputStream { os ->
+                    zip.getInputStream(entry).withStream {
+                        it.transferTo(os)
+                    }
+                }
+
+                println "Bundled ASSIMP ${fileName} -> ${dir}"
+            }
+
+            zip.close()
+        }
+
+        println "=== DONE (ASSIMP ONLY) ==="
+    }
+}
+
+compileJava.dependsOn(bundleAllNativesForDistribution)
+processResources.dependsOn(bundleAllNativesForDistribution)
+
+tasks.withType(JavaCompile).configureEach {
+    options.encoding = 'UTF-8'
 }

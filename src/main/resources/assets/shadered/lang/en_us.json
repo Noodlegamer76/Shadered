@@ -9,5 +9,30 @@
   "block.shadered.end_block": "End Block",
   "block.shadered.end_sky_block": "End Sky Block",
   "block.shadered.eclipse_block": "Eclipse Block",
-  "block.shadered.ps1_block": "Ps1 Sky"
+  "block.shadered.skyblock_painting": "Skyblock 3D Painting",
+  "block.shadered.forest_block": "Forest Block",
+  "block.shadered.mimic_block": "Mimic Block",
+  "block.shadered.iridia_block": "Iridia Block",
+  "block.shadered.sky_emitter": "Sky Emitter",
+  "block.shadered.maxwell": "Maxwell",
+  "block.shadered.light_bulb": "Light Bulb",
+
+  "item.shadered.skyblock_filter_normal": "Skyblock Filter: Normal",
+  "item.shadered.skyblock_filter_inverted": "Skyblock Filter: Inverted",
+  "item.shadered.skyblock_filter_grayscale": "Skyblock Filter: Grayscale",
+  "item.shadered.skyblock_filter_chromatic_aberration": "Skyblock Filter: Chromatic Aberration",
+  "item.shadered.skyblock_filter_posterize": "Skyblock Filter: Posterize",
+  "item.shadered.skyblock_filter_screen": "Skyblock Filter: Screen",
+  "item.shadered.skyblock_filter_blueprint": "Skyblock Filter: Blueprint",
+  "item.shadered.skyblock_filter_gameboy": "Skyblock Filter: Gameboy",
+
+  "gui.shadered.sky_emitter.title": "Sky Emitter",
+  "gui.shadered.sky_emitter.min_distance": "Min Distance: ",
+  "gui.shadered.sky_emitter.max_distance": "Max Distance: ",
+  "gui.shadered.sky_emitter.max_alpha": "Max Alpha: ",
+  "gui.shadered.light_emitter.green": "Green: ",
+  "gui.shadered.light_emitter.red": "Red: ",
+  "gui.shadered.light_emitter.blue": "Blue: ",
+  "gui.shadered.light_emitter.radius": "Radius: ",
+  "gui.shadered.light_emitter.title": "Light Bulb"
 }

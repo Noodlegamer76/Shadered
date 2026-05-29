@@ -1,0 +1,23 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "aea",
+    "eoe",
+    "aea"
+  ],
+  "key": {
+    "e": {
+      "item": "minecraft:stone"
+    },
+    "o": {
+      "item": "shadered:skyblock_filter_normal"
+    },
+    "a": {
+      "item": "minecraft:gray_wool"
+    }
+  },
+  "result": {
+    "item": "shadered:skyblock_filter_grayscale",
+    "count": 1
+  }
+}

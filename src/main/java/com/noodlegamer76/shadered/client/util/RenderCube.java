@@ -3,40 +3,135 @@ package com.noodlegamer76.shadered.client.util;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.*;
 import com.mojang.math.Axis;
+import com.noodlegamer76.shadered.client.util.skyblock.SkyblockBatchData;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
+import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.ShaderInstance;
+import net.minecraft.client.renderer.blockentity.TheEndPortalRenderer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.phys.Vec3;
+import org.jetbrains.annotations.Nullable;
 import org.joml.Matrix4f;
-
-import java.util.ArrayList;
+import org.joml.Vector3f;
 
 public class RenderCube {
+    public static void renderSkyBlocks(SkyblockBatchData.PassData data, boolean inverted, @Nullable ShaderInstance shader) {
+        if (data == null) return;
+        Tesselator tesselator = Tesselator.getInstance();
+        BufferBuilder bufferbuilder = tesselator.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX_COLOR);
 
-    public static void renderSkyBlocks(ArrayList<SkyBlockRenderInfo> info, ShaderInstance shader) {
-        BufferBuilder bufferBuilder = Tesselator.getInstance().begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION);
-        Minecraft.getInstance().gameRenderer.getMainCamera();
+        if (inverted) {
+            RenderSystem.disableDepthTest();
+        }
+        else {
+            RenderSystem.depthMask(true);
+            RenderSystem.enableDepthTest();
+        }
 
-        RenderSystem.depthMask(true);
-        RenderSystem.enableDepthTest();
         RenderSystem.setShader(() -> shader);
 
         PoseStack poseStack = new PoseStack();
 
-        for (int i = 0; i < info.size(); i++) {
-            BlockPos pos = info.get(i).getPos();
+        for (int i = 0; i < data.getPose().size(); i++) {
+            BlockPos pos = data.getPositions().get(i);
+            for (int j = 0; j < 6; j++) {
+                if (shouldCull(pos, j)) {
+                    continue;
+                }
+
+                float alpha = data.getAlphas().get(i);
+                boolean invert = data.getInverts().get(i);
+                if (invert && !inverted || !invert && inverted) {
+                    continue;
+                }
+
+                poseStack.pushPose();
+                poseStack.mulPose(data.getPose().get(i));
+                poseStack.translate(0.5, 0.5, 0.5);
+
+                switch (j) {
+                    case 0:
+                        break;
+                    case 1:
+                        poseStack.mulPose(Axis.XP.rotationDegrees(90));
+                        break;
+                    case 2:
+                        poseStack.mulPose(Axis.XP.rotationDegrees(180));
+                        break;
+                    case 3:
+                        poseStack.mulPose(Axis.XP.rotationDegrees(-90));
+                        break;
+                    case 4:
+                        poseStack.mulPose(Axis.ZP.rotationDegrees(-90));
+                        break;
+                    case 5:
+                        poseStack.mulPose(Axis.ZN.rotationDegrees(-90));
+                        break;
+                }
+
+                if (!invert) {
+                    poseStack.translate(0, -0.5, 0);
+                }
+                else {
+                    poseStack.translate(0, 0.5, 0);
+                }
+                poseStack.scale(0.5f, 0.5f, 0.5f);
+
+                Matrix4f matrix4f = poseStack.last().pose();
+
+                bufferbuilder.addVertex(matrix4f, -1, 0, -1).setUv(0f, 0f).setColor(255, 255, 255, (int) (alpha * 255));
+                bufferbuilder.addVertex(matrix4f, 1, 0, -1).setUv(1f, 0f).setColor(255, 255, 255, (int) (alpha * 255));
+                bufferbuilder.addVertex(matrix4f, 1, 0, 1).setUv(1f, 1f).setColor(255, 255, 255, (int) (alpha * 255));
+                bufferbuilder.addVertex(matrix4f, -1, 0, 1).setUv(0f, 1f).setColor(255, 255, 255, (int) (alpha * 255));
+
+                poseStack.popPose();
+            }
+        }
+
+        MeshData meshData = bufferbuilder.build();
+
+        if (meshData != null) {
+            BufferUploader.drawWithShader(meshData);
+        }
+
+        if (!inverted) {
+            renderSkyBlocks(data, true, shader);
+        }
+
+        RenderSystem.enableDepthTest();
+        RenderSystem.depthMask(true);
+    }
+
+    public static void renderEndPortalCubes(SkyblockBatchData.PassData data) {
+        if (data == null) return;
+        Tesselator tesselator = Tesselator.getInstance();
+        BufferBuilder bufferbuilder = tesselator.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
+
+        RenderSystem.depthMask(true);
+        RenderSystem.enableDepthTest();
+
+        RenderSystem.setShader(GameRenderer::getRendertypeEndPortalShader);
+        ResourceLocation endSky = TheEndPortalRenderer.END_SKY_LOCATION;
+        ResourceLocation endPortal = TheEndPortalRenderer.END_PORTAL_LOCATION;
+
+        RenderSystem.setShaderTexture(0, endSky);
+        RenderSystem.setShaderTexture(1, endPortal);
+
+        PoseStack poseStack = new PoseStack();
+
+        for (int i = 0; i < data.getPose().size(); i++) {
+            BlockPos pos = data.getPositions().get(i);
             for (int j = 0; j < 6; j++) {
                 if (shouldCull(pos, j)) {
                     continue;
                 }
 
                 poseStack.pushPose();
-                poseStack.mulPose(info.get(i).getPose());
-
+                poseStack.mulPose(data.getPose().get(i));
                 poseStack.translate(0.5, 0.5, 0.5);
 
                 switch (j) {
@@ -64,40 +159,39 @@ public class RenderCube {
 
                 Matrix4f matrix4f = poseStack.last().pose();
 
-                bufferBuilder.addVertex(matrix4f, -1, 0, -1);
-                bufferBuilder.addVertex(matrix4f, 1, 0, -1);
-                bufferBuilder.addVertex(matrix4f, 1, 0, 1);
-                bufferBuilder.addVertex(matrix4f, -1, 0, 1);
+                bufferbuilder.addVertex(matrix4f, -1, 0, -1).setUv(0f, 0f);
+                bufferbuilder.addVertex(matrix4f, 1, 0, -1).setUv(1f, 0f);
+                bufferbuilder.addVertex(matrix4f, 1, 0, 1).setUv(1f, 1f);
+                bufferbuilder.addVertex(matrix4f, -1, 0, 1).setUv(0f, 1f);
 
                 poseStack.popPose();
             }
         }
 
-        MeshData data = bufferBuilder.build();
+        MeshData meshData = bufferbuilder.build();
 
-        if (data != null) {
-            BufferUploader.drawWithShader(data);
+        if (meshData != null) {
+            BufferUploader.draw(meshData);
         }
-
-        info.clear();
     }
 
-    public static void renderCubeWithRenderType(ArrayList<SkyBlockRenderInfo> info, RenderType renderType) {
+    public static void renderCubeWithRenderType(RenderType renderType, @Nullable SkyblockBatchData.PassData data) {
+        if (data == null) return;
         VertexConsumer vertexConsumer = Minecraft.getInstance().renderBuffers().bufferSource().getBuffer(renderType);
 
         RenderSystem.depthMask(true);
         RenderSystem.enableDepthTest();
         PoseStack poseStack = new PoseStack();
-        for (int i = 0; i < info.size(); i++) {
-            BlockPos pos = info.get(i).pos;
+
+        for (int i = 0; i < data.getPositions().size(); i++) {
+            if (data.getPositions().get(i) == null || data.getPose().get(i) == null) continue;
+
+            BlockPos pos = data.getPositions().get(i);
             for (int j = 0; j < 6; j++) {
-                if (shouldCull(pos, j)) {
-                    continue;
-                }
+                if (shouldCull(pos, j)) continue;
 
                 poseStack.pushPose();
-
-                poseStack.mulPose(info.get(i).pose);
+                poseStack.mulPose(data.getPose().get(i));
                 poseStack.translate(0.5, 0.5, 0.5);
 
                 switch (j) {
@@ -124,17 +218,212 @@ public class RenderCube {
                 poseStack.scale(0.5f, 0.5f, 0.5f);
 
                 Matrix4f matrix4f = poseStack.last().pose();
+                Vector3f normal = switch (j) {
+                    case 0 -> new Vector3f(0, -1, 0);
+                    case 1 -> new Vector3f(1, 0, 0);
+                    case 3 -> new Vector3f(-1, 0, 0);
+                    case 4 -> new Vector3f(0, 0, -1);
+                    case 5 -> new Vector3f(0, 0, 1);
+                    default -> new Vector3f(0, 1, 0);
+                };
 
-                vertexConsumer.addVertex(matrix4f, -1, 0, -1);
-                vertexConsumer.addVertex(matrix4f, 1, 0, -1);
-                vertexConsumer.addVertex(matrix4f, 1, 0, 1);
-                vertexConsumer.addVertex(matrix4f, -1, 0, 1);
+                // Define vertex data
+                float[][] vertices = {
+                        {-1, 0, -1},
+                        {1, 0, -1},
+                        {1, 0, 1},
+                        {-1, 0, 1}
+                };
+
+                for (float[] v : vertices) {
+                    vertexConsumer
+                            .addVertex(matrix4f, v[0], v[1], v[2])
+                            .setColor(255, 255, 255, 255)
+                            .setUv(0f, 0f)
+                            .setUv2(0, 0)
+                            .setNormal(normal.x(), normal.y(), normal.z());
+                }
 
                 poseStack.popPose();
             }
         }
+    }
 
-        info.clear();
+    public static void renderSizedBox(BlockPos[] positions, float partialTicks, PoseStack poseStack) {
+        Tesselator tesselator = Tesselator.getInstance();
+        BufferBuilder builder = tesselator.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
+
+        float offset = 0.0005f;
+
+        RenderSystem.depthMask(true);
+        RenderSystem.enableDepthTest();
+
+        BlockPos compressorPos = positions[0];
+        BlockPos p1 = positions[1];
+        BlockPos p2 = positions[2];
+
+        int minX = Math.min(p1.getX(), p2.getX());
+        int minY = Math.min(p1.getY(), p2.getY());
+        int minZ = Math.min(p1.getZ(), p2.getZ());
+        int maxX = Math.max(p1.getX(), p2.getX());
+        int maxY = Math.max(p1.getY(), p2.getY());
+        int maxZ = Math.max(p1.getZ(), p2.getZ());
+
+        float sizeX = (maxX - minX) + 1f;
+        float sizeY = (maxY - minY) + 1f;
+        float sizeZ = (maxZ - minZ) + 1f;
+
+        poseStack.pushPose();
+        poseStack.translate(-compressorPos.getX(), -compressorPos.getY(), -compressorPos.getZ());
+        poseStack.translate(minX, minY, minZ);
+
+        poseStack.scale(sizeX, sizeY, sizeZ);
+
+        for (int j = 0; j < 6; j++) {
+            poseStack.pushPose();
+            poseStack.translate(0.5, 0.5, 0.5);
+
+            switch (j) {
+                case 0 -> { /* down */ }
+                case 1 -> poseStack.mulPose(Axis.XP.rotationDegrees(90));
+                case 2 -> poseStack.mulPose(Axis.XP.rotationDegrees(180));
+                case 3 -> poseStack.mulPose(Axis.XP.rotationDegrees(-90));
+                case 4 -> poseStack.mulPose(Axis.ZP.rotationDegrees(-90));
+                case 5 -> poseStack.mulPose(Axis.ZN.rotationDegrees(-90));
+            }
+
+            poseStack.translate(0, 0.5, 0);
+            poseStack.scale(0.5f, 0.5f, 0.5f);
+
+            Matrix4f matrix4f = poseStack.last().pose();
+
+            Vector3f normal = switch (j) {
+                case 0 -> new Vector3f(0, 1, 0);
+                case 1 -> new Vector3f(-1, 0, 0);
+                case 2 -> new Vector3f(0, -1, 0);
+                case 3 -> new Vector3f(1, 0, 0);
+                case 4 -> new Vector3f(0, 0, 1);
+                case 5 -> new Vector3f(0, 0, -1);
+                default -> new Vector3f(0, -1, 0);
+            };
+
+            float[][] vertices = {
+                    { 1f - offset, offset, -1f + offset},
+                    {-1f + offset, offset, -1f + offset},
+                    {-1f + offset, offset,  1f - offset},
+                    { 1f - offset, offset,  1f - offset}
+            };
+
+            float[][] uvs = {
+                    {1f, 0f},
+                    {0f, 0f},
+                    {0f, 1f},
+                    {1f, 1f}
+            };
+
+            for (int k = 0; k < 4; k++) {
+                float[] v = vertices[k];
+                float[] uv = uvs[k];
+                builder
+                        .addVertex(matrix4f, v[0], v[1], v[2])
+                        .setUv(uv[0], uv[1]);
+            }
+
+            poseStack.popPose();
+        }
+
+        poseStack.popPose();
+
+        MeshData meshData = builder.build();
+
+        if (meshData != null) {
+            BufferUploader.drawWithShader(meshData);
+        }
+    }
+
+    public static void renderSpaceCompressorBox(BlockPos[] positions, float partialTicks, RenderType renderType, PoseStack poseStack) {
+        VertexConsumer vertexConsumer = Minecraft.getInstance().renderBuffers().bufferSource().getBuffer(renderType);
+
+        float offset = 0.0005f;
+
+        RenderSystem.depthMask(true);
+        RenderSystem.enableDepthTest();
+
+        BlockPos compressorPos = positions[0];
+        BlockPos p1 = positions[1];
+        BlockPos p2 = positions[2];
+
+        int minX = Math.min(p1.getX(), p2.getX());
+        int minY = Math.min(p1.getY(), p2.getY());
+        int minZ = Math.min(p1.getZ(), p2.getZ());
+        int maxX = Math.max(p1.getX(), p2.getX());
+        int maxY = Math.max(p1.getY(), p2.getY());
+        int maxZ = Math.max(p1.getZ(), p2.getZ());
+
+        float sizeX = (maxX - minX) + 1f;
+        float sizeY = (maxY - minY) + 1f;
+        float sizeZ = (maxZ - minZ) + 1f;
+
+        poseStack.pushPose();
+        poseStack.translate(-compressorPos.getX(), -compressorPos.getY(), -compressorPos.getZ());
+        poseStack.translate(minX, minY, minZ);
+
+        poseStack.scale(sizeX, sizeY, sizeZ);
+
+        for (int j = 0; j < 6; j++) {
+            poseStack.pushPose();
+            poseStack.translate(0.5, 0.5, 0.5);
+
+            switch (j) {
+                case 0 -> { /* down */ }
+                case 1 -> poseStack.mulPose(Axis.XP.rotationDegrees(90));
+                case 2 -> poseStack.mulPose(Axis.XP.rotationDegrees(180));
+                case 3 -> poseStack.mulPose(Axis.XP.rotationDegrees(-90));
+                case 4 -> poseStack.mulPose(Axis.ZP.rotationDegrees(-90));
+                case 5 -> poseStack.mulPose(Axis.ZN.rotationDegrees(-90));
+            }
+
+            poseStack.translate(0, -0.5, 0);
+            poseStack.scale(0.5f, 0.5f, 0.5f);
+
+            Matrix4f matrix4f = poseStack.last().pose();
+
+            Vector3f normal = switch (j) {
+                case 0 -> new Vector3f(0, 1, 0);
+                case 1 -> new Vector3f(-1, 0, 0);
+                case 2 -> new Vector3f(0, -1, 0);
+                case 3 -> new Vector3f(1, 0, 0);
+                case 4 -> new Vector3f(0, 0, 1);
+                case 5 -> new Vector3f(0, 0, -1);
+                default -> new Vector3f(0, -1, 0);
+            };
+
+            float[][] vertices = {
+                    { 1f - offset, offset, -1f + offset},
+                    {-1f + offset, offset, -1f + offset},
+                    {-1f + offset, offset,  1f - offset},
+                    { 1f - offset, offset,  1f - offset}
+            };
+
+            float[][] uvs = {
+                    {1f, 0f},
+                    {0f, 0f},
+                    {0f, 1f},
+                    {1f, 1f}
+            };
+
+            for (int k = 0; k < 4; k++) {
+                float[] v = vertices[k];
+                float[] uv = uvs[k];
+                vertexConsumer
+                        .addVertex(matrix4f, v[0], v[1], v[2])
+                        .setUv(uv[0], uv[1]);
+            }
+
+            poseStack.popPose();
+        }
+
+        poseStack.popPose();
     }
 
     private static boolean shouldCull(BlockPos pos, int faceIndex) {

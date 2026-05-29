@@ -1,22 +1,23 @@
 package com.noodlegamer76.shadered.client.renderer.block;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.noodlegamer76.shadered.client.RenderTargets;
-import com.noodlegamer76.shadered.client.util.SkyBlockRenderInfo;
-import com.noodlegamer76.shadered.tile.OceanBlockEntity;
+import com.noodlegamer76.shadered.client.renderer.SkyblockRenderer;
+import com.noodlegamer76.shadered.client.util.skyblock.SkyblockPass;
+import com.noodlegamer76.shadered.entity.block.OceanBlockEntity;
+import com.noodlegamer76.shadered.entity.block.RenderTester;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.world.phys.Vec3;
 
-public class OceanBlockRenderer implements BlockEntityRenderer<OceanBlockEntity> {
+public class OceanBlockRenderer<T extends RenderTester> implements BlockEntityRenderer<OceanBlockEntity> {
 
     public OceanBlockRenderer(BlockEntityRendererProvider.Context context) {
     }
 
     @Override
     public void render(OceanBlockEntity pBlockEntity, float pPartialTick, PoseStack pPoseStack, MultiBufferSource pBuffer, int pPackedLight, int pPackedOverlay) {
-        RenderTargets.oceanRenderInfos.add(new SkyBlockRenderInfo(pBlockEntity.getBlockPos(), pPoseStack.last().pose()));
+        SkyblockRenderer.oceanData.add(pBlockEntity.getPass(), pBlockEntity.getBlockPos(), pPoseStack.last().pose(), false, 1.0F);
     }
 
     @Override
