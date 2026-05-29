@@ -49,6 +49,9 @@ minecraft {
 
         client {
             property 'forge.enabledGameTestNamespaces', mod_id
+
+            args '--username', 'noodlegamer76'
+            args '--uuid', 'f9b4a424-8a26-40ac-baed-f86f1a19eb98'
         }
 
         server {
