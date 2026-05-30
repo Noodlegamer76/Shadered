@@ -1,12 +1,7 @@
 package com.noodlegamer76.shadered.block;
 
-import com.noodlegamer76.shadered.entity.block.EclipseBlockEntity;
-import com.noodlegamer76.shadered.entity.block.EndBlockEntity;
+import com.noodlegamer76.shadered.entity.block.skyblock.EclipseBlockEntity;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.EntityBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;

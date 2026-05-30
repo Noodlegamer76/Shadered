@@ -1,7 +1,7 @@
 package com.noodlegamer76.shadered.item;
 
 import com.noodlegamer76.shadered.client.util.skyblock.SkyblockPass;
-import com.noodlegamer76.shadered.entity.block.SkyblockEntity;
+import com.noodlegamer76.shadered.entity.block.skyblock.SkyblockEntity;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.context.UseOnContext;

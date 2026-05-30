@@ -6,15 +6,11 @@ import com.noodlegamer76.shadered.ShaderedMod;
 import com.noodlegamer76.shadered.block.Maxwell;
 import com.noodlegamer76.shadered.client.assimp.AssimpModel;
 import com.noodlegamer76.shadered.client.assimp.McModel;
-import com.noodlegamer76.shadered.client.assimp.anim.Animation;
-import com.noodlegamer76.shadered.client.assimp.anim.Animator;
 import com.noodlegamer76.shadered.client.assimp.load.AssimpModels;
-import com.noodlegamer76.shadered.client.renderer.SkyblockRenderer;
 import com.noodlegamer76.shadered.client.renderer.assimp.AssimpRenderer;
 import com.noodlegamer76.shadered.client.renderer.assimp.RenderableModel;
 import com.noodlegamer76.shadered.entity.block.MaxwellEntity;
 import com.noodlegamer76.shadered.entity.block.RenderTester;
-import com.noodlegamer76.shadered.entity.block.SpaceBlockEntity;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
@@ -22,7 +18,6 @@ import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
-import net.minecraft.world.phys.Vec3;
 import org.joml.Matrix4f;
 
 public class MaxwellRenderer<T extends RenderTester> implements BlockEntityRenderer<MaxwellEntity> {

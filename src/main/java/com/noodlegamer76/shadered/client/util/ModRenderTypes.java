@@ -4,6 +4,8 @@ import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.DefaultVertexFormat;
 import com.mojang.blaze3d.vertex.VertexFormat;
+import com.noodlegamer76.shadered.client.renderer.SkyblockRenderer;
+import com.noodlegamer76.shadered.client.util.skyblock.SkyBoxRenderer;
 import com.noodlegamer76.shadered.event.RegisterShaders;
 import net.minecraft.client.renderer.RenderStateShard;
 import net.minecraft.client.renderer.RenderType;
@@ -24,6 +26,16 @@ public class ModRenderTypes {
     protected static final RenderStateShard.DepthTestStateShard GREATER_DEPTH_TEST = new RenderStateShard.DepthTestStateShard(">", 516);
     protected static final RenderStateShard.DepthTestStateShard LESS_DEPTH_TEST = new RenderStateShard.DepthTestStateShard(">", GL33.GL_LESS);
 
+    private static final RenderStateShard.TexturingStateShard SPACE_TEXTURING = new RenderStateShard.TexturingStateShard("space_texturing",
+            () -> RenderSystem.setShaderTexture(0, SkyblockRenderer.spaceRenderPass.getSkyboxTarget().getColorTextureId()),
+            () -> {}
+            );
+
+    private static final RenderStateShard.TexturingStateShard STORMY_TEXTURING = new RenderStateShard.TexturingStateShard("stormy_texturing",
+            () -> RenderSystem.setShaderTexture(0, SkyblockRenderer.stormyRenderPass.getSkyboxTarget().getColorTextureId()),
+            () -> {}
+    );
+
 
     public static final RenderType WARP_TRANSPARENT = RenderType.create(
             "compressor",
@@ -35,6 +47,32 @@ public class ModRenderTypes {
             RenderType.CompositeState.builder()
                     .setShaderState(new RenderStateShard.ShaderStateShard(() -> RegisterShaders.compressor))
                     .setTransparencyState(TRANSLUCENT_TRANSPARENCY)
+                    .setDepthTestState(LESS_DEPTH_TEST)
+                    .createCompositeState(false)
+    );
+
+    public static final RenderType SPACE = RenderType.create(
+            "space",
+            DefaultVertexFormat.POSITION_TEX,
+            VertexFormat.Mode.QUADS,
+            256,
+            true,
+            true,
+            RenderType.CompositeState.builder()
+                    .setTexturingState(SPACE_TEXTURING)
+                    .setDepthTestState(LESS_DEPTH_TEST)
+                    .createCompositeState(false)
+    );
+
+    public static final RenderType STORMY = RenderType.create(
+            "stormy",
+            DefaultVertexFormat.POSITION_TEX,
+            VertexFormat.Mode.QUADS,
+            256,
+            true,
+            true,
+            RenderType.CompositeState.builder()
+                    .setTexturingState(STORMY_TEXTURING)
                     .setDepthTestState(LESS_DEPTH_TEST)
                     .createCompositeState(false)
     );

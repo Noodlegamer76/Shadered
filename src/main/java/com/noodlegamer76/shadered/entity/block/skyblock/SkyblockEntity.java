@@ -1,4 +1,4 @@
-package com.noodlegamer76.shadered.entity.block;
+package com.noodlegamer76.shadered.entity.block.skyblock;
 
 import com.noodlegamer76.shadered.client.util.skyblock.SkyblockPass;
 import com.noodlegamer76.shadered.item.SkyblockFilter;

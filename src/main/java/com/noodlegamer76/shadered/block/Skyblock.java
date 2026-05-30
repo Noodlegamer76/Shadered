@@ -1,6 +1,6 @@
 package com.noodlegamer76.shadered.block;
 
-import com.noodlegamer76.shadered.entity.block.SkyblockEntity;
+import com.noodlegamer76.shadered.entity.block.skyblock.SkyblockEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.Entity;

@@ -1,7 +1,6 @@
 package com.noodlegamer76.shadered.block;
 
-import com.noodlegamer76.shadered.entity.block.IridiaBlockEntity;
-import com.noodlegamer76.shadered.entity.block.LightBlockEntity;
+import com.noodlegamer76.shadered.entity.block.skyblock.IridiaBlockEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.block.EntityBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;

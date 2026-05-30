@@ -1,6 +1,7 @@
 package com.noodlegamer76.shadered.event;
 
 import com.noodlegamer76.shadered.client.renderer.block.*;
+import com.noodlegamer76.shadered.client.renderer.block.skyblock.*;
 import com.noodlegamer76.shadered.client.renderer.entity.GameObjectRenderer;
 import com.noodlegamer76.shadered.entity.InitEntities;
 import com.noodlegamer76.shadered.entity.block.InitBlockEntities;

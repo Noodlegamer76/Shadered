@@ -25,6 +25,14 @@ group = mod_group_id
 
 repositories {
     mavenLocal()
+
+    maven {
+        name = 'GeckoLib'
+        url 'https://dl.cloudsmith.io/public/geckolib3/geckolib/maven/'
+        content {
+            includeGroup("software.bernie.geckolib")
+        }
+    }
 }
 
 base {
@@ -117,6 +125,8 @@ configurations {
 }
 
 dependencies {
+    implementation "software.bernie.geckolib:geckolib-neoforge-${minecraft_version}:${geckolib_version}"
+
     def lwjglVersion = "3.3.3"
 
     implementation("org.lwjgl:lwjgl-assimp:${lwjglVersion}") {
@@ -126,12 +136,12 @@ dependencies {
         exclude group: 'org.lwjgl', module: 'lwjgl-stb'
     }
 
-    additionalRuntimeClasspath("org.lwjgl:lwjgl-assimp:${lwjglVersion}") {
-        exclude group: 'org.lwjgl', module: 'lwjgl'
-        exclude group: 'org.lwjgl', module: 'lwjgl-glfw'
-        exclude group: 'org.lwjgl', module: 'lwjgl-opengl'
-        exclude group: 'org.lwjgl', module: 'lwjgl-stb'
-    }
+    //additionalRuntimeClasspath("org.lwjgl:lwjgl-assimp:${lwjglVersion}") {
+    //    exclude group: 'org.lwjgl', module: 'lwjgl'
+    //    exclude group: 'org.lwjgl', module: 'lwjgl-glfw'
+    //    exclude group: 'org.lwjgl', module: 'lwjgl-opengl'
+    //    exclude group: 'org.lwjgl', module: 'lwjgl-stb'
+    //}
 
     shadow("org.lwjgl:lwjgl-assimp:${lwjglVersion}") {
         exclude group: 'org.lwjgl', module: 'lwjgl'
@@ -218,14 +228,21 @@ idea {
         downloadJavadoc = true
     }
 }
-task moveFiles {
-    doLast {
-        // Input and output files based on the shadowJar and jar archive file names
-        def inputFile = file("$buildDir/libs/" + shadowJar.archiveFileName.get())
-        def outputFile = file("$buildDir/libs/" + jar.archiveFileName.get())
 
-        // Temporary file for the updated output
-        def tempFile = file("$buildDir/libs/" + "output_temp.zip")
+tasks.register('moveFiles') {
+    // 1. Capture the file providers during configuration phase to satisfy the cache engine
+    def shadowJarFile = shadowJar.archiveFile
+    def vanillaJarFile = jar.archiveFile
+    def tempFileProvider = layout.buildDirectory.file("libs/output_temp.zip")
+
+    // 2. Leave inputs/outputs completely empty so Gradle treats this as an action-only task.
+    // The task will run every time it's called by the finalizedBy pipeline.
+
+    doLast {
+        // 3. Resolve the providers directly within the runtime block
+        def inputFile = shadowJarFile.get().asFile
+        def outputFile = vanillaJarFile.get().asFile
+        def tempFile = tempFileProvider.get().asFile
 
         if (inputFile.exists() && outputFile.exists()) {
             def sourceZip = new ZipFile(inputFile)
@@ -255,14 +272,16 @@ task moveFiles {
             sourceZip.close()
             destinationZip.close()
 
-            // Replace the original destination file with the new one
+            // Safe file swap sequence
             if (outputFile.exists()) {
-                outputFile.delete() // Delete the old output file if it exists
+                outputFile.delete()
             }
-            tempFile.renameTo(outputFile) // Rename temp file to the destination file
-            inputFile.delete() // Delete the source file (inputFile) after moving
+            tempFile.renameTo(outputFile)
+            inputFile.delete()
+
+            println "Successfully merged shadow dependencies into the main mod jar."
         } else {
-            println "Input or output ZIP file not found."
+            println "Skipping merge: Shadow or target jar file not found."
         }
     }
 }
@@ -355,3 +374,20 @@ processResources.dependsOn(bundleAllNativesForDistribution)
 tasks.withType(JavaCompile).configureEach {
     options.encoding = 'UTF-8'
 }
+
+shadowJar {
+    // 1. Tell Shadow to ONLY look at dependencies added to the 'shadow' configuration
+    configurations = [project.configurations.shadow]
+
+    // 2. Prevent class name collisions by relocating shaded libraries if needed
+    // relocate 'org.lwjgl.assimp', 'com.noodlegamer76.shadered.deps.assimp'
+
+    // 3. Strip out signature files from dependency META-INF folders that break jar loading
+    exclude 'META-INF/INDEX.LIST'
+    exclude 'META-INF/*.SF'
+    exclude 'META-INF/*.DSA'
+    exclude 'META-INF/*.RSA'
+}
+
+// Tells the build lifecycle that assembling the project means executing shadowJar
+assemble.dependsOn(shadowJar)
