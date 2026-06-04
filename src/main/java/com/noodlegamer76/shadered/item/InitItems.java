@@ -58,6 +58,9 @@ public class InitItems {
     public static final DeferredHolder<Item, Item> SKY_EMITTER = ITEMS.register("sky_emitter",
             () -> new BlockItem(InitBlocks.SKY_EMITTER.get(), new Item.Properties()));
 
+    public static final DeferredHolder<Item, Item> SKYBLOCK_PAINTING = ITEMS.register("skyblock_painting",
+            () -> new BlockItem(InitBlocks.SKYBLOCK_PAINTING.get(), new Item.Properties()));
+
     public static final DeferredHolder<Item, Item> MAXWELL = ITEMS.register("maxwell",
             () -> new MaxwellItem(InitBlocks.MAXWELL.get(), new Item.Properties()));
 

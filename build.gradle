@@ -136,12 +136,12 @@ dependencies {
         exclude group: 'org.lwjgl', module: 'lwjgl-stb'
     }
 
-    //additionalRuntimeClasspath("org.lwjgl:lwjgl-assimp:${lwjglVersion}") {
-    //    exclude group: 'org.lwjgl', module: 'lwjgl'
-    //    exclude group: 'org.lwjgl', module: 'lwjgl-glfw'
-    //    exclude group: 'org.lwjgl', module: 'lwjgl-opengl'
-    //    exclude group: 'org.lwjgl', module: 'lwjgl-stb'
-    //}
+    additionalRuntimeClasspath("org.lwjgl:lwjgl-assimp:${lwjglVersion}") {
+        exclude group: 'org.lwjgl', module: 'lwjgl'
+        exclude group: 'org.lwjgl', module: 'lwjgl-glfw'
+        exclude group: 'org.lwjgl', module: 'lwjgl-opengl'
+        exclude group: 'org.lwjgl', module: 'lwjgl-stb'
+    }
 
     shadow("org.lwjgl:lwjgl-assimp:${lwjglVersion}") {
         exclude group: 'org.lwjgl', module: 'lwjgl'

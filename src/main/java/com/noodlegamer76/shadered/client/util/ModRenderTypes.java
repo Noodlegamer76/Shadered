@@ -7,9 +7,13 @@ import com.mojang.blaze3d.vertex.VertexFormat;
 import com.noodlegamer76.shadered.client.renderer.SkyblockRenderer;
 import com.noodlegamer76.shadered.client.util.skyblock.SkyBoxRenderer;
 import com.noodlegamer76.shadered.event.RegisterShaders;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.RenderStateShard;
 import net.minecraft.client.renderer.RenderType;
 import org.lwjgl.opengl.GL33;
+
+import static net.minecraft.client.renderer.RenderStateShard.*;
+import static net.minecraft.client.renderer.RenderStateShard.OVERLAY;
 
 public class ModRenderTypes {
     protected static final RenderStateShard.TransparencyStateShard TRANSLUCENT_TRANSPARENCY = new RenderStateShard.TransparencyStateShard("translucent_transparency", () -> {
@@ -36,6 +40,20 @@ public class ModRenderTypes {
             () -> {}
     );
 
+    private static final RenderStateShard.TexturingStateShard WINDOW_TEXTURING = new RenderStateShard.TexturingStateShard("window_texturing",
+            () -> RenderSystem.setShaderTexture(0, SkyblockRenderer.paintingWindow.getColorTextureId()),
+            () -> {}
+    );
+
+    private static final RenderStateShard.OutputStateShard SKYBOX_OUTPUT = new RenderStateShard.OutputStateShard(
+            "skybox_output",
+            () -> {
+                SkyblockRenderer.paintingWindow.bindWrite(true);
+            },
+            () -> {
+                Minecraft.getInstance().getMainRenderTarget().bindWrite(true);
+            }
+    );
 
     public static final RenderType WARP_TRANSPARENT = RenderType.create(
             "compressor",
@@ -53,12 +71,14 @@ public class ModRenderTypes {
 
     public static final RenderType SPACE = RenderType.create(
             "space",
-            DefaultVertexFormat.POSITION_TEX,
+            DefaultVertexFormat.NEW_ENTITY,
             VertexFormat.Mode.QUADS,
             256,
             true,
-            true,
+            false,
             RenderType.CompositeState.builder()
+                    .setShaderState(RENDERTYPE_ENTITY_CUTOUT_SHADER)
+                    .setOutputState(SKYBOX_OUTPUT)
                     .setTexturingState(SPACE_TEXTURING)
                     .setDepthTestState(LESS_DEPTH_TEST)
                     .createCompositeState(false)
@@ -66,13 +86,46 @@ public class ModRenderTypes {
 
     public static final RenderType STORMY = RenderType.create(
             "stormy",
-            DefaultVertexFormat.POSITION_TEX,
+            DefaultVertexFormat.NEW_ENTITY,
+            VertexFormat.Mode.QUADS,
+            256,
+            true,
+            false,
+            RenderType.CompositeState.builder()
+                    .setShaderState(RENDERTYPE_ENTITY_CUTOUT_SHADER)
+                    .setTexturingState(STORMY_TEXTURING)
+                    .setOutputState(SKYBOX_OUTPUT)
+                    .setDepthTestState(LESS_DEPTH_TEST)
+                    .createCompositeState(false)
+    );
+
+    public static final RenderType ENTITY_IN_WINDOW = RenderType.create(
+            "entity_in_window",
+            DefaultVertexFormat.NEW_ENTITY,
+            VertexFormat.Mode.QUADS,
+            256,
+            true,
+            false,
+            RenderType.CompositeState.builder()
+                    .setShaderState(RENDERTYPE_ENTITY_SOLID_SHADER)
+                    .setOutputState(SKYBOX_OUTPUT)
+                    .setTransparencyState(NO_TRANSPARENCY)
+                    .setLightmapState(LIGHTMAP)
+                    .setOverlayState(OVERLAY)
+                    .createCompositeState(true)
+    );
+
+    public static final RenderType WINDOW = RenderType.create(
+            "window",
+            DefaultVertexFormat.NEW_ENTITY,
             VertexFormat.Mode.QUADS,
             256,
             true,
             true,
             RenderType.CompositeState.builder()
-                    .setTexturingState(STORMY_TEXTURING)
+                    .setShaderState(POSITION_TEX_SHADER)
+                    .setTransparencyState(TRANSLUCENT_TRANSPARENCY)
+                    .setTexturingState(WINDOW_TEXTURING)
                     .setDepthTestState(LESS_DEPTH_TEST)
                     .createCompositeState(false)
     );

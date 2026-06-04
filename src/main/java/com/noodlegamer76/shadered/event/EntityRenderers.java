@@ -1,6 +1,7 @@
 package com.noodlegamer76.shadered.event;
 
 import com.noodlegamer76.shadered.client.renderer.block.*;
+import com.noodlegamer76.shadered.client.renderer.block.painting.SkyblockPaintingRenderer;
 import com.noodlegamer76.shadered.client.renderer.block.skyblock.*;
 import com.noodlegamer76.shadered.client.renderer.entity.GameObjectRenderer;
 import com.noodlegamer76.shadered.entity.InitEntities;
@@ -33,6 +34,7 @@ public class EntityRenderers {
         event.registerBlockEntityRenderer(InitBlockEntities.SPACE_COMPRESSOR.get(), SpaceCompressorBlockRenderer::new);
         event.registerBlockEntityRenderer(InitBlockEntities.IRIDIA_BLOCK.get(), IridiaBlockRenderer::new);
         event.registerBlockEntityRenderer(InitBlockEntities.MAXWELL.get(), MaxwellRenderer::new);
+        event.registerBlockEntityRenderer(InitBlockEntities.SKYBLOCK_PAINTING.get(), SkyblockPaintingRenderer::new);
 
         event.registerEntityRenderer(InitEntities.GAME_OBJECT.get(), GameObjectRenderer::new);
     }

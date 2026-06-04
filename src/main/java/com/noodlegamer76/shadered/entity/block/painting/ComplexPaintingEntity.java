@@ -11,8 +11,12 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Nullable;
 import software.bernie.geckolib.animatable.GeoBlockEntity;
+import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
+import software.bernie.geckolib.animation.AnimatableManager;
+import software.bernie.geckolib.util.GeckoLibUtil;
 
 public abstract class ComplexPaintingEntity extends BlockEntity implements GeoBlockEntity {
+    AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
     private int channel;
 
     public ComplexPaintingEntity(BlockEntityType<?> type, BlockPos pos, BlockState blockState) {
@@ -53,5 +57,21 @@ public abstract class ComplexPaintingEntity extends BlockEntity implements GeoBl
     @Override
     public @Nullable Packet<ClientGamePacketListener> getUpdatePacket() {
         return ClientboundBlockEntityDataPacket.create(this);
+    }
+
+    @Override
+    public void registerControllers(AnimatableManager.ControllerRegistrar controllers) {
+
+    }
+
+    @Override
+    public AnimatableInstanceCache getAnimatableInstanceCache() {
+        return cache
+
+
+
+
+
+                ;
     }
 }

@@ -1,5 +1,6 @@
 package com.noodlegamer76.shadered.client.renderer;
 
+import com.mojang.blaze3d.pipeline.TextureTarget;
 import com.noodlegamer76.shadered.ShaderedMod;
 import com.noodlegamer76.shadered.client.renderer.complexpasses.*;
 import com.noodlegamer76.shadered.client.util.RenderStage;
@@ -87,6 +88,10 @@ public class SkyblockRenderer {
             mimicData
     );
 
+    public static TextureTarget paintingWindow;
+    private static int previousWidth = 0;
+    private static int previousHeight = 0;
+
     public static void setup() {
         ComplexPassRenderer renderer = ComplexPassRenderer.getInstance();
 
@@ -119,6 +124,23 @@ public class SkyblockRenderer {
         RegisterShaders.skyblockScreen.setSampler("Pixel", pixel);
 
         RegisterShaders.skyblockBackground.setSampler("MainDepth", Minecraft.getInstance().getMainRenderTarget().getDepthTextureId());
+
+        int width = Minecraft.getInstance().getWindow().getWidth();
+        int height = Minecraft.getInstance().getWindow().getHeight();
+        if (paintingWindow == null) {
+            paintingWindow = new TextureTarget(width, height, true, false);
+        }
+
+        paintingWindow.clear(false);
+        paintingWindow.setClearColor(1, 0, 1, 1);
+
+        if (previousWidth != width || previousHeight != height) {
+            paintingWindow.resize(width, height, false);
+            previousWidth = width;
+            previousHeight = height;
+        }
+
+        Minecraft.getInstance().getMainRenderTarget().bindWrite(true);
     }
 
     public static int getTextureId(ResourceLocation resourceLocation) {

@@ -2,6 +2,7 @@ package com.noodlegamer76.shadered.entity.block;
 
 import com.noodlegamer76.shadered.ShaderedMod;
 import com.noodlegamer76.shadered.block.*;
+import com.noodlegamer76.shadered.entity.block.painting.SkyblockPaintingEntity;
 import com.noodlegamer76.shadered.entity.block.skyblock.*;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -46,6 +47,9 @@ public class InitBlockEntities {
 
     public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<SkyEmitterEntity>> SKY_EMITTER = BLOCK_ENTITIES.register("sky_emitter",
             () -> BlockEntityType.Builder.of(SkyEmitterEntity::new, InitBlocks.SKY_EMITTER.get()).build(null));
+
+    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<SkyblockPaintingEntity>> SKYBLOCK_PAINTING = BLOCK_ENTITIES.register("skyblock_painting",
+            () -> BlockEntityType.Builder.of(SkyblockPaintingEntity::new, InitBlocks.SKYBLOCK_PAINTING.get()).build(null));
 
     public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<MaxwellEntity>> MAXWELL = BLOCK_ENTITIES.register("maxwell",
             () -> BlockEntityType.Builder.of(MaxwellEntity::new, InitBlocks.MAXWELL.get()).build(null));

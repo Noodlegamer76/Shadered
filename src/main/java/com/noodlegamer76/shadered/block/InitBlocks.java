@@ -52,6 +52,9 @@ public class InitBlocks {
     public static final DeferredHolder<Block, Block> SKY_EMITTER = BLOCKS.register("sky_emitter",
             () -> new SkyEmitterBlock(BlockBehaviour.Properties.ofLegacyCopy(Blocks.STONE).mapColor(DyeColor.WHITE)));
 
+    public static final DeferredHolder<Block, Block> SKYBLOCK_PAINTING = BLOCKS.register("skyblock_painting",
+            () -> new SkyblockPainting(BlockBehaviour.Properties.ofLegacyCopy(Blocks.STONE).mapColor(DyeColor.WHITE)));
+
     public static final DeferredHolder<Block, Block> MAXWELL = BLOCKS.register("maxwell",
             () -> new Maxwell(BlockBehaviour.Properties.ofLegacyCopy(Blocks.STONE).mapColor(DyeColor.BLACK).noOcclusion()));
 
