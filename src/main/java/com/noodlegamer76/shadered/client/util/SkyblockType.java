@@ -6,23 +6,21 @@ import com.noodlegamer76.shadered.item.SkyblockItemTypes;
 import net.minecraft.network.chat.Component;
 
 public enum SkyblockType {
-    SPACE("skyblock_type.shadered.space", SkyblockRenderer.spaceData),
-    ECLIPSE("skyblock_type.shadered.eclipse", SkyblockRenderer.eclipseData),
-    END("skyblock_type.shadered.end", SkyblockRenderer.endData),
-    FOREST("skyblock_type.shadered.forest", SkyblockRenderer.forestData),
-    STORMY("skyblock_type.shadered.stormy", SkyblockRenderer.stormyData),
-    LIGHT("skyblock_type.shadered.light", SkyblockRenderer.lightData),
-    MIMIC("skyblock_type.shadered.mimic", SkyblockRenderer.mimicData),
-    OCEAN("skyblock_type.shadered.ocean", SkyblockRenderer.oceanData),
-    IRIDIA("skyblock_type.shadered.iridia", SkyblockRenderer.iridiaData),
-    END_SKY("skyblock_type.shadered.end_sky", SkyblockRenderer.endSkyData);
+    SPACE("skyblock_type.shadered.space"),
+    ECLIPSE("skyblock_type.shadered.eclipse"),
+    END("skyblock_type.shadered.end"),
+    FOREST("skyblock_type.shadered.forest"),
+    STORMY("skyblock_type.shadered.stormy"),
+    LIGHT("skyblock_type.shadered.light"),
+    MIMIC("skyblock_type.shadered.mimic"),
+    OCEAN("skyblock_type.shadered.ocean"),
+    IRIDIA("skyblock_type.shadered.iridia"),
+    END_SKY("skyblock_type.shadered.end_sky");
 
     private final String translationKey;
-    private final SkyblockBatchData data;
 
-    SkyblockType(String translationKey, SkyblockBatchData data) {
+    SkyblockType(String translationKey) {
         this.translationKey = translationKey;
-        this.data = data;
     }
 
     public String getTranslationKey() {
@@ -31,9 +29,5 @@ public enum SkyblockType {
 
     public Component getDisplayName() {
         return Component.translatable(translationKey);
-    }
-
-    public SkyblockBatchData getData() {
-        return data;
     }
 }

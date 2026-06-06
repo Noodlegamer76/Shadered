@@ -3,6 +3,7 @@ package com.noodlegamer76.shadered.client.renderer.block;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
+import com.noodlegamer76.shadered.client.renderer.SkyblockRenderer;
 import com.noodlegamer76.shadered.client.renderer.assimp.RenderableModel;
 import com.noodlegamer76.shadered.client.util.skyblock.SkyblockBatchData;
 import com.noodlegamer76.shadered.client.util.skyblock.SkyblockPass;
@@ -47,7 +48,7 @@ public class SkyEmitterRenderer implements BlockEntityRenderer<SkyEmitterEntity>
 
         pos = pos.atY(4000 + pos.getY());
 
-        renderSkyblockSkybox(pos, pass, poseStack, type.getData(), alpha, renderTime);
+        renderSkyblockSkybox(pos, pass, poseStack, SkyblockRenderer.getData(type), alpha, renderTime);
     }
 
     @Override

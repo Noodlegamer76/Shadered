@@ -59,11 +59,12 @@ public class SkyboxRenderPass implements RenderableComplexPass {
 
         if (skyboxTarget == null) {
             skyboxTarget = new TextureTarget(renderer.getPreviousWidth(), renderer.getPreviousHeight(), false, Minecraft.ON_OSX);
-            SkyblockRenderer.DATA_LIST.put(batchData, skyboxTarget.getColorTextureId());
         }
         else if (skyboxTarget.width != renderer.getPreviousWidth() || skyboxTarget.height != renderer.getPreviousHeight()) {
             skyboxTarget.resize(renderer.getPreviousWidth(), renderer.getPreviousHeight(), Minecraft.ON_OSX);
         }
+
+        SkyblockRenderer.DATA_LIST.put(batchData, skyboxTarget.getColorTextureId());
 
         skyboxTarget.bindWrite(true);
         poseStack.pushPose();

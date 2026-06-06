@@ -36,10 +36,10 @@ public class InitItems {
             () -> new BlockItem(InitBlocks.SPACE_COMPRESSOR.get(), new Item.Properties()));
 
     public static final RegistryObject<Item> ILLUSORITE_ORE = ITEMS.register("illusorite_ore",
-            () -> new SkyblockHolderItem(InitBlocks.ILLUSORITE_ORE.get(), new Item.Properties()));
+            () -> new IllusoriteOreItem(InitBlocks.ILLUSORITE_ORE.get(), new Item.Properties()));
 
     public static final RegistryObject<Item> DEEPSLATE_ILLUSORITE_ORE = ITEMS.register("deepslate_illusorite_ore",
-            () -> new SkyblockHolderItem(InitBlocks.DEEPSLATE_ILLUSORITE_ORE.get(), new Item.Properties()));
+            () -> new IllusoriteOreItem(InitBlocks.DEEPSLATE_ILLUSORITE_ORE.get(), new Item.Properties()));
 
     public static final RegistryObject<Item> CONFIGURATOR = ITEMS.register("configurator",
             () -> new Configurator(new Item.Properties()));

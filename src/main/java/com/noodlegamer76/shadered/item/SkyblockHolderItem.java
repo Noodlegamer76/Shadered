@@ -30,67 +30,22 @@ public class SkyblockHolderItem extends BlockItem {
                                 List<Component> tooltip,
                                 TooltipFlag flag) {
 
-        CompoundTag tag = stack.getTag();
+        SkyblockType type = getSkyblockType(stack);
+        SkyblockPass pass = getSkyblockPass(stack);
 
-        if (tag != null && tag.contains("BlockEntityTag")) {
-            CompoundTag beTag = tag.getCompound("BlockEntityTag");
+        tooltip.add(
+                Component.translatable(
+                        "tooltip.shadered.type",
+                        type.getDisplayName()
+                ).withStyle(ChatFormatting.YELLOW)
+        );
 
-            SkyblockType type = DEFAULT_TYPE;
-
-            if (beTag.contains("blockType")) {
-                String typeName = beTag.getString("blockType");
-
-                if (!typeName.isEmpty()) {
-                    try {
-                        type = SkyblockType.valueOf(typeName);
-                    } catch (IllegalArgumentException ignored) {
-                        type = DEFAULT_TYPE;
-                    }
-                }
-            }
-
-            tooltip.add(
-                    Component.translatable(
-                            "tooltip.shadered.type",
-                            type.getDisplayName()
-                    ).withStyle(ChatFormatting.YELLOW)
-            );
-
-            SkyblockPass pass = DEFAULT_PASS;
-
-            if (beTag.contains("pass")) {
-                String passName = beTag.getString("pass");
-
-                if (!passName.isEmpty()) {
-                    try {
-                        pass = SkyblockPass.valueOf(passName);
-                    } catch (IllegalArgumentException ignored) {
-                        pass = DEFAULT_PASS;
-                    }
-                }
-            }
-
-            tooltip.add(
-                    Component.translatable(
-                            "tooltip.shadered.pass",
-                            pass.getDisplayName()
-                    ).withStyle(ChatFormatting.YELLOW)
-            );
-        } else {
-            tooltip.add(
-                    Component.translatable(
-                            "tooltip.shadered.type",
-                            DEFAULT_TYPE.getDisplayName()
-                    ).withStyle(ChatFormatting.YELLOW)
-            );
-
-            tooltip.add(
-                    Component.translatable(
-                            "tooltip.shadered.pass",
-                            DEFAULT_PASS.getDisplayName()
-                    ).withStyle(ChatFormatting.YELLOW)
-            );
-        }
+        tooltip.add(
+                Component.translatable(
+                        "tooltip.shadered.pass",
+                        pass.getDisplayName()
+                ).withStyle(ChatFormatting.YELLOW)
+        );
 
         super.appendHoverText(stack, level, tooltip, flag);
     }
@@ -105,5 +60,47 @@ public class SkyblockHolderItem extends BlockItem {
         stack.getOrCreateTag().put("BlockEntityTag", beTag);
 
         return stack;
+    }
+
+    public static SkyblockType getSkyblockType(ItemStack stack) {
+        CompoundTag tag = stack.getTag();
+
+        if (tag != null && tag.contains("BlockEntityTag")) {
+            CompoundTag beTag = tag.getCompound("BlockEntityTag");
+
+            if (beTag.contains("blockType")) {
+                String typeName = beTag.getString("blockType");
+
+                if (!typeName.isEmpty()) {
+                    try {
+                        return SkyblockType.valueOf(typeName);
+                    } catch (IllegalArgumentException ignored) {
+                    }
+                }
+            }
+        }
+
+        return DEFAULT_TYPE;
+    }
+
+    public static SkyblockPass getSkyblockPass(ItemStack stack) {
+        CompoundTag tag = stack.getTag();
+
+        if (tag != null && tag.contains("BlockEntityTag")) {
+            CompoundTag beTag = tag.getCompound("BlockEntityTag");
+
+            if (beTag.contains("pass")) {
+                String passName = beTag.getString("pass");
+
+                if (!passName.isEmpty()) {
+                    try {
+                        return SkyblockPass.valueOf(passName);
+                    } catch (IllegalArgumentException ignored) {
+                    }
+                }
+            }
+        }
+
+        return DEFAULT_PASS;
     }
 }

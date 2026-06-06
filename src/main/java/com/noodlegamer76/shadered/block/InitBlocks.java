@@ -40,7 +40,6 @@ public class InitBlocks {
                     .mapColor(DyeColor.LIGHT_GRAY)
                     .requiresCorrectToolForDrops()
                     .lightLevel((state) -> 7)
-                    .noOcclusion()
             ));
 
     public static final RegistryObject<Block> DEEPSLATE_ILLUSORITE_ORE = BLOCKS.register("deepslate_illusorite_ore",
@@ -48,7 +47,6 @@ public class InitBlocks {
                     .mapColor(DyeColor.GRAY)
                     .requiresCorrectToolForDrops()
                     .lightLevel((state) -> 7)
-                    .noOcclusion()
             ));
 
     //DEPRECATED BLOCKS

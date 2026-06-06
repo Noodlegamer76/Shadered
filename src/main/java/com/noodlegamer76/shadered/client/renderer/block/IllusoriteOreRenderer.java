@@ -24,7 +24,7 @@ public class IllusoriteOreRenderer<T extends IllusoriteOreBlockEntity> implement
 
     @Override
     public void render(T animatable, float pPartialTick, PoseStack poseStack, MultiBufferSource pBuffer, int pPackedLight, int pPackedOverlay) {
-        SkyblockBatchData data = animatable.getBlockType().getData();
+        SkyblockBatchData data = SkyblockRenderer.getData(animatable.getBlockType());
         if (data == null) {
             return;
     }

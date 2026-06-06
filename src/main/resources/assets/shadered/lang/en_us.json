@@ -52,7 +52,7 @@
   "skyblock_type.shadered.iridia": "Iridia",
   "skyblock_type.shadered.end_sky": "End Sky",
 
-  "tooltip.shadered.pass": "Pass: %s",
+  "tooltip.shadered.pass": "Filter: %s",
   "skyblock_pass.shadered.normal": "Normal",
   "skyblock_pass.shadered.inverted": "Inverted",
   "skyblock_pass.shadered.posterize": "Posterize",

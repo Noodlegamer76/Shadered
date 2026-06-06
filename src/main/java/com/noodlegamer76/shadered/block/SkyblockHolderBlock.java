@@ -3,6 +3,7 @@ package com.noodlegamer76.shadered.block;
 import com.noodlegamer76.shadered.client.util.SkyblockRegistry;
 import com.noodlegamer76.shadered.client.util.SkyblockType;
 import com.noodlegamer76.shadered.client.util.skyblock.SkyblockPass;
+import com.noodlegamer76.shadered.entity.block.IllusoriteOreBlockEntity;
 import com.noodlegamer76.shadered.entity.block.SkyblockEntity;
 import com.noodlegamer76.shadered.entity.block.SkyblockHolderEntity;
 import com.noodlegamer76.shadered.item.InitItems;

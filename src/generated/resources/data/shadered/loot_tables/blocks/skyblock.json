@@ -11,11 +11,11 @@
       "entries": [
         {
           "type": "minecraft:item",
-          "name": "shadered:window"
+          "name": "shadered:mimic_block"
         }
       ],
       "rolls": 1.0
     }
   ],
-  "random_sequence": "shadered:blocks/window"
+  "random_sequence": "shadered:blocks/skyblock"
 }

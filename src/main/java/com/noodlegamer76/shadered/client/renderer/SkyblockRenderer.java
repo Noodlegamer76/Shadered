@@ -3,6 +3,7 @@ package com.noodlegamer76.shadered.client.renderer;
 import com.noodlegamer76.shadered.ShaderedMod;
 import com.noodlegamer76.shadered.client.renderer.complexpasses.*;
 import com.noodlegamer76.shadered.client.util.RenderStage;
+import com.noodlegamer76.shadered.client.util.SkyblockType;
 import com.noodlegamer76.shadered.client.util.glass.GlassChannel;
 import com.noodlegamer76.shadered.client.util.skyblock.SkyblockBatchData;
 import com.noodlegamer76.shadered.client.util.skyblock.SkyboxTranslation;
@@ -87,6 +88,43 @@ public class SkyblockRenderer {
     public static final MimicSkyboxRenderPass mimicSkyblockRenderPass = new MimicSkyboxRenderPass(
             mimicData
     );
+
+
+    public static SkyblockBatchData getData(SkyblockType type) {
+        if (type == SkyblockType.SPACE) {
+            return SkyblockRenderer.spaceData;
+        }
+        else if (type == SkyblockType.OCEAN) {
+            return SkyblockRenderer.oceanData;
+        }
+        else if (type == SkyblockType.LIGHT) {
+            return SkyblockRenderer.lightData;
+        }
+        else if (type == SkyblockType.END) {
+            return SkyblockRenderer.endData;
+        }
+        else if (type == SkyblockType.STORMY) {
+            return SkyblockRenderer.stormyData;
+        }
+        else if (type == SkyblockType.ECLIPSE) {
+            return SkyblockRenderer.eclipseData;
+        }
+        else if (type == SkyblockType.MIMIC) {
+            return SkyblockRenderer.mimicData;
+        }
+        else if (type == SkyblockType.END_SKY) {
+            return SkyblockRenderer.endSkyData;
+        }
+        else if (type == SkyblockType.IRIDIA) {
+            return SkyblockRenderer.iridiaData;
+        }
+        else if (type == SkyblockType.FOREST) {
+            return SkyblockRenderer.forestData;
+        }
+        else {
+            return SkyblockRenderer.stormyData;
+        }
+    }
 
     public static void setup() {
         ComplexPassRenderer renderer = ComplexPassRenderer.getInstance();
