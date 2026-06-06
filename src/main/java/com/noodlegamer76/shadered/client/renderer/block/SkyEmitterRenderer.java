@@ -16,6 +16,7 @@ import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.core.BlockPos;
 import net.minecraft.util.Mth;
 import net.minecraft.world.phys.Vec3;
+import org.joml.Matrix4f;
 import org.joml.Quaternionf;
 
 public class SkyEmitterRenderer implements BlockEntityRenderer<SkyEmitterEntity> {
@@ -26,8 +27,9 @@ public class SkyEmitterRenderer implements BlockEntityRenderer<SkyEmitterEntity>
 
     @Override
     public void render(SkyEmitterEntity skyEmitter, float partialTick, PoseStack poseStack, MultiBufferSource buffer, int packedLight, int packedOverlay) {
-        SkyblockType type = skyEmitter.getEmitterType();
-        if (type == null) return;
+        SkyblockType type = skyEmitter.getBlockType();
+        SkyblockPass pass = skyEmitter.getPass();
+        if (type == null || pass == null) return;
 
         BlockPos pos = skyEmitter.getBlockPos();
         float maxAlpha = skyEmitter.getAlpha();
@@ -45,13 +47,7 @@ public class SkyEmitterRenderer implements BlockEntityRenderer<SkyEmitterEntity>
 
         pos = pos.atY(4000 + pos.getY());
 
-        RenderSystem.disableDepthTest();
-        RenderSystem.depthMask(false);
-
-        renderSkyblockSkybox(pos, poseStack, type.getData(), alpha, renderTime);
-
-        RenderSystem.depthMask(true);
-        RenderSystem.enableDepthTest();
+        renderSkyblockSkybox(pos, pass, poseStack, type.getData(), alpha, renderTime);
     }
 
     @Override
@@ -59,13 +55,13 @@ public class SkyEmitterRenderer implements BlockEntityRenderer<SkyEmitterEntity>
         return 4096;
     }
 
-    private void renderSkyblockSkybox(BlockPos pos, PoseStack poseStack, SkyblockBatchData data, float alpha, float renderTime) {
+    private void renderSkyblockSkybox(BlockPos pos, SkyblockPass pass, PoseStack poseStack, SkyblockBatchData data, float alpha, float renderTime) {
         PoseStack test = new PoseStack();
 
         test.translate(-5, -5, -5);
         test.scale(10, 10, 10);
 
-        data.add(SkyblockPass.BACKGROUND, pos, test.last().pose(), true, alpha);
+        data.add(SkyblockPass.BACKGROUND, pos, new Matrix4f(test.last().pose()), true, alpha);
 
         poseStack.pushPose();
 
@@ -80,7 +76,7 @@ public class SkyEmitterRenderer implements BlockEntityRenderer<SkyEmitterEntity>
 
         poseStack.translate(-0.5, -0.5, -0.5);
 
-        data.add(SkyblockPass.NORMAL, pos, poseStack.last().pose(), false, alpha);
+        data.add(SkyblockPass.NORMAL, pos, new Matrix4f(poseStack.last().pose()), false, alpha);
 
         poseStack.popPose();
     }

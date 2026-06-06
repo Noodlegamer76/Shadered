@@ -2,6 +2,7 @@ package com.noodlegamer76.shadered.client.util;
 
 import com.noodlegamer76.shadered.client.renderer.SkyblockRenderer;
 import com.noodlegamer76.shadered.client.util.skyblock.SkyblockBatchData;
+import com.noodlegamer76.shadered.item.SkyblockItemTypes;
 import net.minecraft.network.chat.Component;
 
 public enum SkyblockType {

@@ -1,9 +1,8 @@
 package com.noodlegamer76.shadered.block;
 
-import com.noodlegamer76.shadered.client.util.SkyblockType;
 import com.noodlegamer76.shadered.entity.block.SkyEmitterEntity;
-import com.noodlegamer76.shadered.item.InitItems;
 import com.noodlegamer76.shadered.client.ClientHooks;
+import com.noodlegamer76.shadered.item.SkyblockFilter;
 import com.noodlegamer76.shadered.item.SkyblockItem;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.InteractionHand;
@@ -23,7 +22,7 @@ import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.Nullable;
 
-public class SkyEmitterBlock extends Skyblock implements EntityBlock {
+public class SkyEmitterBlock extends SkyblockHolderBlock implements EntityBlock {
     private static final VoxelShape SHAPE = Block.box(0, 0, 0, 16, 8, 16);
 
     public SkyEmitterBlock(Properties pProperties) {
@@ -52,10 +51,10 @@ public class SkyEmitterBlock extends Skyblock implements EntityBlock {
 
     @Override
     public InteractionResult use(BlockState pState, Level pLevel, BlockPos pPos, Player pPlayer, InteractionHand pHand, BlockHitResult pHit) {
-        if (pLevel.getBlockEntity(pPos) instanceof SkyEmitterEntity skyEmitterBlock) {
-            ItemStack stack = pPlayer.getItemInHand(pHand);
+        ItemStack stack = pPlayer.getItemInHand(pHand);
+        if (pLevel.getBlockEntity(pPos) instanceof SkyEmitterEntity skyEmitterBlock && !(stack.getItem() instanceof SkyblockFilter)) {
             if (stack.getItem() instanceof SkyblockItem skyblockItem) {
-                skyEmitterBlock.setType(skyblockItem.getType());
+                skyEmitterBlock.setBlockType(skyblockItem.getType());
                 return InteractionResult.SUCCESS;
             }
             else {

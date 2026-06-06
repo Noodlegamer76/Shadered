@@ -1,10 +1,8 @@
 package com.noodlegamer76.shadered.client.renderer.block;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.noodlegamer76.shadered.client.renderer.SkyblockRenderer;
 import com.noodlegamer76.shadered.client.util.shader.lights.Light;
 import com.noodlegamer76.shadered.client.util.shader.lights.LightUploader;
-import com.noodlegamer76.shadered.entity.block.EclipseBlockEntity;
 import com.noodlegamer76.shadered.entity.block.LightBulbEntity;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;

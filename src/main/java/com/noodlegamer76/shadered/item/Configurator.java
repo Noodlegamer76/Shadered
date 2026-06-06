@@ -1,11 +1,8 @@
 package com.noodlegamer76.shadered.item;
 
-import com.noodlegamer76.shadered.entity.block.SkyblockEntity;
 import com.noodlegamer76.shadered.entity.block.SpaceCompressorBlockEntity;
-import com.noodlegamer76.shadered.entity.block.WindowEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.Tag;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;

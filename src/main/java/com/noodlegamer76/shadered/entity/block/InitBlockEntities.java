@@ -2,6 +2,7 @@ package com.noodlegamer76.shadered.entity.block;
 
 import com.noodlegamer76.shadered.ShaderedMod;
 import com.noodlegamer76.shadered.block.*;
+import com.noodlegamer76.shadered.entity.block.old.*;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
@@ -12,6 +13,26 @@ public class InitBlockEntities {
 
         public static final RegistryObject<BlockEntityType<RenderTester>> RENDER_TESTER = BLOCK_ENTITIES.register("render_tester",
             () -> BlockEntityType.Builder.of(RenderTester::new, InitBlocks.RENDER_TESTER_BLOCK.get()).build(null));
+
+    public static final RegistryObject<BlockEntityType<SkyblockEntity>> SKYBLOCK = BLOCK_ENTITIES.register("skyblock",
+            () -> BlockEntityType.Builder.of(SkyblockEntity::new, InitBlocks.SKYBLOCK.get()).build(null));
+
+    public static final RegistryObject<BlockEntityType<SkyEmitterEntity>> SKY_EMITTER = BLOCK_ENTITIES.register("sky_emitter",
+            () -> BlockEntityType.Builder.of(SkyEmitterEntity::new, InitBlocks.SKY_EMITTER.get()).build(null));
+
+    public static final RegistryObject<BlockEntityType<LightBulbEntity>> LIGHT_BULB = BLOCK_ENTITIES.register("light_bulb",
+            () -> BlockEntityType.Builder.of(LightBulbEntity::new, InitBlocks.LIGHT_BULB.get()).build(null));
+
+    public static final RegistryObject<BlockEntityType<MaxwellEntity>> MAXWELL = BLOCK_ENTITIES.register("maxwell",
+            () -> BlockEntityType.Builder.of(MaxwellEntity::new, InitBlocks.MAXWELL.get()).build(null));
+
+    public static final RegistryObject<BlockEntityType<SpaceCompressorBlockEntity>> SPACE_COMPRESSOR = BLOCK_ENTITIES.register("space_compressor",
+            () -> BlockEntityType.Builder.of(SpaceCompressorBlockEntity::new, InitBlocks.SPACE_COMPRESSOR.get()).build(null));
+
+    public static final RegistryObject<BlockEntityType<IllusoriteOreBlockEntity>> ILLUSORITE_BLOCK_ENTITY = BLOCK_ENTITIES.register("illusorite_block_entity",
+            () -> BlockEntityType.Builder.of(IllusoriteOreBlockEntity::new, InitBlocks.ILLUSORITE_ORE.get(), InitBlocks.DEEPSLATE_ILLUSORITE_ORE.get()).build(null));
+
+    //DEPRECATED BLOCK ENTITIES
 
     public static final RegistryObject<BlockEntityType<SpaceBlockEntity>> SPACE_BLOCK = BLOCK_ENTITIES.register("space_block",
             () -> BlockEntityType.Builder.of(SpaceBlockEntity::new, InitBlocks.SPACE_BLOCK.get()).build(null));
@@ -43,21 +64,4 @@ public class InitBlockEntities {
     public static final RegistryObject<BlockEntityType<LightBlockEntity>> LIGHT_BLOCK = BLOCK_ENTITIES.register("light_block",
             () -> BlockEntityType.Builder.of(LightBlockEntity::new, InitBlocks.LIGHT_BLOCK.get()).build(null));
 
-    public static final RegistryObject<BlockEntityType<SkyEmitterEntity>> SKY_EMITTER = BLOCK_ENTITIES.register("sky_emitter",
-            () -> BlockEntityType.Builder.of(SkyEmitterEntity::new, InitBlocks.SKY_EMITTER.get()).build(null));
-
-    public static final RegistryObject<BlockEntityType<LightBulbEntity>> LIGHT_BULB = BLOCK_ENTITIES.register("light_bulb",
-            () -> BlockEntityType.Builder.of(LightBulbEntity::new, InitBlocks.LIGHT_BULB.get()).build(null));
-
-    public static final RegistryObject<BlockEntityType<MaxwellEntity>> MAXWELL = BLOCK_ENTITIES.register("maxwell",
-            () -> BlockEntityType.Builder.of(MaxwellEntity::new, InitBlocks.MAXWELL.get()).build(null));
-
-    public static final RegistryObject<BlockEntityType<WindowEntity>> WINDOW = BLOCK_ENTITIES.register("window",
-            () -> BlockEntityType.Builder.of(WindowEntity::new, InitBlocks.WINDOW.get()).build(null));
-
-    public static final RegistryObject<BlockEntityType<SpaceCompressorBlockEntity>> SPACE_COMPRESSOR = BLOCK_ENTITIES.register("space_compressor",
-            () -> BlockEntityType.Builder.of(SpaceCompressorBlockEntity::new, InitBlocks.SPACE_COMPRESSOR.get()).build(null));
-
-    public static final RegistryObject<BlockEntityType<IllusoriteOreBlockEntity>> ILLUSORITE_BLOCK_ENTITY = BLOCK_ENTITIES.register("illusorite_block_entity",
-            () -> BlockEntityType.Builder.of(IllusoriteOreBlockEntity::new, InitBlocks.ILLUSORITE_ORE.get(), InitBlocks.DEEPSLATE_ILLUSORITE_ORE.get()).build(null));
 }

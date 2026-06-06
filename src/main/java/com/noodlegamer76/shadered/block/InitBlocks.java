@@ -1,6 +1,8 @@
 package com.noodlegamer76.shadered.block;
 
 import com.noodlegamer76.shadered.ShaderedMod;
+import com.noodlegamer76.shadered.block.old.*;
+import com.noodlegamer76.shadered.block.old.LightBlock;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.state.BlockBehaviour;
@@ -15,6 +17,42 @@ public class InitBlocks {
     public static final RegistryObject<Block> RENDER_TESTER_BLOCK = BLOCKS.register("render_tester",
             () -> new RenderTesterBlock(BlockBehaviour.Properties.copy(Blocks.STONE).mapColor(DyeColor.BLACK).noCollission().noOcclusion()));
 
+    public static final RegistryObject<Block> DARKNESS_BLOCK = BLOCKS.register("darkness_block",
+            () -> new Block(BlockBehaviour.Properties.copy(Blocks.STONE).mapColor(DyeColor.BLACK)));
+
+    public static final RegistryObject<Block> SKYBLOCK = BLOCKS.register("skyblock",
+            () -> new SkyblockBlock(BlockBehaviour.Properties.copy(Blocks.STONE).mapColor(DyeColor.BLACK)));
+
+    public static final RegistryObject<Block> SKY_EMITTER = BLOCKS.register("sky_emitter",
+            () -> new SkyEmitterBlock(BlockBehaviour.Properties.copy(Blocks.STONE).mapColor(DyeColor.WHITE)));
+
+    public static final RegistryObject<Block> MAXWELL = BLOCKS.register("maxwell",
+            () -> new Maxwell(BlockBehaviour.Properties.copy(Blocks.STONE).mapColor(DyeColor.BLACK).noOcclusion()));
+
+    public static final RegistryObject<Block> LIGHT_BULB = BLOCKS.register("light_bulb",
+            () -> new LightBulb(BlockBehaviour.Properties.copy(Blocks.STONE).mapColor(DyeColor.WHITE).noOcclusion()));
+
+    public static final RegistryObject<Block> SPACE_COMPRESSOR = BLOCKS.register("space_compressor",
+            () -> new SpaceCompressorBlock(BlockBehaviour.Properties.copy(Blocks.STONE).mapColor(DyeColor.WHITE)));
+
+    public static final RegistryObject<Block> ILLUSORITE_ORE = BLOCKS.register("illusorite_ore",
+            () -> new IllusoriteOreBlock(BlockBehaviour.Properties.copy(Blocks.STONE)
+                    .mapColor(DyeColor.LIGHT_GRAY)
+                    .requiresCorrectToolForDrops()
+                    .lightLevel((state) -> 7)
+                    .noOcclusion()
+            ));
+
+    public static final RegistryObject<Block> DEEPSLATE_ILLUSORITE_ORE = BLOCKS.register("deepslate_illusorite_ore",
+            () -> new IllusoriteOreBlock(BlockBehaviour.Properties.copy(Blocks.DEEPSLATE)
+                    .mapColor(DyeColor.GRAY)
+                    .requiresCorrectToolForDrops()
+                    .lightLevel((state) -> 7)
+                    .noOcclusion()
+            ));
+
+    //DEPRECATED BLOCKS
+
     public static final RegistryObject<Block> SPACE_BLOCK = BLOCKS.register("space_block",
             () -> new SpaceBlock(BlockBehaviour.Properties.copy(Blocks.STONE).mapColor(DyeColor.BLACK).lightLevel((state) -> 15)));
 
@@ -23,9 +61,6 @@ public class InitBlocks {
 
     public static final RegistryObject<Block> OCEAN_BLOCK = BLOCKS.register("ocean_block",
             () -> new OceanBlock(BlockBehaviour.Properties.copy(Blocks.STONE).mapColor(DyeColor.BLUE).lightLevel((state) -> 15)));
-
-    public static final RegistryObject<Block> DARKNESS_BLOCK = BLOCKS.register("darkness_block",
-            () -> new Block(BlockBehaviour.Properties.copy(Blocks.STONE).mapColor(DyeColor.BLACK)));
 
     public static final RegistryObject<Block> LIGHT_BLOCK = BLOCKS.register("light_block",
             () -> new LightBlock(BlockBehaviour.Properties.copy(Blocks.STONE).mapColor(DyeColor.WHITE).lightLevel((state) -> 15)));
@@ -47,35 +82,4 @@ public class InitBlocks {
 
     public static final RegistryObject<Block> MIMIC_BLOCK = BLOCKS.register("mimic_block",
             () -> new MimicBlock(BlockBehaviour.Properties.copy(Blocks.STONE).mapColor(DyeColor.WHITE).lightLevel((state) -> 15)));
-
-    public static final RegistryObject<Block> SKY_EMITTER = BLOCKS.register("sky_emitter",
-            () -> new SkyEmitterBlock(BlockBehaviour.Properties.copy(Blocks.STONE).mapColor(DyeColor.WHITE)));
-
-    public static final RegistryObject<Block> MAXWELL = BLOCKS.register("maxwell",
-            () -> new Maxwell(BlockBehaviour.Properties.copy(Blocks.STONE).mapColor(DyeColor.BLACK).noOcclusion()));
-
-    public static final RegistryObject<Block> LIGHT_BULB = BLOCKS.register("light_bulb",
-            () -> new LightBulb(BlockBehaviour.Properties.copy(Blocks.STONE).mapColor(DyeColor.WHITE).noOcclusion()));
-
-    public static final RegistryObject<Block> WINDOW = BLOCKS.register("window",
-            () -> new WindowBlock(BlockBehaviour.Properties.copy(Blocks.STONE).mapColor(DyeColor.WHITE)));
-
-    public static final RegistryObject<Block> SPACE_COMPRESSOR = BLOCKS.register("space_compressor",
-            () -> new SpaceCompressorBlock(BlockBehaviour.Properties.copy(Blocks.STONE).mapColor(DyeColor.WHITE)));
-
-    public static final RegistryObject<Block> ILLUSORITE_ORE = BLOCKS.register("illusorite_ore",
-            () -> new IllusoriteOreBlock(BlockBehaviour.Properties.copy(Blocks.STONE)
-                    .mapColor(DyeColor.LIGHT_GRAY)
-                    .requiresCorrectToolForDrops()
-                    .lightLevel((state) -> 7)
-                    .noOcclusion()
-            ));
-
-    public static final RegistryObject<Block> DEEPSLATE_ILLUSORITE_ORE = BLOCKS.register("deepslate_illusorite_ore",
-            () -> new IllusoriteOreBlock(BlockBehaviour.Properties.copy(Blocks.DEEPSLATE)
-                    .mapColor(DyeColor.GRAY)
-                    .requiresCorrectToolForDrops()
-                    .lightLevel((state) -> 7)
-                    .noOcclusion()
-            ));
 }

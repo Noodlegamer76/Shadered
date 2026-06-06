@@ -1,15 +1,10 @@
 package com.noodlegamer76.shadered.block;
 
-import com.noodlegamer76.shadered.client.util.PassType;
 import com.noodlegamer76.shadered.client.util.SkyblockType;
 import com.noodlegamer76.shadered.client.util.skyblock.SkyblockPass;
 import com.noodlegamer76.shadered.entity.block.IllusoriteOreBlockEntity;
-import com.noodlegamer76.shadered.entity.block.SkyEmitterEntity;
-import com.noodlegamer76.shadered.item.InitItems;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
@@ -20,13 +15,12 @@ import net.minecraft.world.level.block.RenderShape;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.storage.loot.LootParams;
-import net.minecraft.world.phys.BlockHitResult;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Collections;
 import java.util.List;
 
-public class IllusoriteOreBlock extends Skyblock implements EntityBlock {
+public class IllusoriteOreBlock extends SkyblockHolderBlock implements EntityBlock {
     public IllusoriteOreBlock(Properties pProperties) {
         super(pProperties);
     }

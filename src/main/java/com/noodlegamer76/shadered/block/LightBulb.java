@@ -2,7 +2,6 @@ package com.noodlegamer76.shadered.block;
 
 import com.noodlegamer76.shadered.client.ClientHooks;
 import com.noodlegamer76.shadered.entity.block.LightBulbEntity;
-import com.noodlegamer76.shadered.entity.block.SkyEmitterEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;

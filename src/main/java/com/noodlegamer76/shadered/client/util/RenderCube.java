@@ -1,5 +1,6 @@
 package com.noodlegamer76.shadered.client.util;
 
+import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.*;
 import com.mojang.math.Axis;
@@ -17,6 +18,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
+import org.lwjgl.opengl.GL20;
 
 public class RenderCube {
     public static void renderSkyBlocks(SkyblockBatchData.PassData data, boolean inverted, @Nullable ShaderInstance shader) {
@@ -27,6 +29,7 @@ public class RenderCube {
 
         if (inverted) {
             RenderSystem.disableDepthTest();
+            RenderSystem.enableBlend();
         }
         else {
             RenderSystem.depthMask(true);
@@ -100,6 +103,7 @@ public class RenderCube {
         }
 
         RenderSystem.enableDepthTest();
+        RenderSystem.disableBlend();
         RenderSystem.depthMask(true);
     }
 
