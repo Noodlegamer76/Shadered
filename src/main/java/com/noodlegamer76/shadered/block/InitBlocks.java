@@ -62,4 +62,20 @@ public class InitBlocks {
 
     public static final RegistryObject<Block> SPACE_COMPRESSOR = BLOCKS.register("space_compressor",
             () -> new SpaceCompressorBlock(BlockBehaviour.Properties.copy(Blocks.STONE).mapColor(DyeColor.WHITE)));
+
+    public static final RegistryObject<Block> ILLUSORITE_ORE = BLOCKS.register("illusorite_ore",
+            () -> new IllusoriteOreBlock(BlockBehaviour.Properties.copy(Blocks.STONE)
+                    .mapColor(DyeColor.LIGHT_GRAY)
+                    .requiresCorrectToolForDrops()
+                    .lightLevel((state) -> 7)
+                    .noOcclusion()
+            ));
+
+    public static final RegistryObject<Block> DEEPSLATE_ILLUSORITE_ORE = BLOCKS.register("deepslate_illusorite_ore",
+            () -> new IllusoriteOreBlock(BlockBehaviour.Properties.copy(Blocks.DEEPSLATE)
+                    .mapColor(DyeColor.GRAY)
+                    .requiresCorrectToolForDrops()
+                    .lightLevel((state) -> 7)
+                    .noOcclusion()
+            ));
 }

@@ -8,6 +8,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.level.block.Block;
+import net.minecraftforge.common.Tags;
 import net.minecraftforge.common.data.BlockTagsProvider;
 import net.minecraftforge.common.data.ExistingFileHelper;
 import org.jetbrains.annotations.Nullable;
@@ -37,9 +38,17 @@ public class ModBlockTagGenerator extends BlockTagsProvider  {
                 .add(InitBlocks.IRIDIA_BLOCK.get())
                 .add(InitBlocks.END_SKY_BLOCK.get())
                 .add(InitBlocks.ECLIPSE_BLOCK.get())
-                .add(InitBlocks.SPACE_COMPRESSOR.get());
+                .add(InitBlocks.SPACE_COMPRESSOR.get())
+                .add(InitBlocks.ILLUSORITE_ORE.get())
+                .add(InitBlocks.DEEPSLATE_ILLUSORITE_ORE.get());
 
         tag(BlockTags.NEEDS_DIAMOND_TOOL)
-                .add(InitBlocks.SKY_EMITTER.get());
+                .add(InitBlocks.SKY_EMITTER.get())
+                .add(InitBlocks.ILLUSORITE_ORE.get())
+                .add(InitBlocks.DEEPSLATE_ILLUSORITE_ORE.get());
+
+        tag(Tags.Blocks.ORES)
+                .add(InitBlocks.ILLUSORITE_ORE.get())
+                .add(InitBlocks.DEEPSLATE_ILLUSORITE_ORE.get());
     }
 }

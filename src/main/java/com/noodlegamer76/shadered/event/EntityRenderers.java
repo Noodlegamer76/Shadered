@@ -33,6 +33,7 @@ public class EntityRenderers {
         event.registerBlockEntityRenderer(InitBlockEntities.IRIDIA_BLOCK.get(), IridiaBlockRenderer::new);
         event.registerBlockEntityRenderer(InitBlockEntities.MAXWELL.get(), MaxwellRenderer::new);
         event.registerBlockEntityRenderer(InitBlockEntities.LIGHT_BULB.get(), LightBulbRenderer::new);
+        event.registerBlockEntityRenderer(InitBlockEntities.ILLUSORITE_BLOCK_ENTITY.get(), IllusoriteOreRenderer::new);
 
         event.registerEntityRenderer(InitEntities.GAME_OBJECT.get(), GameObjectRenderer::new);
     }

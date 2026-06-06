@@ -1,6 +1,7 @@
 package com.noodlegamer76.shadered.datagen;
 
 import com.noodlegamer76.shadered.block.InitBlocks;
+import com.noodlegamer76.shadered.item.InitItems;
 import net.minecraft.data.loot.BlockLootSubProvider;
 import net.minecraft.world.flag.FeatureFlags;
 import net.minecraft.world.level.block.Block;
@@ -33,6 +34,16 @@ public class ModBlockLootTables extends BlockLootSubProvider {
         dropSelf(InitBlocks.WINDOW.get());
         dropSelf(InitBlocks.ECLIPSE_BLOCK.get());
         dropSelf(InitBlocks.SPACE_COMPRESSOR.get());
+        this.add(InitBlocks.ILLUSORITE_ORE.get(),
+                block -> createOreDrop(
+                        InitBlocks.ILLUSORITE_ORE.get(),
+                        InitItems.STORMY_BLOCK.get()
+                ));
+        this.add(InitBlocks.DEEPSLATE_ILLUSORITE_ORE.get(),
+                block -> createOreDrop(
+                        InitBlocks.DEEPSLATE_ILLUSORITE_ORE.get(),
+                        InitItems.STORMY_BLOCK.get()
+                ));
     }
 
     @Override

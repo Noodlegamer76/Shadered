@@ -16,6 +16,8 @@
   "block.shadered.sky_emitter": "Sky Emitter",
   "block.shadered.maxwell": "Maxwell",
   "block.shadered.light_bulb": "Light Bulb",
+  "block.shadered.illusorite_ore": "Illusorite Ore",
+  "block.shadered.deepslate_illusorite_ore": "Deepslate Illusorite Ore",
 
   "item.shadered.skyblock_filter_normal": "Skyblock Filter: Normal",
   "item.shadered.skyblock_filter_inverted": "Skyblock Filter: Inverted",
@@ -34,5 +36,28 @@
   "gui.shadered.light_emitter.red": "Red: ",
   "gui.shadered.light_emitter.blue": "Blue: ",
   "gui.shadered.light_emitter.radius": "Radius: ",
-  "gui.shadered.light_emitter.title": "Light Bulb"
+  "gui.shadered.light_emitter.title": "Light Bulb",
+
+  "tooltip.shadered.type": "Type: %s",
+  "skyblock_type.shadered.none": "None",
+  "skyblock_type.shadered.space": "Space",
+  "skyblock_type.shadered.eclipse": "Eclipse",
+  "skyblock_type.shadered.end": "The End",
+  "skyblock_type.shadered.forest": "Forest",
+  "skyblock_type.shadered.stormy": "Stormy",
+  "skyblock_type.shadered.light": "Light",
+  "skyblock_type.shadered.mimic": "Mimic",
+  "skyblock_type.shadered.ocean": "Ocean",
+  "skyblock_type.shadered.iridia": "Iridia",
+
+  "tooltip.shadered.pass": "Pass: %s",
+  "skyblock_pass.shadered.normal": "Normal",
+  "skyblock_pass.shadered.inverted": "Inverted",
+  "skyblock_pass.shadered.posterize": "Posterize",
+  "skyblock_pass.shadered.grayscale": "Grayscale",
+  "skyblock_pass.shadered.chromatic_aberration": "Chromatic Aberration",
+  "skyblock_pass.shadered.screen": "Screen",
+  "skyblock_pass.shadered.blueprint": "Blueprint",
+  "skyblock_pass.shadered.gameboy": "Game Boy",
+  "skyblock_pass.shadered.background": "Background"
 }

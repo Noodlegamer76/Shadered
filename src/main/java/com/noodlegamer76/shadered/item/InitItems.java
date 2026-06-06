@@ -3,6 +3,7 @@ package com.noodlegamer76.shadered.item;
 import com.noodlegamer76.shadered.ShaderedMod;
 import com.noodlegamer76.shadered.block.InitBlocks;
 import com.noodlegamer76.shadered.block.StormyBlock;
+import com.noodlegamer76.shadered.client.util.SkyblockType;
 import com.noodlegamer76.shadered.client.util.skyblock.SkyblockPass;
 import net.minecraft.world.item.*;
 import net.minecraftforge.registries.DeferredRegister;
@@ -21,40 +22,40 @@ public class InitItems {
             () -> new BlockItem(InitBlocks.RENDER_TESTER_BLOCK.get(), new Item.Properties()));
 
     public static final RegistryObject<Item> SPACE_BLOCK = ITEMS.register("space_block",
-            () -> new BlockItem(InitBlocks.SPACE_BLOCK.get(), new Item.Properties()));
+            () -> new SkyblockItem(InitBlocks.SPACE_BLOCK.get(), new Item.Properties(), SkyblockType.SPACE));
 
     public static final RegistryObject<Item> STORMY_BLOCK = ITEMS.register("stormy_block",
-            () -> new BlockItem(InitBlocks.STORMY_BLOCK.get(), new Item.Properties()));
+            () -> new SkyblockItem(InitBlocks.STORMY_BLOCK.get(), new Item.Properties(), SkyblockType.STORMY));
 
     public static final RegistryObject<Item> OCEAN_BLOCK = ITEMS.register("ocean_block",
-            () -> new BlockItem(InitBlocks.OCEAN_BLOCK.get(), new Item.Properties()));
+            () -> new SkyblockItem(InitBlocks.OCEAN_BLOCK.get(), new Item.Properties(), SkyblockType.OCEAN));
 
     public static final RegistryObject<Item> DARKNESS_BLOCK = ITEMS.register("darkness_block",
             () -> new BlockItem(InitBlocks.DARKNESS_BLOCK.get(), new Item.Properties()));
 
     public static final RegistryObject<Item> LIGHT_BLOCK = ITEMS.register("light_block",
-            () -> new BlockItem(InitBlocks.LIGHT_BLOCK.get(), new Item.Properties()));
+            () -> new SkyblockItem(InitBlocks.LIGHT_BLOCK.get(), new Item.Properties(), SkyblockType.LIGHT));
 
     public static final RegistryObject<Item> END_BLOCK = ITEMS.register("end_block",
-            () -> new BlockItem(InitBlocks.END_BLOCK.get(), new Item.Properties()));
+            () -> new SkyblockItem(InitBlocks.END_BLOCK.get(), new Item.Properties(), SkyblockType.END));
 
     public static final RegistryObject<Item> IRIDIA_BLOCK = ITEMS.register("iridia_block",
-            () -> new BlockItem(InitBlocks.IRIDIA_BLOCK.get(), new Item.Properties()));
+            () -> new SkyblockItem(InitBlocks.IRIDIA_BLOCK.get(), new Item.Properties(), SkyblockType.IRIDIA));
 
     public static final RegistryObject<Item> END_SKY_BLOCK = ITEMS.register("end_sky_block",
-            () -> new BlockItem(InitBlocks.END_SKY_BLOCK.get(), new Item.Properties()));
+            () -> new SkyblockItem(InitBlocks.END_SKY_BLOCK.get(), new Item.Properties(), null));
 
     public static final RegistryObject<Item> ECLIPSE_BLOCK = ITEMS.register("eclipse_block",
-            () -> new BlockItem(InitBlocks.ECLIPSE_BLOCK.get(), new Item.Properties()));
+            () -> new SkyblockItem(InitBlocks.ECLIPSE_BLOCK.get(), new Item.Properties(), SkyblockType.ECLIPSE));
 
     public static final RegistryObject<Item> FOREST_BLOCK = ITEMS.register("forest_block",
-            () -> new BlockItem(InitBlocks.FOREST_BLOCK.get(), new Item.Properties()));
+            () -> new SkyblockItem(InitBlocks.FOREST_BLOCK.get(), new Item.Properties(), SkyblockType.FOREST));
 
     public static final RegistryObject<Item> WINDOW = ITEMS.register("window",
             () -> new BlockItem(InitBlocks.WINDOW.get(), new Item.Properties()));
 
     public static final RegistryObject<Item> MIMIC_BLOCK = ITEMS.register("mimic_block",
-            () -> new BlockItem(InitBlocks.MIMIC_BLOCK.get(), new Item.Properties()));
+            () -> new SkyblockItem(InitBlocks.MIMIC_BLOCK.get(), new Item.Properties(), SkyblockType.MIMIC));
 
     public static final RegistryObject<Item> SKY_EMITTER = ITEMS.register("sky_emitter",
             () -> new BlockItem(InitBlocks.SKY_EMITTER.get(), new Item.Properties()));
@@ -67,6 +68,12 @@ public class InitItems {
 
     public static final RegistryObject<Item> SPACE_COMPRESSOR = ITEMS.register("space_compressor",
             () -> new BlockItem(InitBlocks.SPACE_COMPRESSOR.get(), new Item.Properties()));
+
+    public static final RegistryObject<Item> ILLUSORITE_ORE = ITEMS.register("illusorite_ore",
+            () -> new IllusoriteOreBlockItem(InitBlocks.ILLUSORITE_ORE.get(), new Item.Properties()));
+
+    public static final RegistryObject<Item> DEEPSLATE_ILLUSORITE_ORE = ITEMS.register("deepslate_illusorite_ore",
+            () -> new IllusoriteOreBlockItem(InitBlocks.DEEPSLATE_ILLUSORITE_ORE.get(), new Item.Properties()));
 
     public static final RegistryObject<Item> CONFIGURATOR = ITEMS.register("configurator",
             () -> new Configurator(new Item.Properties()));

@@ -29,6 +29,8 @@ public class ModBlockStateProvider extends BlockStateProvider {
         blockWithItem(InitBlocks.FOREST_BLOCK);
         blockWithItem(InitBlocks.MIMIC_BLOCK);
         blockWithItem(InitBlocks.LIGHT_BULB);
+        cutout(InitBlocks.ILLUSORITE_ORE);
+        cutout(InitBlocks.DEEPSLATE_ILLUSORITE_ORE);
     }
 
     private void cubeBottomTop(RegistryObject<Block> block, ResourceLocation top, ResourceLocation side, ResourceLocation bottom) {

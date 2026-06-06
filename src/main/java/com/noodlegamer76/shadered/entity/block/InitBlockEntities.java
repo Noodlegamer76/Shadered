@@ -2,7 +2,6 @@ package com.noodlegamer76.shadered.entity.block;
 
 import com.noodlegamer76.shadered.ShaderedMod;
 import com.noodlegamer76.shadered.block.*;
-import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
@@ -58,4 +57,7 @@ public class InitBlockEntities {
 
     public static final RegistryObject<BlockEntityType<SpaceCompressorBlockEntity>> SPACE_COMPRESSOR = BLOCK_ENTITIES.register("space_compressor",
             () -> BlockEntityType.Builder.of(SpaceCompressorBlockEntity::new, InitBlocks.SPACE_COMPRESSOR.get()).build(null));
+
+    public static final RegistryObject<BlockEntityType<IllusoriteOreBlockEntity>> ILLUSORITE_BLOCK_ENTITY = BLOCK_ENTITIES.register("illusorite_block_entity",
+            () -> BlockEntityType.Builder.of(IllusoriteOreBlockEntity::new, InitBlocks.ILLUSORITE_ORE.get(), InitBlocks.DEEPSLATE_ILLUSORITE_ORE.get()).build(null));
 }

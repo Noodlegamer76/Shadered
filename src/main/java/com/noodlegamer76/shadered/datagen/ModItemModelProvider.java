@@ -29,6 +29,8 @@ public class ModItemModelProvider extends ItemModelProvider {
         simpleItem(InitItems.SKYBLOCK_FILTER_SCREEN);
         simpleItem(InitItems.SKYBLOCK_FILTER_BLUEPRINT);
         simpleItem(InitItems.SKYBLOCK_FILTER_GAMEBOY);
+        simpleBlockItem(InitBlocks.ILLUSORITE_ORE);
+        simpleBlockItem(InitBlocks.DEEPSLATE_ILLUSORITE_ORE);
     }
 
     private ItemModelBuilder saplingItem(RegistryObject<Block> item) {

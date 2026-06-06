@@ -1,6 +1,10 @@
 package com.noodlegamer76.shadered.creativetabs;
 
 import com.noodlegamer76.shadered.ShaderedMod;
+import com.noodlegamer76.shadered.block.InitBlocks;
+import com.noodlegamer76.shadered.client.util.SkyblockType;
+import com.noodlegamer76.shadered.client.util.skyblock.SkyblockPass;
+import com.noodlegamer76.shadered.item.IllusoriteOreBlockItem;
 import com.noodlegamer76.shadered.item.InitItems;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.event.BuildCreativeModeTabContentsEvent;
@@ -38,6 +42,14 @@ public class ShaderedTab {
             event.accept(InitItems.LIGHT_BULB);
             event.accept(InitItems.MAXWELL);
             event.accept(InitItems.WINDOW);
+
+            for (SkyblockType type : SkyblockType.values()) {
+                event.accept(IllusoriteOreBlockItem.create(type, SkyblockPass.NORMAL, InitBlocks.ILLUSORITE_ORE.get()));
+            }
+
+            for (SkyblockType type : SkyblockType.values()) {
+                event.accept(IllusoriteOreBlockItem.create(type, SkyblockPass.NORMAL, InitBlocks.DEEPSLATE_ILLUSORITE_ORE.get()));
+            }
         }
     }
 }

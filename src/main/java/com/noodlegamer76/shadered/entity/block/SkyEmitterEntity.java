@@ -1,22 +1,20 @@
 package com.noodlegamer76.shadered.entity.block;
 
-import com.noodlegamer76.shadered.ShaderedMod;
-import com.noodlegamer76.shadered.client.util.skyemitter.SkyEmitterType;
+import com.noodlegamer76.shadered.client.util.SkyblockType;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 
-public class SkyEmitterEntity extends BlockEntity {
+public class SkyEmitterEntity extends SkyblockEntity {
     private float minimumRange = 5.0f;
     private float maximumRange = 10.0f;
     private float alpha = 1.0f;
-    private SkyEmitterType type = SkyEmitterType.MIMIC;
+    private SkyblockType type = SkyblockType.MIMIC;
     public static final AABB RENDER_BOUNDING_BOX = new AABB(
             -512, -512, -512,
             512, 512, 512
@@ -40,8 +38,8 @@ public class SkyEmitterEntity extends BlockEntity {
 
 
         int type = tag.getInt("type");
-        if (type >= 0 && type < SkyEmitterType.values().length) {
-            this.type = SkyEmitterType.values()[type];
+        if (type >= 0 && type < SkyblockType.values().length) {
+            this.type = SkyblockType.values()[type];
         }
     }
 
@@ -102,7 +100,7 @@ public class SkyEmitterEntity extends BlockEntity {
         return alpha;
     }
 
-    public void setType(SkyEmitterType type) {
+    public void setType(SkyblockType type) {
         this.type = type;
         setChanged();
         if (level != null) {
@@ -110,7 +108,7 @@ public class SkyEmitterEntity extends BlockEntity {
         }
     }
 
-    public SkyEmitterType getEmitterType() {
+    public SkyblockType getEmitterType() {
         return type;
     }
 
