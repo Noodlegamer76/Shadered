@@ -49,6 +49,7 @@
   "skyblock_type.shadered.mimic": "Mimic",
   "skyblock_type.shadered.ocean": "Ocean",
   "skyblock_type.shadered.iridia": "Iridia",
+  "skyblock_type.shadered.end_sky": "End Sky",
 
   "tooltip.shadered.pass": "Pass: %s",
   "skyblock_pass.shadered.normal": "Normal",
