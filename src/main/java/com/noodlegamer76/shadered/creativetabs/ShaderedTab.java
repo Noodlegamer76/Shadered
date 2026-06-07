@@ -1,12 +1,13 @@
 package com.noodlegamer76.shadered.creativetabs;
 
 import com.noodlegamer76.shadered.ShaderedMod;
-import com.noodlegamer76.shadered.block.InitBlocks;
 import com.noodlegamer76.shadered.client.util.SkyblockType;
 import com.noodlegamer76.shadered.client.util.skyblock.SkyblockPass;
-import com.noodlegamer76.shadered.item.SkyblockHolderItem;
+import com.noodlegamer76.shadered.item.SkyblockHolderBlockItem;
 import com.noodlegamer76.shadered.item.InitItems;
+import com.noodlegamer76.shadered.item.SkyblockItem;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.event.BuildCreativeModeTabContentsEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -20,16 +21,26 @@ public class ShaderedTab {
     @SubscribeEvent
     public static void buildContents(BuildCreativeModeTabContentsEvent event) {
         if (event.getTabKey() == InitCreativeTabs.shaderedTab.getKey()) {
-            event.accept(InitItems.SPACE_BLOCK);
-            event.accept(InitItems.OCEAN_BLOCK);
-            event.accept(InitItems.STORMY_BLOCK);
-            event.accept(InitItems.LIGHT_BLOCK);
-            event.accept(InitItems.END_BLOCK);
-            event.accept(InitItems.END_SKY_BLOCK);
-            event.accept(InitItems.IRIDIA_BLOCK);
-            event.accept(InitItems.ECLIPSE_BLOCK);
-            event.accept(InitItems.FOREST_BLOCK);
-            event.accept(InitItems.MIMIC_BLOCK);
+            List<Item> skyblocks = List.of(
+                    InitItems.SPACE_BLOCK.get(),
+                    InitItems.OCEAN_BLOCK.get(),
+                    InitItems.STORMY_BLOCK.get(),
+                    InitItems.LIGHT_BLOCK.get(),
+                    InitItems.END_BLOCK.get(),
+                    InitItems.END_SKY_BLOCK.get(),
+                    InitItems.IRIDIA_BLOCK.get(),
+                    InitItems.ECLIPSE_BLOCK.get(),
+                    InitItems.FOREST_BLOCK.get(),
+                    InitItems.MIMIC_BLOCK.get()
+            );
+
+            for (Item skyblock : skyblocks) {
+                if (skyblock instanceof SkyblockItem skyblockItem) {
+                    ItemStack stack = SkyblockHolderBlockItem.create(skyblockItem.getType(), SkyblockPass.NORMAL, skyblockItem);
+                    event.accept(stack);
+                }
+            }
+
             event.accept(InitItems.DARKNESS_BLOCK);
             event.accept(InitItems.SPACE_COMPRESSOR);
             event.accept(InitItems.CONFIGURATOR);
@@ -44,13 +55,14 @@ public class ShaderedTab {
             event.accept(InitItems.SKY_EMITTER);
             event.accept(InitItems.LIGHT_BULB);
             event.accept(InitItems.MAXWELL);
+            event.accept(InitItems.ILLUSORITE);
 
             for (SkyblockType type : SkyblockType.values()) {
-                event.accept(SkyblockHolderItem.create(type, SkyblockPass.NORMAL, InitItems.ILLUSORITE_ORE.get()));
+                event.accept(SkyblockHolderBlockItem.create(type, SkyblockPass.NORMAL, InitItems.ILLUSORITE_ORE.get()));
             }
 
             for (SkyblockType type : SkyblockType.values()) {
-                event.accept(SkyblockHolderItem.create(type, SkyblockPass.NORMAL, InitItems.DEEPSLATE_ILLUSORITE_ORE.get()));
+                event.accept(SkyblockHolderBlockItem.create(type, SkyblockPass.NORMAL, InitItems.DEEPSLATE_ILLUSORITE_ORE.get()));
             }
         }
     }

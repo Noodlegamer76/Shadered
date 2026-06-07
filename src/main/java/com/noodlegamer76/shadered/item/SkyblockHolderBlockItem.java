@@ -15,12 +15,12 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
-public class SkyblockHolderItem extends Item {
+public class SkyblockHolderBlockItem extends BlockItem {
     private static final SkyblockType DEFAULT_TYPE = SkyblockType.STORMY;
     private static final SkyblockPass DEFAULT_PASS = SkyblockPass.NORMAL;
 
-    public SkyblockHolderItem(Properties properties) {
-        super(properties);
+    public SkyblockHolderBlockItem(Block block, Properties properties) {
+        super(block, properties);
     }
 
     @Override

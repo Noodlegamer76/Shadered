@@ -1,16 +1,13 @@
 package com.noodlegamer76.shadered.client.renderer.item;
 
-import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.noodlegamer76.shadered.ShaderedMod;
-import com.noodlegamer76.shadered.client.renderer.SkyblockRenderer;
 import com.noodlegamer76.shadered.client.util.ModRenderTypes;
 import com.noodlegamer76.shadered.client.util.SkyblockType;
 import com.noodlegamer76.shadered.client.util.skyblock.SkyblockPass;
 import com.noodlegamer76.shadered.item.InitItems;
-import com.noodlegamer76.shadered.item.SkyblockHolderItem;
-import net.minecraft.client.Minecraft;
+import com.noodlegamer76.shadered.item.SkyblockHolderBlockItem;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
@@ -20,8 +17,6 @@ import software.bernie.geckolib.core.animatable.GeoAnimatable;
 import software.bernie.geckolib.model.DefaultedItemGeoModel;
 import software.bernie.geckolib.renderer.GeoItemRenderer;
 import software.bernie.geckolib.cache.object.GeoBone;
-
-import javax.annotation.Nullable;
 
 public class IllusoriteOreRenderer<T extends Item & GeoAnimatable> extends GeoItemRenderer<T> {
     private GeoBone currentBone;
@@ -64,8 +59,8 @@ public class IllusoriteOreRenderer<T extends Item & GeoAnimatable> extends GeoIt
             float alpha) {
 
         if (bone.getName().equals("Inner")) {
-            SkyblockType type = SkyblockHolderItem.getSkyblockType(getCurrentItemStack());
-            SkyblockPass pass = SkyblockHolderItem.getSkyblockPass(getCurrentItemStack());
+            SkyblockType type = SkyblockHolderBlockItem.getSkyblockType(getCurrentItemStack());
+            SkyblockPass pass = SkyblockHolderBlockItem.getSkyblockPass(getCurrentItemStack());
             renderType = ModRenderTypes.getSkyblockRenderType(type, pass);
             buffer = bufferSource.getBuffer(renderType);
         }

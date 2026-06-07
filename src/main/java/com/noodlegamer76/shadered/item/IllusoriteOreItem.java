@@ -1,10 +1,7 @@
 package com.noodlegamer76.shadered.item;
 
 import com.noodlegamer76.shadered.client.renderer.item.IllusoriteOreRenderer;
-import com.noodlegamer76.shadered.client.renderer.item.MaxwellItemRenderer;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
-import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
 import net.minecraftforge.client.extensions.common.IClientItemExtensions;
@@ -15,7 +12,7 @@ import software.bernie.geckolib.util.GeckoLibUtil;
 
 import java.util.function.Consumer;
 
-public class IllusoriteOreItem extends SkyblockHolderItem implements GeoItem {
+public class IllusoriteOreItem extends SkyblockHolderBlockItem implements GeoItem {
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
 
     public IllusoriteOreItem(Block pBlock, Item.Properties pProperties) {

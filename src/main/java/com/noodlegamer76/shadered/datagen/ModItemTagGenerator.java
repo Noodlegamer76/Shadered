@@ -32,5 +32,8 @@ public class ModItemTagGenerator extends ItemTagsProvider {
         this.tag(Tags.Items.ORES)
                 .add(InitItems.ILLUSORITE_ORE.get())
                 .add(InitItems.DEEPSLATE_ILLUSORITE_ORE.get());
+
+        this.tag(Tags.Items.GEMS)
+                .add(InitItems.ILLUSORITE.get());
     }
 }

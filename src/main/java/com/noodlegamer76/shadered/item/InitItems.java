@@ -41,6 +41,9 @@ public class InitItems {
     public static final RegistryObject<Item> DEEPSLATE_ILLUSORITE_ORE = ITEMS.register("deepslate_illusorite_ore",
             () -> new IllusoriteOreItem(InitBlocks.DEEPSLATE_ILLUSORITE_ORE.get(), new Item.Properties()));
 
+    public static final RegistryObject<Item> ILLUSORITE = ITEMS.register("illusorite",
+            () -> new Illusorite(new Item.Properties()));
+
     public static final RegistryObject<Item> CONFIGURATOR = ITEMS.register("configurator",
             () -> new Configurator(new Item.Properties()));
 

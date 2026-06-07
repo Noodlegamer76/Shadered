@@ -1,13 +1,11 @@
 package com.noodlegamer76.shadered.block;
 
-import com.noodlegamer76.shadered.client.util.SkyblockRegistry;
 import com.noodlegamer76.shadered.client.util.SkyblockType;
 import com.noodlegamer76.shadered.client.util.skyblock.SkyblockPass;
-import com.noodlegamer76.shadered.entity.block.IllusoriteOreBlockEntity;
 import com.noodlegamer76.shadered.entity.block.SkyblockEntity;
 import com.noodlegamer76.shadered.entity.block.SkyblockHolderEntity;
 import com.noodlegamer76.shadered.item.InitItems;
-import com.noodlegamer76.shadered.item.SkyblockHolderItem;
+import com.noodlegamer76.shadered.item.SkyblockHolderBlockItem;
 import com.noodlegamer76.shadered.item.SkyblockItem;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
@@ -15,7 +13,6 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
@@ -50,7 +47,7 @@ public class SkyblockHolderBlock extends Block implements EntityBlock {
         BlockEntity be = level.getBlockEntity(pos);
         if (!(be instanceof SkyblockHolderEntity entity)) return;
 
-        if (stack.getItem() instanceof SkyblockHolderItem) {
+        if (stack.getItem() instanceof SkyblockHolderBlockItem) {
             CompoundTag tag = stack.getTag();
             if (tag == null || !tag.contains("BlockEntityTag")) return;
 

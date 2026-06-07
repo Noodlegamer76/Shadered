@@ -3,13 +3,9 @@ package com.noodlegamer76.shadered.block;
 import com.noodlegamer76.shadered.client.util.SkyblockRegistry;
 import com.noodlegamer76.shadered.client.util.SkyblockType;
 import com.noodlegamer76.shadered.client.util.skyblock.SkyblockPass;
-import com.noodlegamer76.shadered.entity.block.IllusoriteOreBlockEntity;
 import com.noodlegamer76.shadered.entity.block.SkyblockHolderEntity;
-import com.noodlegamer76.shadered.item.InitItems;
-import com.noodlegamer76.shadered.item.SkyblockHolderItem;
-import com.noodlegamer76.shadered.item.SkyblockItemTypes;
+import com.noodlegamer76.shadered.item.SkyblockHolderBlockItem;
 import net.minecraft.core.BlockPos;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -38,7 +34,7 @@ public class SkyblockBlock extends SkyblockHolderBlock {
 
             Item item = SkyblockRegistry.getItem(type).getItem();
 
-            return SkyblockHolderItem.create(type, pass, item);
+            return SkyblockHolderBlockItem.create(type, pass, item);
         }
 
         return super.getCloneItemStack(state, target, level, pos, player);
@@ -54,7 +50,7 @@ public class SkyblockBlock extends SkyblockHolderBlock {
                 SkyblockPass pass = entity.getPass();
 
                 Item itemType = SkyblockRegistry.getItem(type).getItem();
-                ItemStack stack = SkyblockHolderItem.create(type, pass, itemType);
+                ItemStack stack = SkyblockHolderBlockItem.create(type, pass, itemType);
 
                 if (!player.isCreative()) {
                     popResource(level, pos, stack);
