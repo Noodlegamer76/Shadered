@@ -49,6 +49,11 @@ public class InitBlocks {
                     .lightLevel((state) -> 7)
             ));
 
+    public static final RegistryObject<Block> FILTER_BLOCK = BLOCKS.register("filter_block",
+            () -> new FilterBlock(BlockBehaviour.Properties.copy(Blocks.STONE)
+                    .noOcclusion()
+            ));
+
     //DEPRECATED BLOCKS
 
     public static final RegistryObject<Block> SPACE_BLOCK = BLOCKS.register("space_block",

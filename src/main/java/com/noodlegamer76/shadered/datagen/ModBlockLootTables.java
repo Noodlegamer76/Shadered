@@ -33,6 +33,7 @@ public class ModBlockLootTables extends BlockLootSubProvider {
         dropSelf(InitBlocks.END_SKY_BLOCK.get());
         dropSelf(InitBlocks.ECLIPSE_BLOCK.get());
         dropSelf(InitBlocks.SPACE_COMPRESSOR.get());
+        dropSelf(InitBlocks.FILTER_BLOCK.get());
         dropSelf(InitBlocks.SKYBLOCK.get());
 
         this.add(InitBlocks.ILLUSORITE_ORE.get(),

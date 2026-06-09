@@ -2,24 +2,15 @@ package com.noodlegamer76.shadered.client.renderer;
 
 import com.mojang.blaze3d.pipeline.RenderTarget;
 import com.mojang.blaze3d.pipeline.TextureTarget;
-import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.platform.Window;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.*;
 import com.noodlegamer76.shadered.client.util.*;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GameRenderer;
-import net.minecraft.client.renderer.RenderType;
 import org.joml.Matrix4f;
-import org.lwjgl.opengl.GL15;
-import org.lwjgl.opengl.GL30;
-import org.lwjgl.opengl.GL42;
-import org.w3c.dom.Text;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 
 /**
@@ -36,7 +27,7 @@ public class ComplexPassRenderer {
     private ComplexPassRenderer() {
     }
 
-    private final Map<RenderStage, List<RenderableComplexPass>> complexPasses = new HashMap<>();
+    private final Map<RenderStage, List<RenderableComplexPass>> complexPasses = new LinkedHashMap<>();
     private TextureTarget renderBuffer;
     private TextureTarget writeBuffer;
     private TextureTarget extraBuffer;
@@ -44,6 +35,8 @@ public class ComplexPassRenderer {
     private int previousWidth;
     private int previousHeight;
     private boolean rendering = false;
+    private TextureTarget currentSourceBuffer;
+    private TextureTarget currentDestinationBuffer;
 
     public void add(RenderStage stage, RenderableComplexPass effect) {
         complexPasses.computeIfAbsent(stage, s -> new ArrayList<>()).add(effect);
@@ -108,17 +101,23 @@ public class ComplexPassRenderer {
         }
 
         for (RenderableComplexPass pass : passes) {
-            if (pass.getType() == PassType.FILTER) {
-                scratch.bindWrite(true);
-
-                current.bindRead();
-
-                pass.render(stage, poseStack, renderTick, partialTick);
-
-                TextureTarget tmp = current;
-                current = scratch;
-                scratch = tmp;
+            if (pass.getType() != PassType.FILTER) {
+                continue;
             }
+
+            currentSourceBuffer = current;
+            currentDestinationBuffer = scratch;
+
+            scratch.bindWrite(true);
+
+            pass.render(stage, poseStack, renderTick, partialTick);
+
+            scratch.copyDepthFrom(current);
+
+            TextureTarget temp = current;
+            current = scratch;
+            scratch = temp;
+
         }
 
         renderBuffer = current;
@@ -146,9 +145,9 @@ public class ComplexPassRenderer {
     private void renderToMainTarget() {
         RenderTarget mainTarget = Minecraft.getInstance().getMainRenderTarget();
 
-        Matrix4f orthagraphic = new Matrix4f().ortho(0, 1, 0, 1, -1, 1);
+        Matrix4f orthographic = new Matrix4f().ortho(0, 1, 0, 1, -1, 1);
         RenderSystem.backupProjectionMatrix();
-        RenderSystem.setProjectionMatrix(orthagraphic, VertexSorting.ORTHOGRAPHIC_Z);
+        RenderSystem.setProjectionMatrix(orthographic, VertexSorting.ORTHOGRAPHIC_Z);
         mainTarget.bindWrite(true);
 
         RenderSystem.setShader(GameRenderer::getPositionTexShader);
@@ -198,5 +197,13 @@ public class ComplexPassRenderer {
 
     public TextureTarget getExtraBuffer() {
         return extraBuffer;
+    }
+
+    public TextureTarget getCurrentSourceBuffer() {
+        return currentSourceBuffer;
+    }
+
+    public TextureTarget getCurrentDestinationBuffer() {
+        return currentDestinationBuffer;
     }
 }

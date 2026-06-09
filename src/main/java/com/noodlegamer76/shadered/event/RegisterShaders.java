@@ -28,6 +28,8 @@ public class RegisterShaders {
     public static ShaderInstance skyblockBackground;
     public static ShaderInstance glass;
     public static ShaderInstance pbr;
+    public static ShaderInstance filterBlock;
+    public static ShaderInstance filterApply;
 
     private static final Map<String, ShaderInstance> SHADERS = new HashMap<>();
 
@@ -141,6 +143,22 @@ public class RegisterShaders {
                     SHADERS.put("pbr", e);
                 });
 
+        event.registerShader(new ShaderInstance(event.getResourceProvider(),
+                        new ResourceLocation(ShaderedMod.MODID, "filter_block"),
+                        DefaultVertexFormat.POSITION_TEX),
+                (e) -> {
+                    filterBlock = e;
+                    SHADERS.put("filter_block", e);
+                });
+
+        event.registerShader(new ShaderInstance(event.getResourceProvider(),
+                        new ResourceLocation(ShaderedMod.MODID, "filter_apply"),
+                        DefaultVertexFormat.POSITION_TEX),
+                (e) -> {
+                    filterApply = e;
+                    SHADERS.put("filter_apply", e);
+                });
+
     }
 
     public static ShaderInstance getCompressor() {
@@ -193,5 +211,13 @@ public class RegisterShaders {
 
     public static ShaderInstance getPbr() {
         return pbr;
+    }
+
+    public static ShaderInstance getFilterBlock() {
+        return filterBlock;
+    }
+
+    public static ShaderInstance getFilterApply() {
+        return filterApply;
     }
 }

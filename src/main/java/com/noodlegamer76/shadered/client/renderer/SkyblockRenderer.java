@@ -1,24 +1,35 @@
 package com.noodlegamer76.shadered.client.renderer;
 
+import com.mojang.blaze3d.pipeline.TextureTarget;
+import com.mojang.blaze3d.platform.GlStateManager;
+import com.mojang.blaze3d.systems.RenderSystem;
 import com.noodlegamer76.shadered.ShaderedMod;
 import com.noodlegamer76.shadered.client.renderer.complexpasses.*;
+import com.noodlegamer76.shadered.client.util.GlUtils;
 import com.noodlegamer76.shadered.client.util.RenderStage;
 import com.noodlegamer76.shadered.client.util.SkyblockType;
 import com.noodlegamer76.shadered.client.util.glass.GlassChannel;
+import com.noodlegamer76.shadered.client.util.shader.EmbeddiumFilterSamplers;
+import com.noodlegamer76.shadered.client.util.shader.ShaderPatchRegistry;
 import com.noodlegamer76.shadered.client.util.skyblock.SkyblockBatchData;
 import com.noodlegamer76.shadered.client.util.skyblock.SkyboxTranslation;
 import com.noodlegamer76.shadered.event.RegisterShaders;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GameRenderer;
+import net.minecraft.client.renderer.ShaderInstance;
 import net.minecraft.client.renderer.texture.AbstractTexture;
 import net.minecraft.client.renderer.texture.TextureManager;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
 import org.joml.Vector3f;
+import org.lwjgl.opengl.GL30;
+import org.lwjgl.opengl.GL33;
+import org.lwjgl.opengl.GL43;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Supplier;
 
 public class SkyblockRenderer {
     public static final ResourceLocation NEBULA = new ResourceLocation(ShaderedMod.MODID, "textures/environment/nebula");
@@ -47,6 +58,8 @@ public class SkyblockRenderer {
     public static SkyblockBatchData forestData = new SkyblockBatchData();
     public static SkyblockBatchData lightData = new SkyblockBatchData();
     public static SkyblockBatchData mimicData = new SkyblockBatchData();
+
+    public static SkyblockBatchData filterData = new SkyblockBatchData();
 
     public static Map<SkyblockBatchData, Integer> DATA_LIST = new HashMap<>();
 
@@ -88,6 +101,8 @@ public class SkyblockRenderer {
     public static final MimicSkyboxRenderPass mimicSkyblockRenderPass = new MimicSkyboxRenderPass(
             mimicData
     );
+    public static final FilterBlockEncodeComplexPass filterBlockComplexPass = new FilterBlockEncodeComplexPass(filterData);
+    public static final FilterBlockApplyComplexPass filterBlockApplyComplexPass = new FilterBlockApplyComplexPass();
 
 
     public static SkyblockBatchData getData(SkyblockType type) {
@@ -143,6 +158,9 @@ public class SkyblockRenderer {
         SkyblockRenderPass skyblockRenderPass = new SkyblockRenderPass(DATA_LIST);
         renderer.add(RenderStage.AFTER_BLOCK_ENTITIES, skyblockRenderPass);
 
+        renderer.add(RenderStage.AFTER_BLOCK_ENTITIES, filterBlockComplexPass);
+        renderer.add(RenderStage.AFTER_BLOCK_ENTITIES, filterBlockApplyComplexPass);
+
 
         renderer.add(RenderStage.AFTER_LEVEL, glassRenderer);
         glassRenderer.addGlassChannel(channel);
@@ -159,7 +177,65 @@ public class SkyblockRenderer {
         RegisterShaders.skyblockScreen.setSampler("Pixel", pixel);
 
         RegisterShaders.skyblockBackground.setSampler("MainDepth", Minecraft.getInstance().getMainRenderTarget().getDepthTextureId());
+
+        setupFilterSamplersForLitShaders();
     }
+
+    private static void setupFilterSamplersForLitShaders() {
+        if (filterBlockComplexPass.getFilterTarget() == null) {
+            return;
+        }
+
+        TextureTarget extraBuffer = ComplexPassRenderer.getInstance().getExtraBuffer();
+        extraBuffer.copyDepthFrom(Minecraft.getInstance().getMainRenderTarget());
+
+        Minecraft.getInstance().getMainRenderTarget().bindWrite(true);
+
+        GL43.glMemoryBarrier(
+                GL43.GL_FRAMEBUFFER_BARRIER_BIT |
+                        GL43.GL_TEXTURE_FETCH_BARRIER_BIT
+        );
+
+        int filterColor = filterBlockComplexPass.getFilterTarget().getColorTextureId();
+        int filterDepth = filterBlockComplexPass.getFilterTarget().getDepthTextureId();
+        int mainDepth = extraBuffer.getDepthTextureId();
+
+        for (Supplier<ShaderInstance> shaderSupplier : FILTERED_LIT_SHADER_SUPPLIERS) {
+            ShaderInstance shader = shaderSupplier.get();
+            if (shader == null) {
+                continue;
+            }
+
+            shader.setSampler("FilterSampler", filterColor);
+            shader.setSampler("FilterDepthSampler", filterDepth);
+            shader.setSampler("MainDepthSampler", mainDepth);
+        }
+    }
+
+    private static final List<Supplier<ShaderInstance>> FILTERED_LIT_SHADER_SUPPLIERS = List.of(
+            GameRenderer::getRendertypeEntitySolidShader,
+            GameRenderer::getRendertypeEntityCutoutShader,
+            GameRenderer::getRendertypeEntityTranslucentShader,
+            GameRenderer::getRendertypeEntityCutoutNoCullShader,
+            GameRenderer::getRendertypeLeashShader,
+            GameRenderer::getRendertypeEntitySmoothCutoutShader,
+            GameRenderer::getRendertypeEntityTranslucentCullShader,
+            GameRenderer::getRendertypeItemEntityTranslucentCullShader,
+            GameRenderer::getRendertypeEntityCutoutNoCullZOffsetShader,
+            GameRenderer::getRendertypeCutoutMippedShader,
+            GameRenderer::getRendertypeSolidShader,
+            GameRenderer::getParticleShader,
+            GameRenderer::getRendertypeCutoutShader,
+            GameRenderer::getPositionTexColorNormalShader,
+            GameRenderer::getRendertypeArmorCutoutNoCullShader,
+            GameRenderer::getRendertypeEntityDecalShader,
+            GameRenderer::getRendertypeEntityNoOutlineShader,
+            GameRenderer::getRendertypeEntityShadowShader,
+            GameRenderer::getRendertypeEntityTranslucentEmissiveShader,
+            GameRenderer::getRendertypeOutlineShader,
+            GameRenderer::getRendertypeTranslucentShader,
+            GameRenderer::getRendertypeTripwireShader
+    );
 
     public static int getTextureId(ResourceLocation resourceLocation) {
         TextureManager texturemanager = Minecraft.getInstance().getTextureManager();

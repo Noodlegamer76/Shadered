@@ -1,6 +1,7 @@
 package com.noodlegamer76.shadered.client.util.shader;
 
 import com.noodlegamer76.shadered.ShaderedMod;
+import com.noodlegamer76.shadered.client.util.shader.patches.EmbeddiumFilterFragPatch;
 import com.noodlegamer76.shadered.client.util.shader.patches.*;
 
 import java.util.ArrayList;
@@ -16,47 +17,24 @@ public class ShaderPatchRegistry {
                 "blocks/block_layer_opaque.fsh",
                 new InjectLightsPatch()
         );
+        ShaderPatchRegistry.register(
+                "blocks/block_layer_opaque.fsh",
+                new EmbeddiumFilterFragPatch()
+        );
+        ShaderPatchRegistry.register(
+                "clouds",
+                new EmbeddiumCloudFilterFragPatch()
+        );
 
         ShaderPatchRegistry.register(
                 "blocks/block_layer_opaque.vsh",
                 new InjectWorldPosVertexPatch()
         );
 
-        ShaderPatchRegistry.register(
-                "rendertype_entity_solid",
-                new VanillaLightVertexPatch()
-        );
-        ShaderPatchRegistry.register(
-                "rendertype_entity_solid",
-                new VanillaLightFragPatch()
-        );
-
-        ShaderPatchRegistry.register(
-                "rendertype_entity_cutout",
-                new VanillaLightVertexPatch()
-        );
-        ShaderPatchRegistry.register(
-                "rendertype_entity_cutout",
-                new VanillaLightFragPatch()
-        );
-
-        ShaderPatchRegistry.register(
-                "rendertype_entity_translucent",
-                new VanillaLightVertexPatch()
-        );
-        ShaderPatchRegistry.register(
-                "rendertype_entity_translucent",
-                new VanillaLightFragPatch()
-        );
-
-        ShaderPatchRegistry.register(
-                "rendertype_entity_cutout_no_cull",
-                new VanillaLightVertexPatch()
-        );
-        ShaderPatchRegistry.register(
-                "rendertype_entity_cutout_no_cull",
-                new VanillaLightFragPatch()
-        );
+        registerVanillaLitFiltered("rendertype_entity_solid", true);
+        registerVanillaLitFiltered("rendertype_entity_cutout", true);
+        registerVanillaLitFiltered("rendertype_entity_translucent", true);
+        registerVanillaLitFiltered("rendertype_entity_cutout_no_cull", true);
 
         ShaderPatchRegistry.register(
                 "rendertype_leash",
@@ -67,167 +45,41 @@ public class ShaderPatchRegistry {
                 new VanillaLightFragNotColorPatch()
         );
 
-        ShaderPatchRegistry.register(
-                "rendertype_entity_smooth_cutout",
-                new VanillaLightVertexPatch()
-        );
-        ShaderPatchRegistry.register(
-                "rendertype_entity_smooth_cutout",
-                new VanillaLightFragPatch()
-        );
+        registerVanillaLitFiltered("rendertype_entity_smooth_cutout", true);
+        registerVanillaLitFiltered("rendertype_entity_translucent_cull", true);
+        registerVanillaLitFiltered("rendertype_item_entity_translucent_cull", true);
+        registerVanillaLitFiltered("rendertype_entity_cutout_no_cull_z_offset", true);
+        registerVanillaLitFiltered("rendertype_cutout_mipped", true);
+        registerVanillaLitFiltered("rendertype_solid", true);
+        registerVanillaLitFiltered("particle", true);
+        registerVanillaLitFiltered("rendertype_cutout", true);
+        registerVanillaLitFiltered("forge:rendertype_entity_unlit_translucent", true);
+        registerVanillaLitFiltered("position_tex_color_normal", true);
+        registerVanillaLitFiltered("rendertype_armor_cutout_no_cull", true);
+        registerVanillaLitFiltered("rendertype_entity_decal", true);
+        registerVanillaLitFiltered("rendertype_entity_no_outline", true);
+        registerVanillaLitFiltered("rendertype_entity_shadow", true);
+        registerVanillaLitFiltered("rendertype_entity_translucent_emissive", true);
+        registerVanillaLitFiltered("rendertype_outline", true);
+        registerVanillaLitFiltered("rendertype_translucent", true);
+        registerVanillaLitFiltered("rendertype_tripwire", true);
+    }
 
+    private static void registerVanillaLitFiltered(String shaderName, boolean translucent) {
         ShaderPatchRegistry.register(
-                "rendertype_entity_translucent_cull",
+                shaderName,
                 new VanillaLightVertexPatch()
         );
         ShaderPatchRegistry.register(
-                "rendertype_entity_translucent_cull",
+                shaderName,
                 new VanillaLightFragPatch()
         );
-
-        ShaderPatchRegistry.register(
-                "rendertype_item_entity_translucent_cull",
-                new VanillaLightVertexPatch()
-        );
-        ShaderPatchRegistry.register(
-                "rendertype_item_entity_translucent_cull",
-                new VanillaLightFragPatch()
-        );
-
-        ShaderPatchRegistry.register(
-                "rendertype_entity_cutout_no_cull_z_offset",
-                new VanillaLightVertexPatch()
-        );
-        ShaderPatchRegistry.register(
-                "rendertype_entity_cutout_no_cull_z_offset",
-                new VanillaLightFragPatch()
-        );
-
-        ShaderPatchRegistry.register(
-                "rendertype_cutout_mipped",
-                new VanillaLightVertexPatch()
-        );
-        ShaderPatchRegistry.register(
-                "rendertype_cutout_mipped",
-                new VanillaLightFragPatch()
-        );
-
-        ShaderPatchRegistry.register(
-                "rendertype_solid",
-                new VanillaLightVertexPatch()
-        );
-        ShaderPatchRegistry.register(
-                "rendertype_solid",
-                new VanillaLightFragPatch()
-        );
-
-        ShaderPatchRegistry.register(
-                "particle",
-                new VanillaLightVertexPatch()
-        );
-        ShaderPatchRegistry.register(
-                "particle",
-                new VanillaLightFragPatch()
-        );
-
-        ShaderPatchRegistry.register(
-                "rendertype_cutout",
-                new VanillaLightVertexPatch()
-        );
-        ShaderPatchRegistry.register(
-                "rendertype_cutout",
-                new VanillaLightFragPatch()
-        );
-
-        ShaderPatchRegistry.register(
-                "forge:rendertype_entity_unlit_translucent",
-                new VanillaLightVertexPatch()
-        );
-        ShaderPatchRegistry.register(
-                "forge:rendertype_entity_unlit_translucent",
-                new VanillaLightFragPatch()
-        );
-
-        ShaderPatchRegistry.register(
-                "position_tex_color_normal",
-                new VanillaLightVertexPatch()
-        );
-        ShaderPatchRegistry.register(
-                "position_tex_color_normal",
-                new VanillaLightFragPatch()
-        );
-
-        ShaderPatchRegistry.register(
-                "rendertype_armor_cutout_no_cull",
-                new VanillaLightVertexPatch()
-        );
-        ShaderPatchRegistry.register(
-                "rendertype_armor_cutout_no_cull",
-                new VanillaLightFragPatch()
-        );
-
-        ShaderPatchRegistry.register(
-                "rendertype_entity_decal",
-                new VanillaLightVertexPatch()
-        );
-        ShaderPatchRegistry.register(
-                "rendertype_entity_decal",
-                new VanillaLightFragPatch()
-        );
-
-        ShaderPatchRegistry.register(
-                "rendertype_entity_no_outline",
-                new VanillaLightVertexPatch()
-        );
-        ShaderPatchRegistry.register(
-                "rendertype_entity_no_outline",
-                new VanillaLightFragPatch()
-        );
-
-        ShaderPatchRegistry.register(
-                "rendertype_entity_shadow",
-                new VanillaLightVertexPatch()
-        );
-        ShaderPatchRegistry.register(
-                "rendertype_entity_shadow",
-                new VanillaLightFragPatch()
-        );
-
-        ShaderPatchRegistry.register(
-                "rendertype_entity_translucent_emissive",
-                new VanillaLightVertexPatch()
-        );
-        ShaderPatchRegistry.register(
-                "rendertype_entity_translucent_emissive",
-                new VanillaLightFragPatch()
-        );
-
-        ShaderPatchRegistry.register(
-                "rendertype_outline",
-                new VanillaLightVertexPatch()
-        );
-        ShaderPatchRegistry.register(
-                "rendertype_outline",
-                new VanillaLightFragPatch()
-        );
-
-        ShaderPatchRegistry.register(
-                "rendertype_translucent",
-                new VanillaLightVertexPatch()
-        );
-        ShaderPatchRegistry.register(
-                "rendertype_translucent",
-                new VanillaLightFragPatch()
-        );
-
-        ShaderPatchRegistry.register(
-                "rendertype_tripwire",
-                new VanillaLightVertexPatch()
-        );
-        ShaderPatchRegistry.register(
-                "rendertype_tripwire",
-                new VanillaLightFragPatch()
-        );
+        if (translucent) {
+            ShaderPatchRegistry.register(
+                    shaderName,
+                    new VanillaFilterFragPatch()
+            );
+        }
     }
 
     public static void register(String shaderName, ShaderPatch patch) {

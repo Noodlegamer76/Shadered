@@ -39,6 +39,7 @@ public class ModBlockTagGenerator extends BlockTagsProvider  {
                 .add(InitBlocks.END_SKY_BLOCK.get())
                 .add(InitBlocks.ECLIPSE_BLOCK.get())
                 .add(InitBlocks.SPACE_COMPRESSOR.get())
+                .add(InitBlocks.FILTER_BLOCK.get())
                 .add(InitBlocks.ILLUSORITE_ORE.get())
                 .add(InitBlocks.DEEPSLATE_ILLUSORITE_ORE.get());
 

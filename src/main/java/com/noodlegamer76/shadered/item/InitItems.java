@@ -47,6 +47,9 @@ public class InitItems {
     public static final RegistryObject<Item> CONFIGURATOR = ITEMS.register("configurator",
             () -> new Configurator(new Item.Properties()));
 
+    public static final RegistryObject<Item> FILTER_BLOCK = ITEMS.register("filter_block",
+            () -> new FilterBlockItem(InitBlocks.FILTER_BLOCK.get(), new Item.Properties()));
+
     public static final RegistryObject<Item> SKYBLOCK_FILTER_NORMAL = ITEMS.register("skyblock_filter_normal",
             () -> new SkyblockFilter(new Item.Properties(), SkyblockPass.NORMAL));
 

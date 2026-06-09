@@ -25,6 +25,7 @@ public class EntityRenderers {
         event.registerBlockEntityRenderer(InitBlockEntities.LIGHT_BULB.get(), LightBulbRenderer::new);
         event.registerBlockEntityRenderer(InitBlockEntities.ILLUSORITE_BLOCK_ENTITY.get(), IllusoriteOreRenderer::new);
         event.registerBlockEntityRenderer(InitBlockEntities.SKYBLOCK.get(), SkyblockEntityRenderer::new);
+        event.registerBlockEntityRenderer(InitBlockEntities.FILTER_BLOCK_ENTITY.get(), FilterBlockRenderer::new);
 
         event.registerEntityRenderer(InitEntities.GAME_OBJECT.get(), GameObjectRenderer::new);
     }

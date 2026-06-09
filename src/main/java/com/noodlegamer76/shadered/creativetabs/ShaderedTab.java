@@ -44,6 +44,13 @@ public class ShaderedTab {
             event.accept(InitItems.DARKNESS_BLOCK);
             event.accept(InitItems.SPACE_COMPRESSOR);
             event.accept(InitItems.CONFIGURATOR);
+
+            event.accept(SkyblockHolderBlockItem.create(SkyblockType.STORMY, SkyblockPass.INVERTED, InitItems.FILTER_BLOCK.get()));
+            event.accept(SkyblockHolderBlockItem.create(SkyblockType.STORMY, SkyblockPass.GRAYSCALE, InitItems.FILTER_BLOCK.get()));
+            event.accept(SkyblockHolderBlockItem.create(SkyblockType.STORMY, SkyblockPass.POSTERIZE, InitItems.FILTER_BLOCK.get()));
+            event.accept(SkyblockHolderBlockItem.create(SkyblockType.STORMY, SkyblockPass.BLUEPRINT, InitItems.FILTER_BLOCK.get()));
+            event.accept(SkyblockHolderBlockItem.create(SkyblockType.STORMY, SkyblockPass.GAMEBOY, InitItems.FILTER_BLOCK.get()));
+
             event.accept(InitItems.SKYBLOCK_FILTER_NORMAL);
             event.accept(InitItems.SKYBLOCK_FILTER_INVERTED);
             event.accept(InitItems.SKYBLOCK_FILTER_GRAYSCALE);
