@@ -14,7 +14,6 @@ public class EmbeddiumFilterFragPatch implements ShaderPatch {
 
 uniform sampler2D FilterSampler;
 uniform sampler2D FilterDepthSampler;
-uniform sampler2D MainDepthSampler;
 
 """);
         }
@@ -25,15 +24,16 @@ uniform sampler2D MainDepthSampler;
 
         String filterCode = """
 
-    vec2 shadered_FilterUV = gl_FragCoord.xy / vec2(textureSize(FilterSampler, 0));
+    vec2 shadered_FilterSize = vec2(textureSize(FilterSampler, 0));
+    vec2 shadered_FilterUV = gl_FragCoord.xy / shadered_FilterSize;
+
     vec4 shadered_FilterData = texture(FilterSampler, shadered_FilterUV);
 
-    float shadered_SceneDepth = texture(MainDepthSampler, shadered_FilterUV).r;
+    float shadered_CurrentDepth = gl_FragCoord.z;
     float shadered_FilterDepth = texture(FilterDepthSampler, shadered_FilterUV).r;
 
     bool shadered_EmbeddiumShouldApplyFilter =
-        shadered_FilterDepth < 0.999999 &&
-        shadered_SceneDepth > shadered_FilterDepth;
+        shadered_CurrentDepth > shadered_FilterDepth + 0.000001;
 
     if (shadered_EmbeddiumShouldApplyFilter) {
         int shadered_FilterEffect = int(shadered_FilterData.r * 255.0 + 0.5);

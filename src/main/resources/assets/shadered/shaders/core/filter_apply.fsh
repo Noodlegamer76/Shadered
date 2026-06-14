@@ -28,6 +28,9 @@ void main() {
 
     int effect = int(filterData.r * 255.0 + 0.5);
 
+    //temp disable
+    effect = 0;
+
     vec2 uv = texCoord;
     ivec2 coord = ivec2(gl_FragCoord.xy);
     vec4 finalColor = sceneColor;

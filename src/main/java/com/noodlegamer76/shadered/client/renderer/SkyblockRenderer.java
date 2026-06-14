@@ -22,9 +22,7 @@ import net.minecraft.client.renderer.texture.TextureManager;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
 import org.joml.Vector3f;
-import org.lwjgl.opengl.GL30;
-import org.lwjgl.opengl.GL33;
-import org.lwjgl.opengl.GL43;
+import org.lwjgl.opengl.*;
 
 import java.util.HashMap;
 import java.util.List;
@@ -186,19 +184,10 @@ public class SkyblockRenderer {
             return;
         }
 
-        TextureTarget extraBuffer = ComplexPassRenderer.getInstance().getExtraBuffer();
-        extraBuffer.copyDepthFrom(Minecraft.getInstance().getMainRenderTarget());
-
         Minecraft.getInstance().getMainRenderTarget().bindWrite(true);
-
-        GL43.glMemoryBarrier(
-                GL43.GL_FRAMEBUFFER_BARRIER_BIT |
-                        GL43.GL_TEXTURE_FETCH_BARRIER_BIT
-        );
 
         int filterColor = filterBlockComplexPass.getFilterTarget().getColorTextureId();
         int filterDepth = filterBlockComplexPass.getFilterTarget().getDepthTextureId();
-        int mainDepth = extraBuffer.getDepthTextureId();
 
         for (Supplier<ShaderInstance> shaderSupplier : FILTERED_LIT_SHADER_SUPPLIERS) {
             ShaderInstance shader = shaderSupplier.get();
@@ -206,9 +195,29 @@ public class SkyblockRenderer {
                 continue;
             }
 
-            shader.setSampler("FilterSampler", filterColor);
-            shader.setSampler("FilterDepthSampler", filterDepth);
-            shader.setSampler("MainDepthSampler", mainDepth);
+            shader.apply();
+
+            int location = GL20.glGetUniformLocation(shader.getId(), "FilterSampler");
+            if (location < 0) {
+                continue;
+            }
+
+            GL20.glUniform1i(location, 9);
+
+            RenderSystem.activeTexture(GL13.GL_TEXTURE0 + 9);
+            RenderSystem.bindTexture(filterColor);
+
+            location = GL20.glGetUniformLocation(shader.getId(), "FilterDepthSampler");
+            if (location < 0) {
+                continue;
+            }
+
+            GL20.glUniform1i(location, 10);
+
+            RenderSystem.activeTexture(GL13.GL_TEXTURE0 + 10);
+            RenderSystem.bindTexture(filterDepth);
+
+            RenderSystem.activeTexture(GL13.GL_TEXTURE0);
         }
     }
 

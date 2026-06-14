@@ -26,7 +26,6 @@ public class FilterBlockApplyComplexPass implements RenderableComplexPass {
     public void render(RenderStage stage, PoseStack poseStack, int renderTick, float partialTick) {
         ComplexPassRenderer renderer = ComplexPassRenderer.getInstance();
 
-
         TextureTarget source = renderer.getCurrentSourceBuffer();
         TextureTarget destination = renderer.getCurrentDestinationBuffer();
 

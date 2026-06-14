@@ -14,16 +14,25 @@ public class VanillaFilterFragPatch implements ShaderPatch {
             source = ShaderKeywords.injectAfterVersion(source, """
 
 uniform sampler2D FilterSampler;
+uniform sampler2D FilterDepthSampler;
 
 """);
         }
 
         String filterCode = """
 
-    vec2 shadered_FilterUV = gl_FragCoord.xy;
-    vec4 shadered_FilterData = texture(FilterSampler, shadered_FilterUV);
+    vec2 shadered_FilterSize = vec2(textureSize(FilterSampler, 0));
+                    vec2 shadered_FilterUV = gl_FragCoord.xy / shadered_FilterSize;
+                    vec4 shadered_FilterData = texture(FilterSampler, shadered_FilterUV);
     int shadered_FilterEffect = int(shadered_FilterData.r * 255.0 + 0.5);
+    
+    float shadered_CurrentDepth = gl_FragCoord.z;
+    float shadered_FilterDepth = texture(FilterDepthSampler, shadered_FilterUV).r;
 
+    bool shadered_EmbeddiumShouldApplyFilter =
+        shadered_CurrentDepth > shadered_FilterDepth + 0.000001;
+
+    if (shadered_EmbeddiumShouldApplyFilter) {
     switch (shadered_FilterEffect) {
         case 1: { // NORMAL
             break;
@@ -104,6 +113,7 @@ uniform sampler2D FilterSampler;
 
         default:
             break;
+    }
     }
 
 """;

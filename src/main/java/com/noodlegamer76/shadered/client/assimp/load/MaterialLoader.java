@@ -26,6 +26,7 @@ public class MaterialLoader {
             ResourceLocation normalTexture = getTexture(aiMaterial, model, path, Assimp.aiTextureType_NORMALS);
             ResourceLocation specularTexture = getTexture(aiMaterial, model, path, Assimp.aiTextureType_SPECULAR);
             ResourceLocation emissiveTexture = getTexture(aiMaterial, model, path, Assimp.aiTextureType_EMISSIVE);
+            ResourceLocation heightTexture = getTexture(aiMaterial, model, path, Assimp.aiTextureType_HEIGHT);
 
             float[] opacity = {1.0f};
             Assimp.aiGetMaterialFloatArray(aiMaterial, Assimp.AI_MATKEY_OPACITY,
@@ -67,6 +68,7 @@ public class MaterialLoader {
             material.setNormalTexture(normalTexture);
             material.setSpecularTexture(specularTexture);
             material.setEmissiveTexture(emissiveTexture);
+            material.setHeightTexture(heightTexture);
             material.setColor(r, g, b, mixedAlpha);
             material.setTransparent(isTransparent);
             material.setBlendMode(mode);

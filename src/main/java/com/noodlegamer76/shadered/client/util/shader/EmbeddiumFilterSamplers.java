@@ -13,7 +13,7 @@ public class EmbeddiumFilterSamplers {
     private static final int MAIN_DEPTH_SAMPLER_UNIT = 11;
 
     public static void upload(int program) {
-        if (program == 0) {
+        if (program <= 0) {
             return;
         }
 
