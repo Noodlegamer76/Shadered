@@ -16,6 +16,5 @@ public class TestRenderer<T extends RenderTester> implements BlockEntityRenderer
     @Override
     public void render(RenderTester pBlockEntity, float pPartialTick, PoseStack poseStack, MultiBufferSource pBuffer, int pPackedLight, int pPackedOverlay) {
 
-
     }
 }

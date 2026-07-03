@@ -1,6 +1,7 @@
 package com.noodlegamer76.shadered.event;
 
 import com.mojang.blaze3d.vertex.DefaultVertexFormat;
+import com.mojang.blaze3d.vertex.VertexFormat;
 import com.noodlegamer76.shadered.ShaderedMod;
 import com.noodlegamer76.shadered.client.util.ModVertexFormat;
 import net.minecraft.client.renderer.ShaderInstance;
@@ -30,6 +31,7 @@ public class RegisterShaders {
     public static ShaderInstance pbr;
     public static ShaderInstance filterBlock;
     public static ShaderInstance filterApply;
+    public static ShaderInstance raymarchFog;
 
     private static final Map<String, ShaderInstance> SHADERS = new HashMap<>();
 
@@ -159,6 +161,18 @@ public class RegisterShaders {
                     SHADERS.put("filter_apply", e);
                 });
 
+        event.registerShader(new ShaderInstance(event.getResourceProvider(),
+                        new ResourceLocation(ShaderedMod.MODID, "raymarch_fog"),
+                        DefaultVertexFormat.POSITION),
+                (e) -> {
+                    raymarchFog = e;
+                    SHADERS.put("raymarch_fog", e);
+                });
+
+    }
+
+    public static ShaderInstance getRaymarchFog() {
+        return raymarchFog;
     }
 
     public static ShaderInstance getCompressor() {

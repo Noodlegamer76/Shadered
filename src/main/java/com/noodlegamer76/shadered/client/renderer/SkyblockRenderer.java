@@ -102,6 +102,8 @@ public class SkyblockRenderer {
     public static final FilterBlockEncodeComplexPass filterBlockComplexPass = new FilterBlockEncodeComplexPass(filterData);
     public static final FilterBlockApplyComplexPass filterBlockApplyComplexPass = new FilterBlockApplyComplexPass();
 
+    public static final RaymarchFogRenderer raymarchFogRenderPass = new RaymarchFogRenderer();
+
 
     public static SkyblockBatchData getData(SkyblockType type) {
         if (type == SkyblockType.SPACE) {
@@ -159,6 +161,7 @@ public class SkyblockRenderer {
         renderer.add(RenderStage.AFTER_BLOCK_ENTITIES, filterBlockComplexPass);
         renderer.add(RenderStage.AFTER_BLOCK_ENTITIES, filterBlockApplyComplexPass);
 
+        renderer.add(RenderStage.AFTER_LEVEL, raymarchFogRenderPass);
 
         renderer.add(RenderStage.AFTER_LEVEL, glassRenderer);
         glassRenderer.addGlassChannel(channel);
