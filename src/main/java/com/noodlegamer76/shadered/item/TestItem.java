@@ -1,6 +1,9 @@
 package com.noodlegamer76.shadered.item;
 
 import com.noodlegamer76.shadered.ShaderedMod;
+import com.noodlegamer76.shadered.client.renderer.ComplexPassRenderer;
+import com.noodlegamer76.shadered.client.renderer.SkyblockRenderer;
+import com.noodlegamer76.shadered.client.util.glass.GlassChannel;
 import com.noodlegamer76.shadered.core.component.components.MeshComponent;
 import com.noodlegamer76.shadered.entity.GameObject;
 import com.noodlegamer76.shadered.entity.InitEntities;

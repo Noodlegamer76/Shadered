@@ -15,10 +15,12 @@ public class AssimpMaterial {
     private static final ResourceLocation DEFAULT_EMISSIVE = ResourceLocation.fromNamespaceAndPath(ShaderedMod.MODID, "textures/environment/emissive.png");
     private static final ResourceLocation DEFAULT_NORMAL = ResourceLocation.fromNamespaceAndPath(ShaderedMod.MODID, "textures/environment/normal.png");
     private static final ResourceLocation DEFAULT_SPECULAR = ResourceLocation.fromNamespaceAndPath(ShaderedMod.MODID, "textures/environment/specular.png");
+    private static final ResourceLocation DEFAULT_HEIGHT = ResourceLocation.fromNamespaceAndPath(ShaderedMod.MODID, "textures/environment/height.png");
     private ResourceLocation diffuseTexture = WHITE_TEXTURE;
     private ResourceLocation specularTexture = DEFAULT_SPECULAR;
     private ResourceLocation normalTexture = DEFAULT_NORMAL;
     private ResourceLocation emissiveTexture = DEFAULT_EMISSIVE;
+    private ResourceLocation heightTexture = DEFAULT_HEIGHT;
     private float r, g, b, a = 1.0f;
     private boolean isTransparent = false;
     private BlendMode mode = OPAQUE;
@@ -77,6 +79,13 @@ public class AssimpMaterial {
                 : emissiveTexture;
     }
 
+    public void setHeightTexture(ResourceLocation heightTexture) {
+        this.heightTexture = (heightTexture == null || heightTexture.getPath().contains("missingno"))
+                ? DEFAULT_HEIGHT
+                : heightTexture;
+    }
+
+
     public ResourceLocation getEmissiveTexture() {
         return emissiveTexture;
     }
@@ -114,6 +123,7 @@ public class AssimpMaterial {
         shader.setSampler("normal", SkyblockRenderer.getTextureId(normalTexture));
         shader.setSampler("pbr", SkyblockRenderer.getTextureId(specularTexture));
         shader.setSampler("emissive", SkyblockRenderer.getTextureId(emissiveTexture));
+        shader.setSampler("height", SkyblockRenderer.getTextureId(heightTexture));
     }
 
     public void applyBlendState() {

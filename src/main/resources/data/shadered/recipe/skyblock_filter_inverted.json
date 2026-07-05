@@ -14,7 +14,7 @@
     }
   },
   "result": {
-    "item": "shadered:skyblock_filter_inverted",
+    "id": "shadered:skyblock_filter_inverted",
     "count": 1
   }
 }

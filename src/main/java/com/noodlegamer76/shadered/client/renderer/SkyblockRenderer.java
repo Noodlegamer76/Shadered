@@ -1,24 +1,32 @@
 package com.noodlegamer76.shadered.client.renderer;
 
 import com.mojang.blaze3d.pipeline.TextureTarget;
+import com.mojang.blaze3d.platform.GlStateManager;
+import com.mojang.blaze3d.systems.RenderSystem;
 import com.noodlegamer76.shadered.ShaderedMod;
 import com.noodlegamer76.shadered.client.renderer.complexpasses.*;
+import com.noodlegamer76.shadered.client.util.GlUtils;
 import com.noodlegamer76.shadered.client.util.RenderStage;
+import com.noodlegamer76.shadered.client.util.SkyblockType;
 import com.noodlegamer76.shadered.client.util.glass.GlassChannel;
+import com.noodlegamer76.shadered.client.util.shader.ShaderPatchRegistry;
 import com.noodlegamer76.shadered.client.util.skyblock.SkyblockBatchData;
 import com.noodlegamer76.shadered.client.util.skyblock.SkyboxTranslation;
 import com.noodlegamer76.shadered.event.RegisterShaders;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GameRenderer;
+import net.minecraft.client.renderer.ShaderInstance;
 import net.minecraft.client.renderer.texture.AbstractTexture;
 import net.minecraft.client.renderer.texture.TextureManager;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
 import org.joml.Vector3f;
+import org.lwjgl.opengl.*;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Supplier;
 
 public class SkyblockRenderer {
     public static final ResourceLocation NEBULA = ResourceLocation.fromNamespaceAndPath(ShaderedMod.MODID, "textures/environment/nebula");
@@ -47,6 +55,8 @@ public class SkyblockRenderer {
     public static SkyblockBatchData forestData = new SkyblockBatchData();
     public static SkyblockBatchData lightData = new SkyblockBatchData();
     public static SkyblockBatchData mimicData = new SkyblockBatchData();
+
+    public static SkyblockBatchData filterData = new SkyblockBatchData();
 
     public static Map<SkyblockBatchData, Integer> DATA_LIST = new HashMap<>();
 
@@ -88,9 +98,44 @@ public class SkyblockRenderer {
             mimicData
     );
 
-    public static TextureTarget paintingWindow;
-    private static int previousWidth = 0;
-    private static int previousHeight = 0;
+    public static final RaymarchFogRenderer raymarchFogRenderPass = new RaymarchFogRenderer();
+
+
+    public static SkyblockBatchData getData(SkyblockType type) {
+        if (type == SkyblockType.SPACE) {
+            return SkyblockRenderer.spaceData;
+        }
+        else if (type == SkyblockType.OCEAN) {
+            return SkyblockRenderer.oceanData;
+        }
+        else if (type == SkyblockType.LIGHT) {
+            return SkyblockRenderer.lightData;
+        }
+        else if (type == SkyblockType.END) {
+            return SkyblockRenderer.endData;
+        }
+        else if (type == SkyblockType.STORMY) {
+            return SkyblockRenderer.stormyData;
+        }
+        else if (type == SkyblockType.ECLIPSE) {
+            return SkyblockRenderer.eclipseData;
+        }
+        else if (type == SkyblockType.MIMIC) {
+            return SkyblockRenderer.mimicData;
+        }
+        else if (type == SkyblockType.END_SKY) {
+            return SkyblockRenderer.endSkyData;
+        }
+        else if (type == SkyblockType.IRIDIA) {
+            return SkyblockRenderer.iridiaData;
+        }
+        else if (type == SkyblockType.FOREST) {
+            return SkyblockRenderer.forestData;
+        }
+        else {
+            return SkyblockRenderer.stormyData;
+        }
+    }
 
     public static void setup() {
         ComplexPassRenderer renderer = ComplexPassRenderer.getInstance();
@@ -109,8 +154,7 @@ public class SkyblockRenderer {
         SkyblockRenderPass skyblockRenderPass = new SkyblockRenderPass(DATA_LIST);
         renderer.add(RenderStage.AFTER_BLOCK_ENTITIES, skyblockRenderPass);
 
-        //TODO: Remove this
-        glassData.clear();
+        renderer.add(RenderStage.AFTER_LEVEL, raymarchFogRenderPass);
 
         AssimpRendererComplexPass assimpRendererComplexPass = new AssimpRendererComplexPass();
         renderer.add(RenderStage.AFTER_BLOCK_ENTITIES, assimpRendererComplexPass);
@@ -124,23 +168,6 @@ public class SkyblockRenderer {
         RegisterShaders.skyblockScreen.setSampler("Pixel", pixel);
 
         RegisterShaders.skyblockBackground.setSampler("MainDepth", Minecraft.getInstance().getMainRenderTarget().getDepthTextureId());
-
-        int width = Minecraft.getInstance().getWindow().getWidth();
-        int height = Minecraft.getInstance().getWindow().getHeight();
-        if (paintingWindow == null) {
-            paintingWindow = new TextureTarget(width, height, true, false);
-        }
-
-        paintingWindow.clear(false);
-        paintingWindow.setClearColor(1, 0, 1, 1);
-
-        if (previousWidth != width || previousHeight != height) {
-            paintingWindow.resize(width, height, false);
-            previousWidth = width;
-            previousHeight = height;
-        }
-
-        Minecraft.getInstance().getMainRenderTarget().bindWrite(true);
     }
 
     public static int getTextureId(ResourceLocation resourceLocation) {

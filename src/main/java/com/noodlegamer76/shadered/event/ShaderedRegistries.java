@@ -10,7 +10,7 @@ import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.registries.NewRegistryEvent;
 import net.neoforged.neoforge.registries.RegistryBuilder;
 
-@EventBusSubscriber(modid = ShaderedMod.MODID, bus = EventBusSubscriber.Bus.MOD)
+@EventBusSubscriber(modid = ShaderedMod.MODID)
 public class ShaderedRegistries {
     public static final ResourceKey<Registry<ComponentType<?>>> COMPONENT_TYPE = createRegistryKey("component_type");
     public static Registry<ComponentType<?>> COMPONENT_TYPES;

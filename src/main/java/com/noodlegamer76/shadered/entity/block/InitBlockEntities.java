@@ -2,8 +2,7 @@ package com.noodlegamer76.shadered.entity.block;
 
 import com.noodlegamer76.shadered.ShaderedMod;
 import com.noodlegamer76.shadered.block.*;
-import com.noodlegamer76.shadered.entity.block.painting.SkyblockPaintingEntity;
-import com.noodlegamer76.shadered.entity.block.skyblock.*;
+import com.noodlegamer76.shadered.entity.block.old.*;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.neoforged.neoforge.registries.DeferredHolder;
@@ -14,6 +13,23 @@ public class InitBlockEntities {
 
         public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<RenderTester>> RENDER_TESTER = BLOCK_ENTITIES.register("render_tester",
             () -> BlockEntityType.Builder.of(RenderTester::new, InitBlocks.RENDER_TESTER_BLOCK.get()).build(null));
+
+    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<SkyblockEntity>> SKYBLOCK = BLOCK_ENTITIES.register("skyblock",
+            () -> BlockEntityType.Builder.of(SkyblockEntity::new, InitBlocks.SKYBLOCK.get()).build(null));
+
+    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<SkyEmitterEntity>> SKY_EMITTER = BLOCK_ENTITIES.register("sky_emitter",
+            () -> BlockEntityType.Builder.of(SkyEmitterEntity::new, InitBlocks.SKY_EMITTER.get()).build(null));
+
+    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<MaxwellEntity>> MAXWELL = BLOCK_ENTITIES.register("maxwell",
+            () -> BlockEntityType.Builder.of(MaxwellEntity::new, InitBlocks.MAXWELL.get()).build(null));
+
+    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<FilterBlockEntity>> FILTER_BLOCK_ENTITY = BLOCK_ENTITIES.register("filter_block_entity",
+            () -> BlockEntityType.Builder.of(FilterBlockEntity::new, InitBlocks.FILTER_BLOCK.get()).build(null));
+
+    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<IllusoriteOreBlockEntity>> ILLUSORITE_BLOCK_ENTITY = BLOCK_ENTITIES.register("illusorite_block_entity",
+            () -> BlockEntityType.Builder.of(IllusoriteOreBlockEntity::new, InitBlocks.ILLUSORITE_ORE.get(), InitBlocks.DEEPSLATE_ILLUSORITE_ORE.get()).build(null));
+
+    //DEPRECATED BLOCK ENTITIES
 
     public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<SpaceBlockEntity>> SPACE_BLOCK = BLOCK_ENTITIES.register("space_block",
             () -> BlockEntityType.Builder.of(SpaceBlockEntity::new, InitBlocks.SPACE_BLOCK.get()).build(null));
@@ -45,21 +61,4 @@ public class InitBlockEntities {
     public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<LightBlockEntity>> LIGHT_BLOCK = BLOCK_ENTITIES.register("light_block",
             () -> BlockEntityType.Builder.of(LightBlockEntity::new, InitBlocks.LIGHT_BLOCK.get()).build(null));
 
-    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<SkyEmitterEntity>> SKY_EMITTER = BLOCK_ENTITIES.register("sky_emitter",
-            () -> BlockEntityType.Builder.of(SkyEmitterEntity::new, InitBlocks.SKY_EMITTER.get()).build(null));
-
-    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<SkyblockPaintingEntity>> SKYBLOCK_PAINTING = BLOCK_ENTITIES.register("skyblock_painting",
-            () -> BlockEntityType.Builder.of(SkyblockPaintingEntity::new, InitBlocks.SKYBLOCK_PAINTING.get()).build(null));
-
-    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<MaxwellEntity>> MAXWELL = BLOCK_ENTITIES.register("maxwell",
-            () -> BlockEntityType.Builder.of(MaxwellEntity::new, InitBlocks.MAXWELL.get()).build(null));
-
-    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<WindowEntity>> WINDOW = BLOCK_ENTITIES.register("window",
-            () -> BlockEntityType.Builder.of(WindowEntity::new, InitBlocks.WINDOW.get()).build(null));
-
-    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<SpaceCompressorBlockEntity>> SPACE_COMPRESSOR = BLOCK_ENTITIES.register("space_compressor",
-            () -> BlockEntityType.Builder.of(SpaceCompressorBlockEntity::new, InitBlocks.SPACE_COMPRESSOR.get()).build(null));
-
-    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<LightBulbEntity>> LIGHT_BULB = BLOCK_ENTITIES.register("light_bulb",
-            () -> BlockEntityType.Builder.of(LightBulbEntity::new, InitBlocks.LIGHT_BULB.get()).build(null));
 }

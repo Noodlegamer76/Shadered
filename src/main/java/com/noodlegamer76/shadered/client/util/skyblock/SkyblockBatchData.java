@@ -19,8 +19,8 @@ public class SkyblockBatchData {
         passes.computeIfAbsent(pass, k -> new PassData());
         passes.get(pass).getPositions().add(pos);
         passes.get(pass).getPose().add(pose);
-        passes.get(pass).getInverts().add(invert);
         passes.get(pass).getAlphas().add(alpha);
+        passes.get(pass).getInverts().add(invert);
         if (invert) {
             passes.get(pass).getInvertedIndices().add(passes.get(pass).getPositions().size() - 1);
         }

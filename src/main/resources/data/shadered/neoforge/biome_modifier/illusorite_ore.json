@@ -1,0 +1,10 @@
+{
+  "type": "neoforge:add_features",
+  "biomes": "#minecraft:is_overworld",
+  "step": "underground_ores",
+  "features": [
+    "shadered:ore_illusorite",
+    "shadered:ore_illusorite_buried",
+    "shadered:ore_illusorite_large"
+  ]
+}

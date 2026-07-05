@@ -19,7 +19,8 @@
         { "name": "diffuse" },
         { "name": "emissive" },
         { "name": "pbr" },
-        { "name": "normal" }
+        { "name": "normal" },
+        { "name": "height" }
     ],
     "uniforms": [
         { "name": "ModelMat", "type": "matrix4x4", "count": 16, "values": [ 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0 ] },

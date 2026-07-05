@@ -1,23 +1,21 @@
 package com.noodlegamer76.shadered.entity.block;
 
-import com.noodlegamer76.shadered.ShaderedMod;
-import com.noodlegamer76.shadered.client.util.skyemitter.SkyEmitterType;
+import com.noodlegamer76.shadered.client.util.SkyblockType;
+import com.noodlegamer76.shadered.client.util.skyblock.SkyblockPass;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 
-public class SkyEmitterEntity extends BlockEntity {
+public class SkyEmitterEntity extends SkyblockHolderEntity {
     private float minimumRange = 5.0f;
     private float maximumRange = 10.0f;
     private float alpha = 1.0f;
-    private SkyEmitterType type = SkyEmitterType.MIMIC;
     public static final AABB RENDER_BOUNDING_BOX = new AABB(
             -512, -512, -512,
             512, 512, 512
@@ -33,12 +31,6 @@ public class SkyEmitterEntity extends BlockEntity {
         this.minimumRange = tag.getFloat("minimumRange");
         this.maximumRange = tag.getFloat("maximumRange");
         this.alpha = tag.getFloat("alpha");
-
-
-        int type = tag.getInt("type");
-        if (type >= 0 && type < SkyEmitterType.values().length) {
-            this.type = SkyEmitterType.values()[type];
-        }
     }
 
     @Override
@@ -47,7 +39,6 @@ public class SkyEmitterEntity extends BlockEntity {
         tag.putFloat("minimumRange", minimumRange);
         tag.putFloat("maximumRange", maximumRange);
         tag.putFloat("alpha", alpha);
-        tag.putInt("type", type.ordinal());
     }
 
     @Override
@@ -96,17 +87,5 @@ public class SkyEmitterEntity extends BlockEntity {
 
     public float getAlpha() {
         return alpha;
-    }
-
-    public void setType(SkyEmitterType type) {
-        this.type = type;
-        setChanged();
-        if (level != null) {
-            level.sendBlockUpdated(worldPosition, getBlockState(), getBlockState(), 3);
-        }
-    }
-
-    public SkyEmitterType getEmitterType() {
-        return type;
     }
 }

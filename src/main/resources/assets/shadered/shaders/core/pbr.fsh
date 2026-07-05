@@ -4,6 +4,7 @@ uniform sampler2D diffuse;
 uniform sampler2D normal;
 uniform sampler2D pbr;
 uniform sampler2D emissive;
+uniform sampler2D height;
 uniform vec3 u_LightPos[32];
 uniform vec3 u_LightColor[32];
 uniform float u_LightRadius[32];

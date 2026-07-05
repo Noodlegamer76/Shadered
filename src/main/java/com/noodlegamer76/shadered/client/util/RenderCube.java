@@ -1,5 +1,6 @@
 package com.noodlegamer76.shadered.client.util;
 
+import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.*;
 import com.mojang.math.Axis;
@@ -17,6 +18,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
+import org.lwjgl.opengl.GL20;
 
 public class RenderCube {
     public static void renderSkyBlocks(SkyblockBatchData.PassData data, boolean inverted, @Nullable ShaderInstance shader) {
@@ -94,7 +96,6 @@ public class RenderCube {
         }
 
         MeshData meshData = bufferbuilder.build();
-
         if (meshData != null) {
             BufferUploader.drawWithShader(meshData);
         }
@@ -171,9 +172,8 @@ public class RenderCube {
         }
 
         MeshData meshData = bufferbuilder.build();
-
         if (meshData != null) {
-            BufferUploader.draw(meshData);
+            BufferUploader.drawWithShader(meshData);
         }
     }
 
@@ -253,7 +253,7 @@ public class RenderCube {
 
     public static void renderSizedBox(BlockPos[] positions, float partialTicks, PoseStack poseStack) {
         Tesselator tesselator = Tesselator.getInstance();
-        BufferBuilder builder = tesselator.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
+        BufferBuilder bufferbuilder = tesselator.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
 
         float offset = 0.0005f;
 
@@ -326,7 +326,7 @@ public class RenderCube {
             for (int k = 0; k < 4; k++) {
                 float[] v = vertices[k];
                 float[] uv = uvs[k];
-                builder
+                bufferbuilder
                         .addVertex(matrix4f, v[0], v[1], v[2])
                         .setUv(uv[0], uv[1]);
             }
@@ -335,9 +335,7 @@ public class RenderCube {
         }
 
         poseStack.popPose();
-
-        MeshData meshData = builder.build();
-
+        MeshData meshData = bufferbuilder.build();
         if (meshData != null) {
             BufferUploader.drawWithShader(meshData);
         }

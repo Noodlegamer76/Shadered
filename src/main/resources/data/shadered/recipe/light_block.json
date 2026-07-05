@@ -16,7 +16,7 @@
   ],
   "result": {
     "count": 8,
-    "item": "shadered:light_block"
+    "id": "shadered:light_block"
   },
   "show_notification": true
 }

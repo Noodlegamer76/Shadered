@@ -11,10 +11,10 @@ import java.util.List;
 
 public abstract class Component implements SyncedVarOwner {
     protected final GameObject gameObject;
-    protected final DeferredHolder<ComponentType<?>, ?> type;
+    protected final DeferredHolder<ComponentType<?>, ComponentType<?>> type;
     public int id;
 
-    protected Component(DeferredHolder<ComponentType<?>, ?> type, GameObject gameObject) {
+    protected Component(DeferredHolder<ComponentType<?>, ComponentType<?>> type, GameObject gameObject) {
         this.gameObject = gameObject;
         this.type = type;
         this.id = gameObject.nextId();
@@ -36,7 +36,7 @@ public abstract class Component implements SyncedVarOwner {
 
     }
 
-    public DeferredHolder<ComponentType<?>, ?> getType() {
+    public DeferredHolder<ComponentType<?>, ComponentType<?>> getType() {
         return type;
     }
 

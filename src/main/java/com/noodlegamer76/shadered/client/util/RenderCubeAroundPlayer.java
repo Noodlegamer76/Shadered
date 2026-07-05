@@ -10,6 +10,7 @@ import org.joml.Matrix4f;
 import java.awt.*;
 
 public class RenderCubeAroundPlayer {
+
     public static void renderCubeWithShader(PoseStack poseStack) {
 
         Tesselator tesselator = Tesselator.getInstance();
@@ -57,19 +58,93 @@ public class RenderCubeAroundPlayer {
             }
             float far = Minecraft.getInstance().gameRenderer.getRenderDistance();
             Matrix4f matrix4f = poseStack.last().pose();
-            BufferBuilder bufferBuilder = tesselator.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
-            bufferBuilder.addVertex(matrix4f, -far, -far, -far).setUv(0, 0);
-            bufferBuilder.addVertex(matrix4f, -far, -far,  far).setUv(0, 1);
-            bufferBuilder.addVertex(matrix4f,  far, -far,  far).setUv(1, 1);
-            bufferBuilder.addVertex(matrix4f,  far, -far, -far).setUv(1, 0);
-
-            MeshData meshData = bufferBuilder.build();
-
+            BufferBuilder bufferbuilder = tesselator.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
+            bufferbuilder.addVertex(matrix4f, -far, -far, -far).setUv(0, 0);
+            bufferbuilder.addVertex(matrix4f, -far, -far,  far).setUv(0, 1);
+            bufferbuilder.addVertex(matrix4f,  far, -far,  far).setUv(1, 1);
+            bufferbuilder.addVertex(matrix4f,  far, -far, -far).setUv(1, 0);
+            MeshData meshData = bufferbuilder.build();
             if (meshData != null) {
                 BufferUploader.drawWithShader(meshData);
             }
-
             poseStack.popPose();
         }
+    }
+
+    public static void renderCubeWithShader(PoseStack poseStack, Color color) {
+        Tesselator tesselator = Tesselator.getInstance();
+
+        RenderSystem.setShader(GameRenderer::getPositionColorShader);
+
+        RenderSystem.getModelViewStack().pushMatrix();
+        RenderSystem.getModelViewStack().mul(poseStack.last().pose());
+        RenderSystem.applyModelViewMatrix();
+
+        RenderSystem.disableDepthTest();
+        RenderSystem.disableCull();
+        RenderSystem.depthMask(false);
+
+        poseStack.pushPose();
+        poseStack.scale(1, 1, 1);
+
+        Matrix4f matrix = poseStack.last().pose();
+
+        BufferBuilder bufferBuilder = tesselator.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_COLOR);
+
+        int r = color.getRed();
+        int g = color.getGreen();
+        int b = color.getBlue();
+        int a = color.getAlpha();
+
+        // Top face
+        bufferBuilder.addVertex(matrix, -1, 1, -1).setColor(r, g, b, a);
+        bufferBuilder.addVertex(matrix,  1, 1, -1).setColor(r, g, b, a);
+        bufferBuilder.addVertex(matrix,  1, 1,  1).setColor(r, g, b, a);
+        bufferBuilder.addVertex(matrix, -1, 1,  1).setColor(r, g, b, a);
+
+        // Bottom face
+        bufferBuilder.addVertex(matrix, -1, -1,  1).setColor(r, g, b, a);
+        bufferBuilder.addVertex(matrix,  1, -1,  1).setColor(r, g, b, a);
+        bufferBuilder.addVertex(matrix,  1, -1, -1).setColor(r, g, b, a);
+        bufferBuilder.addVertex(matrix, -1, -1, -1).setColor(r, g, b, a);
+
+        // Remaining four faces
+        // Front
+        bufferBuilder.addVertex(matrix, -1, -1, 1).setColor(r, g, b, a);
+        bufferBuilder.addVertex(matrix,  1, -1, 1).setColor(r, g, b, a);
+        bufferBuilder.addVertex(matrix,  1,  1, 1).setColor(r, g, b, a);
+        bufferBuilder.addVertex(matrix, -1,  1, 1).setColor(r, g, b, a);
+
+        // Back
+        bufferBuilder.addVertex(matrix,  1, -1, -1).setColor(r, g, b, a);
+        bufferBuilder.addVertex(matrix, -1, -1, -1).setColor(r, g, b, a);
+        bufferBuilder.addVertex(matrix, -1,  1, -1).setColor(r, g, b, a);
+        bufferBuilder.addVertex(matrix,  1,  1, -1).setColor(r, g, b, a);
+
+        // Left
+        bufferBuilder.addVertex(matrix, -1, -1, -1).setColor(r, g, b, a);
+        bufferBuilder.addVertex(matrix, -1, -1,  1).setColor(r, g, b, a);
+        bufferBuilder.addVertex(matrix, -1,  1,  1).setColor(r, g, b, a);
+        bufferBuilder.addVertex(matrix, -1,  1, -1).setColor(r, g, b, a);
+
+        // Right
+        bufferBuilder.addVertex(matrix, 1, -1,  1).setColor(r, g, b, a);
+        bufferBuilder.addVertex(matrix, 1, -1, -1).setColor(r, g, b, a);
+        bufferBuilder.addVertex(matrix, 1,  1, -1).setColor(r, g, b, a);
+        bufferBuilder.addVertex(matrix, 1,  1,  1).setColor(r, g, b, a);
+
+        MeshData meshData = bufferBuilder.build();
+        if (meshData != null) {
+            BufferUploader.drawWithShader(meshData);
+        }
+
+        poseStack.popPose();
+
+        RenderSystem.getModelViewStack().popMatrix();
+        RenderSystem.applyModelViewMatrix();
+
+        RenderSystem.enableCull();
+        RenderSystem.enableDepthTest();
+        RenderSystem.depthMask(true);
     }
 }

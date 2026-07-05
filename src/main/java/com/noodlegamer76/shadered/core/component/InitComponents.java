@@ -11,7 +11,7 @@ import net.neoforged.neoforge.registries.DeferredRegister;
 public class InitComponents {
     public static final DeferredRegister<ComponentType<?>> COMPONENT_TYPES = DeferredRegister.create(ShaderedRegistries.COMPONENT_TYPE, ShaderedMod.MODID);
 
-    public static final DeferredHolder<ComponentType<?>, ?> MESH = COMPONENT_TYPES.register("mesh",
+    public static final DeferredHolder<ComponentType<?>, ComponentType<?>> MESH = COMPONENT_TYPES.register("mesh",
             () -> new ComponentType<>(MeshComponent::new));
 
     @FunctionalInterface

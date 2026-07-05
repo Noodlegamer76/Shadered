@@ -107,12 +107,12 @@ public class SkyBoxRenderer {
     }
 
     public static BufferBuilder startQuad() {
-        return Tesselator.getInstance().begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX_COLOR);
+        BufferBuilder bufferBuilder = Tesselator.getInstance().begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX_COLOR);
+        return bufferBuilder;
     }
 
     public static void endQuad(BufferBuilder bufferBuilder) {
         MeshData meshData = bufferBuilder.build();
-
         if (meshData != null) {
             BufferUploader.drawWithShader(meshData);
         }
@@ -198,19 +198,13 @@ public class SkyBoxRenderer {
             }
 
             Matrix4f matrix4f = poseStack.last().pose();
-            BufferBuilder builder = tesselator.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX_COLOR);
+            BufferBuilder bufferbuilder = tesselator.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX_COLOR);
             float far = Minecraft.getInstance().gameRenderer.getRenderDistance();
-            builder.addVertex(matrix4f, -far, -far, -far).setUv(0.0F, 0.0F).setColor(40, 40, 40, 255);
-            builder.addVertex(matrix4f, -far, -far, far).setUv(0.0F, 16.0F).setColor(40, 40, 40, 255);
-            builder.addVertex(matrix4f, far, -far, far).setUv(16.0F, 16.0F).setColor(40, 40, 40, 255);
-            builder.addVertex(matrix4f, far, -far, -far).setUv(16.0F, 0.0F).setColor(40, 40, 40, 255);
-
-            MeshData meshData = builder.build();
-
-            if (meshData != null) {
-                BufferUploader.drawWithShader(meshData);
-            }
-
+            bufferbuilder.addVertex(matrix4f, -far, -far, -far).setUv(0.0F, 0.0F).setColor(40, 40, 40, 255);
+            bufferbuilder.addVertex(matrix4f, -far, -far, far).setUv(0.0F, 16.0F).setColor(40, 40, 40, 255);
+            bufferbuilder.addVertex(matrix4f, far, -far, far).setUv(16.0F, 16.0F).setColor(40, 40, 40, 255);
+            bufferbuilder.addVertex(matrix4f, far, -far, -far).setUv(16.0F, 0.0F).setColor(40, 40, 40, 255);
+            BufferUploader.drawWithShader(bufferbuilder.build());
             poseStack.popPose();
         }
 
@@ -221,6 +215,7 @@ public class SkyBoxRenderer {
     public static void renderEndPortalSky(PoseStack poseStack) {
         RenderSystem.enableBlend();
         RenderSystem.depthMask(false);
+        RenderSystem.setShader(GameRenderer::getPositionTexColorShader);
 
         RenderSystem.setShader(GameRenderer::getRendertypeEndPortalShader);
         ResourceLocation endSky = TheEndPortalRenderer.END_SKY_LOCATION;
@@ -254,19 +249,13 @@ public class SkyBoxRenderer {
             }
 
             Matrix4f matrix4f = poseStack.last().pose();
-            BufferBuilder bufferBuilder = tesselator.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX_COLOR);
+            BufferBuilder bufferbuilder = tesselator.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX_COLOR);
             float far = Minecraft.getInstance().gameRenderer.getRenderDistance();
-            bufferBuilder.addVertex(matrix4f, -far, -far, -far).setUv(0.0F, 0.0F).setColor(40, 40, 40, 255);
-            bufferBuilder.addVertex(matrix4f, -far, -far, far).setUv(0.0F, 16.0F).setColor(40, 40, 40, 255);
-            bufferBuilder.addVertex(matrix4f, far, -far, far).setUv(16.0F, 16.0F).setColor(40, 40, 40, 255);
-            bufferBuilder.addVertex(matrix4f, far, -far, -far).setUv(16.0F, 0.0F).setColor(40, 40, 40, 255);
-
-            MeshData meshData = bufferBuilder.build();
-
-            if (meshData != null) {
-                BufferUploader.drawWithShader(meshData);
-            }
-
+            bufferbuilder.addVertex(matrix4f, -far, -far, -far).setUv(0.0F, 0.0F).setColor(40, 40, 40, 255);
+            bufferbuilder.addVertex(matrix4f, -far, -far, far).setUv(0.0F, 16.0F).setColor(40, 40, 40, 255);
+            bufferbuilder.addVertex(matrix4f, far, -far, far).setUv(16.0F, 16.0F).setColor(40, 40, 40, 255);
+            bufferbuilder.addVertex(matrix4f, far, -far, -far).setUv(16.0F, 0.0F).setColor(40, 40, 40, 255);
+            BufferUploader.drawWithShader(bufferbuilder.build());
             poseStack.popPose();
         }
 

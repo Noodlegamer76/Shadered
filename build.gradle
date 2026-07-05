@@ -151,8 +151,6 @@ dependencies {
     implementation("org.sinytra.forgified-fabric-api:fabric-rendering-data-attachment-v1:0.3.48+73761d2e19")
     implementation("org.sinytra.forgified-fabric-api:fabric-block-view-api-v2:1.0.10+9afaaf8c19")
 
-    implementation "curse.maven:irisshaders-455508:8242804"
-
 def lwjglVersion = "3.3.3"
 
     implementation("org.lwjgl:lwjgl-assimp:${lwjglVersion}") {

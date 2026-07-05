@@ -1,0 +1,28 @@
+{
+  "blend": {
+    "func": "add",
+    "srcrgb": "one",
+    "dstrgb": "zero"
+  },
+  "vertex": "shadered:filter_apply",
+  "fragment": "shadered:filter_apply",
+  "attributes": [
+    "Position",
+    "UV0"
+  ],
+  "samplers": [
+    {
+      "name": "DiffuseSampler"
+    },
+    {
+      "name": "DepthSampler"
+    },
+    {
+      "name": "FilterSampler"
+    },
+    {
+      "name": "FilterDepthSampler"
+    }
+  ],
+  "uniforms": []
+}

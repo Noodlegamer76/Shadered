@@ -4,11 +4,11 @@
   "compatibilityLevel": "JAVA_21",
   "refmap": "shadered.refmap.json",
   "mixins": [
-    "DefaultShaderInterfaceMixin",
     "ShaderLoaderMixin"
   ],
   "client": [
     "BufferBuilderMixin",
+    "GameRendererAccessor",
     "ProgramMixin"
   ],
   "minVersion": "0.8"

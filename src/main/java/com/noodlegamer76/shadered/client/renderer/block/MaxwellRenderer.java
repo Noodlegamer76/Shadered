@@ -66,6 +66,6 @@ public class MaxwellRenderer<T extends RenderTester> implements BlockEntityRende
 
     @Override
     public AABB getRenderBoundingBox(MaxwellEntity blockEntity) {
-        return BlockEntityRenderer.super.getRenderBoundingBox(blockEntity).inflate(1.0D);
+        return BlockEntityRenderer.super.getRenderBoundingBox(blockEntity).inflate(1);
     }
 }

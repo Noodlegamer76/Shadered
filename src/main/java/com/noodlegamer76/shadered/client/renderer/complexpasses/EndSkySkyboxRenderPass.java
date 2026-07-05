@@ -34,7 +34,6 @@ public class EndSkySkyboxRenderPass implements RenderableComplexPass {
         }
         else if (skyboxTarget.width != renderer.getPreviousWidth() || skyboxTarget.height != renderer.getPreviousHeight()) {
             skyboxTarget.resize(renderer.getPreviousWidth(), renderer.getPreviousHeight(), Minecraft.ON_OSX);
-            SkyblockRenderer.DATA_LIST.put(batchData, skyboxTarget.getColorTextureId());
         }
 
         skyboxTarget.bindWrite(true);
@@ -42,8 +41,6 @@ public class EndSkySkyboxRenderPass implements RenderableComplexPass {
         SkyBoxRenderer.renderEndSky(poseStack);
 
         renderer.getRenderBuffer().bindWrite(true);
-
-        batchData.clear();
     }
 
     public TextureTarget getSkyboxTarget() {

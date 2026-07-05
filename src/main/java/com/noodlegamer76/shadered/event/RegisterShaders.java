@@ -1,6 +1,7 @@
 package com.noodlegamer76.shadered.event;
 
 import com.mojang.blaze3d.vertex.DefaultVertexFormat;
+import com.mojang.blaze3d.vertex.VertexFormat;
 import com.noodlegamer76.shadered.ShaderedMod;
 import com.noodlegamer76.shadered.client.util.ModVertexFormat;
 import net.minecraft.client.renderer.ShaderInstance;
@@ -8,14 +9,13 @@ import net.minecraft.resources.ResourceLocation;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
-import net.neoforged.fml.common.Mod;
 import net.neoforged.neoforge.client.event.RegisterShadersEvent;
 
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
-@EventBusSubscriber(modid = ShaderedMod.MODID, bus = EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
+@EventBusSubscriber(modid = ShaderedMod.MODID, value = Dist.CLIENT)
 public class RegisterShaders {
     public static ShaderInstance compressor;
     public static ShaderInstance skyboxWarp;
@@ -30,6 +30,9 @@ public class RegisterShaders {
     public static ShaderInstance skyblockBackground;
     public static ShaderInstance glass;
     public static ShaderInstance pbr;
+    public static ShaderInstance filterBlock;
+    public static ShaderInstance filterApply;
+    public static ShaderInstance raymarchFog;
 
     private static final Map<String, ShaderInstance> SHADERS = new HashMap<>();
 
@@ -143,6 +146,34 @@ public class RegisterShaders {
                     SHADERS.put("pbr", e);
                 });
 
+        event.registerShader(new ShaderInstance(event.getResourceProvider(),
+                        ResourceLocation.fromNamespaceAndPath(ShaderedMod.MODID, "filter_block"),
+                        DefaultVertexFormat.POSITION_TEX),
+                (e) -> {
+                    filterBlock = e;
+                    SHADERS.put("filter_block", e);
+                });
+
+        event.registerShader(new ShaderInstance(event.getResourceProvider(),
+                        ResourceLocation.fromNamespaceAndPath(ShaderedMod.MODID, "filter_apply"),
+                        DefaultVertexFormat.POSITION_TEX),
+                (e) -> {
+                    filterApply = e;
+                    SHADERS.put("filter_apply", e);
+                });
+
+        event.registerShader(new ShaderInstance(event.getResourceProvider(),
+                        ResourceLocation.fromNamespaceAndPath(ShaderedMod.MODID, "raymarch_fog"),
+                        DefaultVertexFormat.POSITION),
+                (e) -> {
+                    raymarchFog = e;
+                    SHADERS.put("raymarch_fog", e);
+                });
+
+    }
+
+    public static ShaderInstance getRaymarchFog() {
+        return raymarchFog;
     }
 
     public static ShaderInstance getCompressor() {
@@ -195,5 +226,13 @@ public class RegisterShaders {
 
     public static ShaderInstance getPbr() {
         return pbr;
+    }
+
+    public static ShaderInstance getFilterBlock() {
+        return filterBlock;
+    }
+
+    public static ShaderInstance getFilterApply() {
+        return filterApply;
     }
 }

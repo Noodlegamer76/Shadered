@@ -8,14 +8,13 @@ import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.resources.ResourceLocation;
 
 public class TestRenderer<T extends RenderTester> implements BlockEntityRenderer<RenderTester> {
-    public static final ResourceLocation TEXTURE = ResourceLocation.fromNamespaceAndPath("minecraft", "textures/block/stone.png");
+    public static final ResourceLocation TEXTURE = ResourceLocation.withDefaultNamespace("textures/block/stone.png");
 
     public TestRenderer(BlockEntityRendererProvider.Context context) {
     }
 
     @Override
     public void render(RenderTester pBlockEntity, float pPartialTick, PoseStack poseStack, MultiBufferSource pBuffer, int pPackedLight, int pPackedOverlay) {
-
 
     }
 }

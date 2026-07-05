@@ -7,7 +7,7 @@ import com.noodlegamer76.shadered.client.renderer.SkyblockRenderer;
 import com.noodlegamer76.shadered.client.renderer.assimp.RenderableModel;
 import com.noodlegamer76.shadered.client.util.skyblock.SkyblockBatchData;
 import com.noodlegamer76.shadered.client.util.skyblock.SkyblockPass;
-import com.noodlegamer76.shadered.client.util.skyemitter.SkyEmitterType;
+import com.noodlegamer76.shadered.client.util.SkyblockType;
 import com.noodlegamer76.shadered.entity.block.SkyEmitterEntity;
 import net.minecraft.client.Camera;
 import net.minecraft.client.Minecraft;
@@ -18,6 +18,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.util.Mth;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
+import org.joml.Matrix4f;
 import org.joml.Quaternionf;
 
 public class SkyEmitterRenderer implements BlockEntityRenderer<SkyEmitterEntity> {
@@ -28,8 +29,9 @@ public class SkyEmitterRenderer implements BlockEntityRenderer<SkyEmitterEntity>
 
     @Override
     public void render(SkyEmitterEntity skyEmitter, float partialTick, PoseStack poseStack, MultiBufferSource buffer, int packedLight, int packedOverlay) {
-        SkyEmitterType type = skyEmitter.getEmitterType();
-        if (type == null) return;
+        SkyblockType type = skyEmitter.getBlockType();
+        SkyblockPass pass = skyEmitter.getPass();
+        if (type == null || pass == null) return;
 
         BlockPos pos = skyEmitter.getBlockPos();
         float maxAlpha = skyEmitter.getAlpha();
@@ -47,38 +49,7 @@ public class SkyEmitterRenderer implements BlockEntityRenderer<SkyEmitterEntity>
 
         pos = pos.atY(4000 + pos.getY());
 
-        RenderSystem.enableBlend();
-        RenderSystem.disableDepthTest();
-        RenderSystem.depthMask(false);
-
-        if (type == SkyEmitterType.ECLIPSE) {
-            renderSkyblockSkybox(pos, poseStack, SkyblockRenderer.eclipseData, alpha, renderTime);
-        }
-        else if (type == SkyEmitterType.SPACE) {
-            renderSkyblockSkybox(pos, poseStack, SkyblockRenderer.spaceData, alpha, renderTime);
-        }
-        else if (type == SkyEmitterType.FOREST) {
-            renderSkyblockSkybox(pos, poseStack, SkyblockRenderer.forestData, alpha, renderTime);
-        }
-        else if (type == SkyEmitterType.STORMY) {
-            renderSkyblockSkybox(pos, poseStack, SkyblockRenderer.stormyData, alpha, renderTime);
-        }
-        else if (type == SkyEmitterType.LIGHT) {
-            renderSkyblockSkybox(pos, poseStack, SkyblockRenderer.lightData, alpha, renderTime);
-        }
-        else if (type == SkyEmitterType.MIMIC) {
-            renderSkyblockSkybox(pos, poseStack, SkyblockRenderer.mimicData, alpha, renderTime);
-        }
-        else if (type == SkyEmitterType.OCEAN) {
-            renderSkyblockSkybox(pos, poseStack, SkyblockRenderer.oceanData, alpha, renderTime);
-        }
-        else if (type == SkyEmitterType.IRIDIA) {
-            renderSkyblockSkybox(pos, poseStack, SkyblockRenderer.iridiaData, alpha, renderTime);
-        }
-
-        RenderSystem.depthMask(true);
-        RenderSystem.enableDepthTest();
-        RenderSystem.disableBlend();
+        renderSkyblockSkybox(pos, pass, poseStack, SkyblockRenderer.getData(type), alpha, renderTime);
     }
 
     @Override
@@ -86,13 +57,13 @@ public class SkyEmitterRenderer implements BlockEntityRenderer<SkyEmitterEntity>
         return 4096;
     }
 
-    private void renderSkyblockSkybox(BlockPos pos, PoseStack poseStack, SkyblockBatchData data, float alpha, float renderTime) {
+    private void renderSkyblockSkybox(BlockPos pos, SkyblockPass pass, PoseStack poseStack, SkyblockBatchData data, float alpha, float renderTime) {
         PoseStack test = new PoseStack();
 
         test.translate(-5, -5, -5);
         test.scale(10, 10, 10);
 
-        data.add(SkyblockPass.BACKGROUND, pos, test.last().pose(), true, alpha);
+        data.add(SkyblockPass.BACKGROUND, pos, new Matrix4f(test.last().pose()), true, alpha);
 
         poseStack.pushPose();
 
@@ -107,7 +78,7 @@ public class SkyEmitterRenderer implements BlockEntityRenderer<SkyEmitterEntity>
 
         poseStack.translate(-0.5, -0.5, -0.5);
 
-        data.add(SkyblockPass.NORMAL, pos, poseStack.last().pose(), false, alpha);
+        data.add(SkyblockPass.NORMAL, pos, new Matrix4f(poseStack.last().pose()), false, alpha);
 
         poseStack.popPose();
     }
@@ -124,6 +95,6 @@ public class SkyEmitterRenderer implements BlockEntityRenderer<SkyEmitterEntity>
 
     @Override
     public AABB getRenderBoundingBox(SkyEmitterEntity blockEntity) {
-        return BlockEntityRenderer.super.getRenderBoundingBox(blockEntity).inflate(1024);
+        return new AABB(blockEntity.getBlockPos()).inflate(1024);
     }
 }
