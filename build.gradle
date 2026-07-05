@@ -33,6 +33,16 @@ repositories {
             includeGroup("software.bernie.geckolib")
         }
     }
+    maven {
+        name "CaffeineMC"
+        url "https://maven.caffeinemc.net/releases" // or /snapshots
+    }
+    maven {
+        url "https://cursemaven.com"
+    }
+    maven {
+        url "https://maven.sinytra.org"
+    }
 }
 
 base {
@@ -95,6 +105,9 @@ neoForge {
             // "REGISTRIES": For firing of registry events.
             // "REGISTRYDUMP": For getting the contents of all registries.
             systemProperty 'forge.logging.markers', 'REGISTRIES'
+            systemProperty 'mixin.env.remapRefMap', 'true'
+            systemProperty 'mixin.env.refMapRemappingFile', "${projectDir}/build/createSrgToMcp/output.srg"
+
 
             // Recommended logging level for the console
             // You can set various levels here.
@@ -109,6 +122,9 @@ neoForge {
         // multi mod projects should define one per mod
         "${mod_id}" {
             sourceSet(sourceSets.main)
+        }
+        create("sodium") {
+            sourceSet(project(":common").sourceSets["main"])
         }
     }
 }
@@ -127,7 +143,17 @@ configurations {
 dependencies {
     implementation "software.bernie.geckolib:geckolib-neoforge-${minecraft_version}:${geckolib_version}"
 
-    def lwjglVersion = "3.3.3"
+    //implementation "net.caffeinemc:sodium-neoforge-api:0.8.12-beta.2+mc1.21.1"
+    implementation "net.caffeinemc:sodium-neoforge:0.8.12-beta.2+mc1.21.1"
+    implementation "net.caffeinemc:sodium-neoforge-mod:0.8.12-beta.2+mc1.21.1"
+    implementation("org.sinytra.forgified-fabric-api:fabric-api-base:0.4.42+d1308ded19")
+    implementation("org.sinytra.forgified-fabric-api:fabric-renderer-api-v1:3.4.0+acb05a3919")
+    implementation("org.sinytra.forgified-fabric-api:fabric-rendering-data-attachment-v1:0.3.48+73761d2e19")
+    implementation("org.sinytra.forgified-fabric-api:fabric-block-view-api-v2:1.0.10+9afaaf8c19")
+
+    implementation "curse.maven:irisshaders-455508:8242804"
+
+def lwjglVersion = "3.3.3"
 
     implementation("org.lwjgl:lwjgl-assimp:${lwjglVersion}") {
         exclude group: 'org.lwjgl', module: 'lwjgl'
@@ -136,7 +162,7 @@ dependencies {
         exclude group: 'org.lwjgl', module: 'lwjgl-stb'
     }
 
-    additionalRuntimeClasspath("org.lwjgl:lwjgl-assimp:${lwjglVersion}") {
+    clientAdditionalRuntimeClasspath("org.lwjgl:lwjgl-assimp:${lwjglVersion}") {
         exclude group: 'org.lwjgl', module: 'lwjgl'
         exclude group: 'org.lwjgl', module: 'lwjgl-glfw'
         exclude group: 'org.lwjgl', module: 'lwjgl-opengl'

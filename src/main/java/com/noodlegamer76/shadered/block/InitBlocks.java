@@ -63,4 +63,7 @@ public class InitBlocks {
 
     public static final DeferredHolder<Block, Block> SPACE_COMPRESSOR = BLOCKS.register("space_compressor",
             () -> new SpaceCompressorBlock(BlockBehaviour.Properties.ofLegacyCopy(Blocks.STONE).mapColor(DyeColor.WHITE)));
+
+    public static final DeferredHolder<Block, Block> LIGHT_BULB = BLOCKS.register("light_bulb",
+            () -> new LightBulb(BlockBehaviour.Properties.ofLegacyCopy(Blocks.STONE).mapColor(DyeColor.WHITE)));
 }

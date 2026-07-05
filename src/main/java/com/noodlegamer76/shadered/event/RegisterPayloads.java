@@ -3,6 +3,8 @@ package com.noodlegamer76.shadered.event;
 import com.noodlegamer76.shadered.ShaderedMod;
 import com.noodlegamer76.shadered.network.GameObjectPayload.ComponentHandler;
 import com.noodlegamer76.shadered.network.GameObjectPayload.ComponentPayload;
+import com.noodlegamer76.shadered.network.lightemitterpayload.LightEmitterHandler;
+import com.noodlegamer76.shadered.network.lightemitterpayload.LightEmitterPayload;
 import com.noodlegamer76.shadered.network.skyemitter.SkyEmitterHandler;
 import com.noodlegamer76.shadered.network.skyemitter.SkyEmitterPacket;
 import net.neoforged.bus.api.SubscribeEvent;
@@ -27,6 +29,12 @@ public class RegisterPayloads {
                 SkyEmitterPacket.TYPE,
                 SkyEmitterPacket.STREAM_CODEC,
                 SkyEmitterHandler::handle
+        );
+
+        registrar.playToServer(
+                LightEmitterPayload.TYPE,
+                LightEmitterPayload.STREAM_CODEC,
+                LightEmitterHandler::handle
         );
     }
 }

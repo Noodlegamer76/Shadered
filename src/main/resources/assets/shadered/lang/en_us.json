@@ -25,6 +25,7 @@
   "item.shadered.skyblock_filter_screen": "Skyblock Filter: Screen",
   "item.shadered.skyblock_filter_blueprint": "Skyblock Filter: Blueprint",
   "item.shadered.skyblock_filter_gameboy": "Skyblock Filter: Gameboy",
+  "item.shadered.sky_emitter.tooltip": "§6Use a Skyblock to change the skybox",
 
   "gui.shadered.sky_emitter.title": "Sky Emitter",
   "gui.shadered.sky_emitter.min_distance": "Min Distance: ",

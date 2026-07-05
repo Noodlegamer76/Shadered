@@ -59,4 +59,7 @@ public class InitBlockEntities {
 
     public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<SpaceCompressorBlockEntity>> SPACE_COMPRESSOR = BLOCK_ENTITIES.register("space_compressor",
             () -> BlockEntityType.Builder.of(SpaceCompressorBlockEntity::new, InitBlocks.SPACE_COMPRESSOR.get()).build(null));
+
+    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<LightBulbEntity>> LIGHT_BULB = BLOCK_ENTITIES.register("light_bulb",
+            () -> BlockEntityType.Builder.of(LightBulbEntity::new, InitBlocks.LIGHT_BULB.get()).build(null));
 }

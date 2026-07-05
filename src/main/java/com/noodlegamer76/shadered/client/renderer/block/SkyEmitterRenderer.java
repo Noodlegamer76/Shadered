@@ -47,6 +47,7 @@ public class SkyEmitterRenderer implements BlockEntityRenderer<SkyEmitterEntity>
 
         pos = pos.atY(4000 + pos.getY());
 
+        RenderSystem.enableBlend();
         RenderSystem.disableDepthTest();
         RenderSystem.depthMask(false);
 
@@ -77,6 +78,7 @@ public class SkyEmitterRenderer implements BlockEntityRenderer<SkyEmitterEntity>
 
         RenderSystem.depthMask(true);
         RenderSystem.enableDepthTest();
+        RenderSystem.disableBlend();
     }
 
     @Override

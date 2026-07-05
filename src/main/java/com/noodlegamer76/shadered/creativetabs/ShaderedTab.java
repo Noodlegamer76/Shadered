@@ -35,6 +35,7 @@ public class ShaderedTab {
             event.accept(InitItems.SKYBLOCK_FILTER_BLUEPRINT.get().getDefaultInstance());
             event.accept(InitItems.SKYBLOCK_FILTER_GAMEBOY.get().getDefaultInstance());
             event.accept(InitItems.SKY_EMITTER.get().getDefaultInstance());
+            event.accept(InitItems.LIGHT_BULB.get().getDefaultInstance());
             event.accept(InitItems.SKYBLOCK_PAINTING.get().getDefaultInstance());
             event.accept(InitItems.MAXWELL.get().getDefaultInstance());
             event.accept(InitItems.WINDOW.get().getDefaultInstance());

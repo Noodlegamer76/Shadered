@@ -26,6 +26,7 @@ public class RenderCube {
 
         if (inverted) {
             RenderSystem.disableDepthTest();
+            RenderSystem.enableBlend();
         }
         else {
             RenderSystem.depthMask(true);
@@ -103,6 +104,7 @@ public class RenderCube {
         }
 
         RenderSystem.enableDepthTest();
+        RenderSystem.disableBlend();
         RenderSystem.depthMask(true);
     }
 

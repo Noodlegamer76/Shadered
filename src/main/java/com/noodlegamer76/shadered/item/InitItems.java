@@ -55,8 +55,11 @@ public class InitItems {
     public static final DeferredHolder<Item, Item> MIMIC_BLOCK = ITEMS.register("mimic_block",
             () -> new BlockItem(InitBlocks.MIMIC_BLOCK.get(), new Item.Properties()));
 
-    public static final DeferredHolder<Item, Item> SKY_EMITTER = ITEMS.register("sky_emitter",
-            () -> new BlockItem(InitBlocks.SKY_EMITTER.get(), new Item.Properties()));
+    public static final DeferredHolder<Item, SkyEmitterItem> SKY_EMITTER = ITEMS.register("sky_emitter",
+            () -> new SkyEmitterItem(InitBlocks.SKY_EMITTER.get(), new Item.Properties()));
+
+    public static final DeferredHolder<Item, BlockItem> LIGHT_BULB = ITEMS.register("light_bulb",
+            () -> new BlockItem(InitBlocks.LIGHT_BULB.get(), new Item.Properties()));
 
     public static final DeferredHolder<Item, Item> SKYBLOCK_PAINTING = ITEMS.register("skyblock_painting",
             () -> new BlockItem(InitBlocks.SKYBLOCK_PAINTING.get(), new Item.Properties()));
