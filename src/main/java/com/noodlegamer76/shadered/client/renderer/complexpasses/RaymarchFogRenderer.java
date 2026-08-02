@@ -40,9 +40,9 @@ public class RaymarchFogRenderer implements RenderableComplexPass {
         Camera camera = mc.gameRenderer.getMainCamera();
         Vec3 cameraPos = camera.getPosition();
 
-        PoseStack viewMatStack = new PoseStack();
-        viewMatStack.mulPose(Axis.XP.rotationDegrees(camera.getXRot()));
-        viewMatStack.mulPose(Axis.YP.rotationDegrees(camera.getYRot() + 180.0F));
+        PoseStack viewMat = new PoseStack();
+        viewMat.mulPose(Axis.XP.rotationDegrees(camera.getXRot()));
+        viewMat.mulPose(Axis.YP.rotationDegrees(camera.getYRot() + 180.0F));
 
         RenderSystem.setShader(() -> shader);
 
@@ -51,9 +51,9 @@ public class RaymarchFogRenderer implements RenderableComplexPass {
             cameraPosUniform.set((float) cameraPos.x, (float) cameraPos.y, (float) cameraPos.z);
         }
 
-        Uniform viewMat = shader.getUniform("ViewMat");
-        if (viewMat != null) {
-            viewMat.set(viewMatStack.last().pose());
+        Uniform viewMatUniform = shader.getUniform("ViewMat");
+        if (viewMatUniform != null) {
+            viewMatUniform.set(viewMat.last().pose());
         }
 
         Uniform cameraPosInteger = shader.getUniform("CameraPosInteger");

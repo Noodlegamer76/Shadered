@@ -1,7 +1,5 @@
 package com.noodlegamer76.shadered.client.util.skyblock;
 
-import com.noodlegamer76.shadered.event.RegisterShaders;
-import net.minecraft.client.renderer.ShaderInstance;
 import net.minecraft.network.chat.Component;
 
 public enum SkyblockPass {
@@ -23,8 +21,8 @@ public enum SkyblockPass {
         this.translationKey = "skyblock_pass.shadered." + name().toLowerCase();
     }
 
-    public ShaderInstance getShader() {
-        return RegisterShaders.get(shaderName);
+    public String getShaderName() {
+        return shaderName;
     }
 
     public String getTranslationKey() {

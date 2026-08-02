@@ -13,6 +13,7 @@ import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.client.event.RenderLevelStageEvent;
+import static org.lwjgl.opengl.GL11.*;
 
 
 @EventBusSubscriber(modid = ShaderedMod.MODID, value = Dist.CLIENT)
@@ -20,6 +21,9 @@ public class RenderEventsForFbos {
 
     @SubscribeEvent
     public static void levelRenderEvent(RenderLevelStageEvent event) {
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
         SkyblockRenderer.preRender();
 
         RenderLevelStageEvent.Stage stage = event.getStage();

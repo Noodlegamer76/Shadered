@@ -9,6 +9,7 @@ import com.noodlegamer76.shadered.client.util.RenderStage;
 import com.noodlegamer76.shadered.client.util.RenderableComplexPass;
 import com.noodlegamer76.shadered.client.util.skyblock.SkyblockBatchData;
 import com.noodlegamer76.shadered.client.util.skyblock.SkyblockPass;
+import com.noodlegamer76.shadered.event.RegisterShaders;
 import net.minecraft.client.renderer.ShaderInstance;
 
 import java.util.List;
@@ -36,7 +37,7 @@ public class SkyblockRenderPass implements RenderableComplexPass {
             SkyblockBatchData data = entry.getKey();
             if (data.isEmpty()) continue;
             for (SkyblockPass pass : SkyblockPass.values()) {
-                ShaderInstance shader = pass.getShader();
+                ShaderInstance shader = RegisterShaders.get(pass.getShaderName());
                 shader.setSampler("Skybox", batchData.get(data));
                 shader.setSampler("PassDepth", readTarget.getDepthTextureId());
 

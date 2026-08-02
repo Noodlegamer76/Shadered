@@ -12,6 +12,7 @@ import com.noodlegamer76.shadered.worldgen.features.InitFeatures;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.common.Mod;
+import net.neoforged.fml.loading.FMLEnvironment;
 import org.slf4j.Logger;
 
 @Mod(ShaderedMod.MODID)
@@ -20,7 +21,9 @@ public class ShaderedMod {
     public static final Logger LOGGER = LogUtils.getLogger();
 
     public ShaderedMod(IEventBus modEventBus, ModContainer modContainer) {
-        NativeLibraryLoader.loadNatives();
+        if (FMLEnvironment.dist.isClient()) {
+            NativeLibraryLoader.loadNatives();
+        }
 
         InitBlocks.BLOCKS.register(modEventBus);
         InitItems.ITEMS.register(modEventBus);

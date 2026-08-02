@@ -98,7 +98,7 @@ public class SkyblockRenderer {
             mimicData
     );
 
-    public static final RaymarchFogRenderer raymarchFogRenderPass = new RaymarchFogRenderer();
+    //public static final RaymarchFogRenderer raymarchFogRenderPass = new RaymarchFogRenderer();
 
 
     public static SkyblockBatchData getData(SkyblockType type) {
@@ -154,7 +154,7 @@ public class SkyblockRenderer {
         SkyblockRenderPass skyblockRenderPass = new SkyblockRenderPass(DATA_LIST);
         renderer.add(RenderStage.AFTER_BLOCK_ENTITIES, skyblockRenderPass);
 
-        renderer.add(RenderStage.AFTER_LEVEL, raymarchFogRenderPass);
+        //renderer.add(RenderStage.AFTER_LEVEL, raymarchFogRenderPass);
 
         AssimpRendererComplexPass assimpRendererComplexPass = new AssimpRendererComplexPass();
         renderer.add(RenderStage.AFTER_BLOCK_ENTITIES, assimpRendererComplexPass);
