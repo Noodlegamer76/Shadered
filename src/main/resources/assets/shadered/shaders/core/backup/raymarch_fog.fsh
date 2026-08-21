@@ -141,6 +141,37 @@ void main() {
     float dither = interleavedGradientNoise(gl_FragCoord.xy);
     float currentDist = dither * stepSize;
 
+    //for (int i = 0; i < Steps; i++) {
+    //    if (currentDist >= maxDistance) {
+    //        break;
+    //    }
+
+    //    vec3 worldPos = worldCameraPos + rayDir * currentDist;
+
+    //    float density = fogDensity(worldPos) * DensityMultiplier;
+    //    float absorb = density * stepSize;
+
+    //    accumulatedFog += FogColor.rgb * density * transmittance * stepSize;
+    //    transmittance *= exp(-absorb);
+
+    //    currentDist += stepSize;
+
+    //    if (transmittance < 0.01) {
+    //        transmittance = 0.0;
+    //        break;
+    //    }
+    //}
+
+    vec3 eclipsePos = vec3(-380.0, 64.0, 290.0);
+    vec3 spacePos = vec3(-380.0, 64.0, 270.0);
+    vec3 invertPos = vec3(-360.0, 64.0, 270.0);
+    vec3 gasPos = vec3(-360.0, 64.0, 290.0);
+    vec3 warpPos = vec3(-340.0, 64.0, 290.0);
+    float sphereRadius = 6.5;
+
+    vec2 totalWarp = vec2(0.0);
+    currentDist = 0.0;
+
     for (int i = 0; i < Steps; i++) {
         if (currentDist >= maxDistance) {
             break;
@@ -148,18 +179,90 @@ void main() {
 
         vec3 worldPos = worldCameraPos + rayDir * currentDist;
 
-        float density = fogDensity(worldPos) * DensityMultiplier;
-        float absorb = density * stepSize;
-
-        accumulatedFog += FogColor.rgb * density * transmittance * stepSize;
-        transmittance *= exp(-absorb);
+        vec3 toWarpBall = worldPos - warpPos;
+        float distToWarpCenter = length(toWarpBall);
+        if (distToWarpCenter < sphereRadius * 3.0) {
+            vec3 projViewUp = invViewRot * vec3(0.0, 1.0, 0.0);
+            vec3 projViewRight = cross(rayDir, projViewUp);
+            if (length(projViewRight) > 0.0001) {
+                projViewRight = normalize(projViewRight);
+                projViewUp = normalize(cross(projViewRight, rayDir));
+                vec2 screenOffset = vec2(dot(toWarpBall, projViewRight), dot(toWarpBall, projViewUp));
+                float r2 = dot(screenOffset, screenOffset) + 0.01;
+                float strength = 4.0 * pow(sphereRadius, 2.0);
+                float falloff = smoothstep(sphereRadius * 3.0, sphereRadius, distToWarpCenter);
+                vec2 force = -normalize(screenOffset) * (strength / r2) * falloff * (1.0 / float(Steps));
+                totalWarp += force;
+            }
+        }
 
         currentDist += stepSize;
+    }
 
-        if (transmittance < 0.01) {
-            transmittance = 0.0;
+    if (length(totalWarp) > 0.0) {
+        ivec2 warpCoords = ivec2(pixel + totalWarp * ScreenSize);
+        warpCoords = clamp(warpCoords, ivec2(0), ivec2(screenSize) - 1);
+        sceneColor = texelFetch(MainColor, warpCoords, 0).rgb;
+    }
+
+    vec3 warpRayDir = rayDir;
+    vec3 camToWarp = warpPos - worldCameraPos;
+    float closestApproach = dot(camToWarp, rayDir);
+
+    if (closestApproach > 0.0) {
+        vec3 closestPoint = worldCameraPos + rayDir * closestApproach;
+        float lateralDist = length(closestPoint - warpPos);
+        float warpRange = sphereRadius * 4.0;
+
+        if (lateralDist < warpRange) {
+            float minRadiusFallback = max(lateralDist, 0.2);
+            float strength = 2.5 * pow(sphereRadius, 2.0);
+            float factor = (strength / (minRadiusFallback * minRadiusFallback)) * (1.0 - smoothstep(sphereRadius * 1.5, warpRange, lateralDist));
+
+            vec3 outwardDir = (closestPoint - warpPos) / minRadiusFallback;
+            warpRayDir = normalize(rayDir - outwardDir * factor * 0.15);
+
+            if (lateralDist < sphereRadius) {
+                warpRayDir = vec3(0.0);
+            }
+        }
+    }
+
+    currentDist = 0.0;
+    for (int i = 0; i < Steps; i++) {
+        if (currentDist >= maxDistance) {
             break;
         }
+
+        vec3 worldPos = worldCameraPos + warpRayDir * currentDist;
+
+        float dWarp = sphere(worldPos, warpPos, sphereRadius);
+        float dEclipse = sphere(worldPos, eclipsePos, sphereRadius);
+        float dSpace = sphere(worldPos, spacePos, sphereRadius);
+        float dInvert = sphere(worldPos, invertPos, sphereRadius);
+        float dGas = sphere(worldPos, gasPos, sphereRadius);
+
+        if (dEclipse < 0.075) {
+            accumulatedFog += ballColor;
+            transmittance += (dEclipse * sphereRadius) * 0.2;
+        }
+
+        if (dSpace < 0.075) {
+            fragColor = vec4(spaceColor, 1.0);
+            return;
+        }
+
+        if (dInvert < 0.075) {
+            fragColor = vec4(1.0 - sceneColor, 1.0);
+            return;
+        }
+
+        if (dGas < 0.075) {
+            accumulatedFog += spaceColor * (dGas * sphereRadius) * 0.1;
+        }
+
+        float minDist = min(min(min(dEclipse, dSpace), min(dInvert, dGas)), dWarp);
+        currentDist += max(minDist, 0.1);
     }
 
     vec3 finalColor = (sceneColor * transmittance) + accumulatedFog;

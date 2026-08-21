@@ -15,6 +15,7 @@ import net.minecraft.client.renderer.FogRenderer;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.renderer.ShaderInstance;
 import net.minecraft.util.Mth;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 
 public class RaymarchFogRenderer implements RenderableComplexPass {
@@ -26,9 +27,9 @@ public class RaymarchFogRenderer implements RenderableComplexPass {
     @Override
     public void render(RenderStage stage, PoseStack poseStack, int renderTick, float partialTick) {
         float densityMultiplier = 0.065f;
-        int steps = 128;
+        int steps = 32;
         float amplitude = 0.5f;
-        float frequency = 1.0f;
+        float frequency = 5.0f;
 
         ShaderInstance shader = RegisterShaders.getRaymarchFog();
         Minecraft mc = Minecraft.getInstance();
@@ -76,6 +77,11 @@ public class RaymarchFogRenderer implements RenderableComplexPass {
             frequencyUniform.set(frequency);
         }
 
+        Uniform sunDirectionUniform = shader.getUniform("SunDirection");
+        if (sunDirectionUniform != null) {
+            sunDirectionUniform.set(getSunDirection(partialTick).toVector3f());
+        }
+
         shader.setSampler("MainDepth", mc.getMainRenderTarget().getDepthTextureId());
         shader.setSampler("MainColor", mc.getMainRenderTarget().getColorTextureId());
         shader.setSampler("BallTexture", SkyblockRenderer.eclipseRenderPass.getSkyboxTarget().getColorTextureId());
@@ -91,5 +97,18 @@ public class RaymarchFogRenderer implements RenderableComplexPass {
         bufferBuilder.vertex(-1, 1, 0).endVertex();
 
         tesselator.end();
+    }
+
+    public static Vec3 getSunDirection(float partialTicks) {
+        Level level = Minecraft.getInstance().level;
+        if (level == null) return Vec3.ZERO;
+        float celestialAngle = Minecraft.getInstance().level.getSunAngle(partialTicks);
+        float theta = celestialAngle * ((float)Math.PI * 2F);
+
+        double x = 0.0F;
+        double y = -Math.cos(theta);
+        double z = -Math.sin(theta);
+
+        return new Vec3(x, y, z);
     }
 }
